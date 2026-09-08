@@ -1,0 +1,14 @@
+/* Page-level styles for Starting */
+.app-main-content, 
+.view-container {
+    display: block;
+    overflow: visible;
+    height: auto !important; 
+    min-height: 0 !important;
+    position: relative;
+}
+
+body {
+    overflow-x: hidden;
+    height: auto;
+}

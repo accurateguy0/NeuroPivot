@@ -1,0 +1,97 @@
+<div class="questionnaire-container-square animated-fade-in">
+    @if (currentStep == 1)
+    {
+        <div>
+            <label class="step-question-label">
+                1. Choose a habit pattern you want to work with:
+            </label>
+            <div class="vertical-radio-group step-radio-group">
+                @foreach (var cat in new[] { "alcohol", "smoking", "vaping", "any habit" }) {
+                    <label class="radio-item-label">
+                        <input type="radio" name="habitCategory" value="@cat" checked="@(targetHabitCategory == cat)" @onchange='() => targetHabitCategory = cat' />
+                        <span>@cat</span>
+                    </label>
+                }
+            </div>
+            <div class="step-nav-right">
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 2">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 2)
+    {
+        <div>
+            <label class="step-question-label">2. Is this the first thing you touch?</label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label"><input type="radio" name="q1" value="yes" checked='@(q1Answer == "yes")' @onchange='() => q1Answer = "yes"' /><span>Yes</span></label>
+                <label class="radio-item-label"><input type="radio" name="q1" value="no" checked='@(q1Answer == "no")' @onchange='() => q1Answer = "no"' /><span>No</span></label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 1">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 3">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 3)
+    {
+        <div>
+            <label class="step-question-label">3. Can you actually control yourself?</label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label"><input type="radio" name="q2" value="yes" checked='@(q2Answer == "yes")' @onchange='() => q2Answer = "yes"' /><span>Yes</span></label>
+                <label class="radio-item-label"><input type="radio" name="q2" value="no" checked='@(q2Answer == "no")' @onchange='() => q2Answer = "no"' /><span>No</span></label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 2">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 4">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 4)
+    {
+        <div>
+            <label class="step-question-label">4. Do you feel physical agitation doing nothing?</label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label"><input type="radio" name="q3" value="yes" checked='@(q3Answer == "yes")' @onchange='() => q3Answer = "yes"' /><span>Yes</span></label>
+                <label class="radio-item-label"><input type="radio" name="q3" value="no" checked='@(q3Answer == "no")' @onchange='() => q3Answer = "no"' /><span>No</span></label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 3">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 5">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 5)
+    {
+        <div>
+            <label class="step-question-label">5. Have you hidden this fact from loved ones?</label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label"><input type="radio" name="q4" value="yes" checked='@(q4Answer == "yes")' @onchange='() => q4Answer = "yes"' /><span>Yes</span></label>
+                <label class="radio-item-label"><input type="radio" name="q4" value="no" checked='@(q4Answer == "no")' @onchange='() => q4Answer = "no"' /><span>No</span></label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 4">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="SubmitAnswers">Generate Protocol →</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private int currentStep = 1;
+    private string targetHabitCategory = "alcohol";
+    private string q1Answer = "no";
+    private string q2Answer = "no";
+    private string q3Answer = "no";
+    private string q4Answer = "no";
+
+    [Parameter]
+    public EventCallback<int> OnStepChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<(string category, string q1, string q2, string q3, string q4)> OnComplete { get; set; }
+
+    private void SubmitAnswers()
+    {
+        OnComplete.InvokeAsync((targetHabitCategory, q1Answer, q2Answer, q3Answer, q4Answer));
+    }
+}

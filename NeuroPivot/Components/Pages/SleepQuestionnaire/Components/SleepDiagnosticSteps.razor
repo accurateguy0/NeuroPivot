@@ -1,0 +1,99 @@
+@inject SleepService SleepService
+
+<div class="questionnaire-container-square">
+    @if (currentStep == 1)
+    {
+        <div class="animated-fade-in">
+            <label class="step-question-label">
+                1. What would be your ideal time to sleep?
+            </label>
+            <CustomTimePicker TimeValue="@bedTimeStr" TimeValueChanged="@((string v) => bedTimeStr = v)" />
+            <div class="step-nav-right">
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(2)">
+                    Next →
+                </button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 2)
+    {
+        <div class="animated-fade-in">
+            <label class="step-question-label">
+                2. What is your ideal waking up time?
+            </label>
+            <CustomTimePicker TimeValue="@wakeTimeStr" TimeValueChanged="@((string v) => wakeTimeStr = v)" />
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(1)">
+                    ← Back
+                </button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(3)">
+                    Next →
+                </button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 3)
+    {
+        <div class="animated-fade-in">
+            <label class="step-question-label">
+                3. How well rested do you feel after waking up?
+            </label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label">
+                    <input type="radio" name="wellRestedOption" value="groggy" checked="@(wellRestedInput == "groggy")" @onchange='() => wellRestedInput = "groggy"' />
+                    <span>groggy</span>
+                </label>
+                <label class="radio-item-label">
+                    <input type="radio" name="wellRestedOption" value="kinda ok" checked="@(wellRestedInput == "kinda ok")" @onchange='() => wellRestedInput = "kinda ok"' />
+                    <span>kinda ok</span>
+                </label>
+                <label class="radio-item-label">
+                    <input type="radio" name="wellRestedOption" value="well rested" checked="@(wellRestedInput == "well rested")" @onchange='() => wellRestedInput = "well rested"' />
+                    <span>well rested</span>
+                </label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(2)">
+                    ← Back
+                </button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="SubmitChoices">
+                    Generate Alerts →
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private int currentStep = 1;
+    private string bedTimeStr = "21:00";
+    private string wakeTimeStr = "06:00";
+    private string wellRestedInput = "groggy";
+
+    [Parameter]
+    public EventCallback<int> OnStepChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<(string bedTime, string wakeTime, string wellRested)> OnGenerateAlerts { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(SleepService.Model.IdealBedTime))
+            bedTimeStr = SleepService.Model.IdealBedTime;
+        if (!string.IsNullOrWhiteSpace(SleepService.Model.IdealWakeTime))
+            wakeTimeStr = SleepService.Model.IdealWakeTime;
+        if (!string.IsNullOrWhiteSpace(SleepService.Model.WellRestedFeeling))
+            wellRestedInput = SleepService.Model.WellRestedFeeling;
+    }
+
+    private void SetStep(int step)
+    {
+        currentStep = step;
+        OnStepChanged.InvokeAsync(step);
+    }
+
+    private void SubmitChoices()
+    {
+        OnGenerateAlerts.InvokeAsync((bedTimeStr, wakeTimeStr, wellRestedInput));
+    }
+}

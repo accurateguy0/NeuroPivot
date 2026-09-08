@@ -1,0 +1,276 @@
+is_global = true
+build_property.TargetFramework = net9.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v9.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EntryPointFilePath = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = NeuroPivot
+build_property.RootNamespace = NeuroPivot
+build_property.ProjectDir = C:\Users\User\Documents\GitHub\NeuroPivot\NeuroPivot\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\User\Documents\GitHub\NeuroPivot\NeuroPivot
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Error.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/FocusQuestionnaire/Components/FocusDiagnosticSteps.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGb2N1c1F1ZXN0aW9ubmFpcmVcQ29tcG9uZW50c1xGb2N1c0RpYWdub3N0aWNTdGVwcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/AppleToggle.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQXBwbGVUb2dnbGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/CustomTimePicker.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQ3VzdG9tVGltZVBpY2tlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-y7ezyw31zm
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/About/About.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBYm91dFxBYm91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-nvyd87sal9
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/About/Components/AboutFeatureGrid.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBYm91dFxDb21wb25lbnRzXEFib3V0RmVhdHVyZUdyaWQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-adcawjo0w9
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/About/Components/AboutHero.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBYm91dFxDb21wb25lbnRzXEFib3V0SGVyby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-bomfpd0a8i
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/About/Components/AboutOriginStory.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBYm91dFxDb21wb25lbnRzXEFib3V0T3JpZ2luU3RvcnkucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-a957gpjea7
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/About/Components/AboutTeamCouncil.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBYm91dFxDb21wb25lbnRzXEFib3V0VGVhbUNvdW5jaWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-27l4f7f119
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Articles/Articles.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBcnRpY2xlc1xBcnRpY2xlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-mkor58yffy
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Articles/Components/ArticlesTitle.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBcnRpY2xlc1xDb21wb25lbnRzXEFydGljbGVzVGl0bGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-ai0bt2ko7u
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Articles/Components/MinimalistQuoteSquare.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBcnRpY2xlc1xDb21wb25lbnRzXE1pbmltYWxpc3RRdW90ZVNxdWFyZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-l4q1edtzyy
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Authentication/Authentification.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoZW50aWNhdGlvblxBdXRoZW50aWZpY2F0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-7i0k2sohu7
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Authentication/Components/AuthCard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdXRoZW50aWNhdGlvblxDb21wb25lbnRzXEF1dGhDYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-9l99f96ldp
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/ChangeGoal/Changegoal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDaGFuZ2VHb2FsXENoYW5nZWdvYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-g75rs8vayy
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/ChangeGoal/Components/ChangeGoalReasons.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDaGFuZ2VHb2FsXENvbXBvbmVudHNcQ2hhbmdlR29hbFJlYXNvbnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-y8p14d8ycq
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/EatingQuestionnaire/Components/EatingDiagnosticSteps.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFYXRpbmdRdWVzdGlvbm5haXJlXENvbXBvbmVudHNcRWF0aW5nRGlhZ25vc3RpY1N0ZXBzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-isy3rscuat
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/EatingQuestionnaire/Components/EatingResultModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFYXRpbmdRdWVzdGlvbm5haXJlXENvbXBvbmVudHNcRWF0aW5nUmVzdWx0TW9kYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-m48alltr5u
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/EatingQuestionnaire/EatingQuestionnaire.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFYXRpbmdRdWVzdGlvbm5haXJlXEVhdGluZ1F1ZXN0aW9ubmFpcmUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-8f6poa67lj
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/FocusQuestionnaire/Components/FocusResultModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGb2N1c1F1ZXN0aW9ubmFpcmVcQ29tcG9uZW50c1xGb2N1c1Jlc3VsdE1vZGFsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-ctqqx1vcsq
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/FocusQuestionnaire/FocusQuestionnaire.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGb2N1c1F1ZXN0aW9ubmFpcmVcRm9jdXNRdWVzdGlvbm5haXJlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-bfcn8h33bl
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/HabitQuestionnaire/Components/HabitDiagnosticSteps.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIYWJpdFF1ZXN0aW9ubmFpcmVcQ29tcG9uZW50c1xIYWJpdERpYWdub3N0aWNTdGVwcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-kaw2obkem0
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/HabitQuestionnaire/Components/HabitResultModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIYWJpdFF1ZXN0aW9ubmFpcmVcQ29tcG9uZW50c1xIYWJpdFJlc3VsdE1vZGFsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-1cgsi4l0u2
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/HabitQuestionnaire/HabitQuestionnaire.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIYWJpdFF1ZXN0aW9ubmFpcmVcSGFiaXRRdWVzdGlvbm5haXJlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-s4si3pydjw
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/List/Components/HabitAddButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMaXN0XENvbXBvbmVudHNcSGFiaXRBZGRCdXR0b24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-sn3vozqgzh
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/List/Components/HabitProgressBar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMaXN0XENvbXBvbmVudHNcSGFiaXRQcm9ncmVzc0Jhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-lrdi2vtlat
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/List/Components/HabitTable.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMaXN0XENvbXBvbmVudHNcSGFiaXRUYWJsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-1lx01py8yp
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/List/List.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMaXN0XExpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-odctfm31o3
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Profile/Components/ProfileAccountSection.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9maWxlXENvbXBvbmVudHNcUHJvZmlsZUFjY291bnRTZWN0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-eewachcjzz
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Profile/Components/ProfileNavHub.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9maWxlXENvbXBvbmVudHNcUHJvZmlsZU5hdkh1Yi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-184lgkvdth
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Profile/Components/ProfileSettingsSection.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9maWxlXENvbXBvbmVudHNcUHJvZmlsZVNldHRpbmdzU2VjdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-i0j3dmr2dk
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Profile/Components/ProfileStatsSection.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9maWxlXENvbXBvbmVudHNcUHJvZmlsZVN0YXRzU2VjdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-b607iuxcd7
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Profile/Components/ProfileSuggestionsSection.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9maWxlXENvbXBvbmVudHNcUHJvZmlsZVN1Z2dlc3Rpb25zU2VjdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-ht5mgjubir
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Profile/Profile.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9maWxlXFByb2ZpbGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-ug8sf04smz
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/SelectGoal/Components/GoalChoiceCard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTZWxlY3RHb2FsXENvbXBvbmVudHNcR29hbENob2ljZUNhcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-lmzw25pot2
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/SelectGoal/SelectGoal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTZWxlY3RHb2FsXFNlbGVjdEdvYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-3m7k3k03ux
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/SleepQuestionnaire/Components/SleepConfirmModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTbGVlcFF1ZXN0aW9ubmFpcmVcQ29tcG9uZW50c1xTbGVlcENvbmZpcm1Nb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-r3slbi8kbb
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/SleepQuestionnaire/Components/SleepDiagnosticSteps.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTbGVlcFF1ZXN0aW9ubmFpcmVcQ29tcG9uZW50c1xTbGVlcERpYWdub3N0aWNTdGVwcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-oumuqjd1hx
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/SleepQuestionnaire/SleepQuestionnaire.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTbGVlcFF1ZXN0aW9ubmFpcmVcU2xlZXBRdWVzdGlvbm5haXJlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-bqbyihf6nw
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Starting/Components/StartingHero.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdGFydGluZ1xDb21wb25lbnRzXFN0YXJ0aW5nSGVyby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-liu7kumaic
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Starting/Components/StartingManifesto.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdGFydGluZ1xDb21wb25lbnRzXFN0YXJ0aW5nTWFuaWZlc3RvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-y48j4scbaw
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Starting/Components/StartingNarrative.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdGFydGluZ1xDb21wb25lbnRzXFN0YXJ0aW5nTmFycmF0aXZlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-1sb2z88cx6
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Starting/Components/StartingPillars.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdGFydGluZ1xDb21wb25lbnRzXFN0YXJ0aW5nUGlsbGFycy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-9xdbyhzdwn
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/Starting/Starting.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdGFydGluZ1xTdGFydGluZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-9r4riu0m3w
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/WelcomeTransition/Components/TransitionCard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWxjb21lVHJhbnNpdGlvblxDb21wb25lbnRzXFRyYW5zaXRpb25DYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-stzq4f4x0g
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Pages/WelcomeTransition/Welcometransition.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWxjb21lVHJhbnNpdGlvblxXZWxjb21ldHJhbnNpdGlvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-2zo7pwwjj6
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/ActionAlertModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQWN0aW9uQWxlcnRNb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-81og6v6bet
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/AppBadge.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQXBwQmFkZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-u78dky02hw
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/AppButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQXBwQnV0dG9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-672chcm8gq
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/AppGlassCard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQXBwR2xhc3NDYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-fdy9tvghkh
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/AppInput.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQXBwSW5wdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-86mejqfi6j
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/AppSpinner.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQXBwU3Bpbm5lci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-baf56qh8c8
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/CelebrationModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQ2VsZWJyYXRpb25Nb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-5wiinkulo7
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/ConfirmModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcQ29uZmlybU1vZGFsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-1ds7fmk87f
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/LtpMilestoneModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcTHRwTWlsZXN0b25lTW9kYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-cevo552874
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/ManualHabitModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcTWFudWFsSGFiaXRNb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-urzxg5pg67
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/NavBar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcTmF2QmFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-ifmic05seq
+
+[C:/Users/User/Documents/GitHub/NeuroPivot/NeuroPivot/Components/Shared/SleepAlertModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZWRcU2xlZXBBbGVydE1vZGFsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-nj3oihhhoi

@@ -1,0 +1,78 @@
+@page "/questionnaire/habit"
+@using NeuroPivot.Components.Pages.HabitQuestionnaire.Components
+@inject AppState AppState
+@inject HabitService HabitService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<div class="nobs-container" style="max-width: 780px;">
+    <div class="habit-q-header">
+        <h1 class="habit-q-title">
+            Habit Diagnostic Protocol
+        </h1>
+        <div class="habit-q-step-text">
+            Step @activeStep of 5
+        </div>
+        <div class="habit-q-step-track">
+            @for (int i = 1; i <= 5; i++)
+            {
+                int stepNum = i;
+                <div class="step-indicator-bar @(stepNum <= activeStep ? "active" : "")"></div>
+            }
+        </div>
+    </div>
+
+    <HabitDiagnosticSteps OnComplete="HandleComplete" OnStepChanged="(s) => activeStep = s" />
+</div>
+
+<HabitResultModal IsOpen="showResultModal"
+                  AssessedLevel="@AssessedLevel"
+                  ResultQuoteTitle="@ResultQuoteTitle"
+                  ResultQuoteBody="@ResultQuoteBody"
+                  OnClose="() => showResultModal = false"
+                  OnProceed="ProceedToRecommended" />
+
+@code {
+    private int activeStep = 1;
+    private bool showResultModal = false;
+    private string ResultQuoteTitle = "";
+    private string ResultQuoteBody = "";
+    private string AssessedLevel = "";
+
+    protected override void OnInitialized() => AppState.OnChange += OnStateChanged;
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void HandleComplete((string category, string q1, string q2, string q3, string q4) answers)
+    {
+        int score = 0;
+        if (answers.q1 == "yes") score += 2;
+        if (answers.q2 == "no") score += 3;
+        if (answers.q3 == "yes") score += 2;
+        if (answers.q4 == "yes") score += 3;
+
+        if (score >= 7) {
+            AssessedLevel = "addicted";
+            ResultQuoteTitle = "experimental: psychedelics";
+            ResultQuoteBody = "Psychedelics can have anti-depression effects, but never end well without specialist supervision.";
+        } else if (score >= 4) {
+            AssessedLevel = "concerning";
+            ResultQuoteTitle = "long-term depression for breaking bad habits";
+            ResultQuoteBody = "30-240 days of abstinence is required to break a bad habit via long-term depression.";
+        } else {
+            AssessedLevel = "average";
+            ResultQuoteTitle = "it all starts with boredom";
+            ResultQuoteBody = "People with addiction need friction. Finding passion starts with boredom and action steps.";
+        }
+
+        AppState.SetAddictionLevel(AssessedLevel, score);
+        showResultModal = true;
+    }
+
+    private void ProceedToRecommended() {
+        showResultModal = false;
+        HabitService.InitializeGoalHabit(AppState.CurrentGoal);
+        AppState.SetActiveView("recommended");
+    }
+
+    public void Dispose() => AppState.OnChange -= OnStateChanged;
+}

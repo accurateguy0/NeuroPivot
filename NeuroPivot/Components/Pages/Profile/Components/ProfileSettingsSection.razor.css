@@ -1,0 +1,274 @@
+.section-heading {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.setting-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.setting-title {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.setting-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.setting-group-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.setting-item.border-top,
+.setting-group-box.border-top,
+.chime-volume-container.border-top {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.25rem;
+}
+
+.btn-change-sleeptime {
+    padding: 0.55rem 1rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    white-space: nowrap;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.btn-change-sleeptime:hover {
+    border-color: var(--accent-pink, #FF6B6B) !important;
+    color: var(--accent-pink, #FF6B6B) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.12);
+}
+
+.sound-picker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-left: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.sound-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.sound-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nobs-sound-select {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nobs-sound-select:focus {
+    border-color: var(--accent-pink, #FF6B6B);
+    box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+}
+
+.btn-preview-sound {
+    padding: 0.45rem 0.75rem !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    background: var(--bg-page) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-preview-sound:hover {
+    border-color: #7FB7BE !important;
+    color: #7FB7BE !important;
+    transform: scale(1.04);
+}
+
+.btn-preview-sound:active {
+    transform: scale(0.96);
+}
+
+.custom-audio-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.custom-audio-hidden-input {
+    display: none !important;
+}
+
+.btn-upload-custom-sound {
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    background: var(--bg-card) !important;
+    border: 1px dashed var(--border-color) !important;
+    color: var(--text-primary) !important;
+    cursor: pointer;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-upload-custom-sound:hover {
+    border-color: var(--accent-pink, #FF6B6B) !important;
+    color: var(--accent-pink, #FF6B6B) !important;
+    background: var(--bg-page) !important;
+}
+
+.theme-toggle-btn {
+    padding: 0.55rem 1rem !important;
+}
+
+.volume-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.volume-display {
+    font-family: var(--font-mono);
+    color: var(--accent-pink);
+    font-weight: 700;
+}
+
+.volume-slider {
+    width: 100%;
+    background: transparent !important;
+}
+
+.volume-slider::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, var(--color-pacific-blue, #7FB7BE) 0%, var(--color-grapefruit-pink, #FF6B6B) var(--val, 50%), rgba(46, 40, 42, 0.15) var(--val, 50%), rgba(46, 40, 42, 0.15) 100%);
+}
+
+[data-theme="dark"] .volume-slider::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, var(--color-pacific-blue, #7FB7BE) 0%, var(--color-grapefruit-pink, #FF6B6B) var(--val, 50%), rgba(255, 255, 255, 0.22) var(--val, 50%), rgba(255, 255, 255, 0.22) 100%);
+}
+
+.volume-slider::-moz-range-track {
+    background: linear-gradient(to right, var(--color-pacific-blue, #7FB7BE) 0%, var(--color-grapefruit-pink, #FF6B6B) var(--val, 50%), rgba(46, 40, 42, 0.15) var(--val, 50%), rgba(46, 40, 42, 0.15) 100%);
+}
+
+[data-theme="dark"] .volume-slider::-moz-range-track {
+    background: linear-gradient(to right, var(--color-pacific-blue, #7FB7BE) 0%, var(--color-grapefruit-pink, #FF6B6B) var(--val, 50%), rgba(255, 255, 255, 0.22) var(--val, 50%), rgba(255, 255, 255, 0.22) 100%);
+}
+
+.volume-slider::-moz-range-progress {
+    background: linear-gradient(to right, var(--color-pacific-blue, #7FB7BE), var(--color-grapefruit-pink, #FF6B6B));
+}
+
+/* --- Cinematic Dolly Zoom (Vertigo) Effect - Zero Blink, 60fps GPU --- */
+.settings-card {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+}
+
+.settings-card.dolly-zoom-active {
+    animation: dollyZoomCard 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform-origin: center center;
+}
+
+.settings-card.dolly-zoom-active .settings-list,
+.settings-card.dolly-zoom-active .section-heading {
+    animation: dollyZoomContent 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    transform-origin: center center;
+}
+
+@keyframes dollyZoomCard {
+    0% {
+        transform: scale(1);
+    }
+    35% {
+        transform: scale(0.978);
+    }
+    70% {
+        transform: scale(1.008);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes dollyZoomContent {
+    0% {
+        transform: scale(1);
+    }
+    35% {
+        transform: scale(1.026);
+    }
+    70% {
+        transform: scale(0.994);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.theme-btn-pulse {
+    animation: themeBtnPulse 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes themeBtnPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.94);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+

@@ -1,0 +1,39 @@
+@inject HabitService HabitService
+@implements IDisposable
+
+<div class="habit-progress-box">
+    <div class="habit-progress-label">
+        <span>Day @HabitService.CurrentActiveDay: @HabitService.GetCompletedTodayCount() / @GetTotalHabitsDisplay() Habits</span>
+        <span>@GetProgressMeterPercent()% Completed</span>
+    </div>
+    <div class="habit-progress-track">
+        <div class="habit-progress-fill" style="width: @GetProgressMeterPercent()%;"></div>
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        HabitService.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private int GetTotalHabitsDisplay()
+    {
+        int total = HabitService.GetTotalHabitsCount();
+        return total > 0 ? total : 6;
+    }
+
+    private int GetProgressMeterPercent()
+    {
+        int total = HabitService.GetTotalHabitsCount();
+        if (total == 0) return 0;
+        return (int)Math.Round(Math.Clamp((double)HabitService.GetCompletedTodayCount() / total * 100.0, 0.0, 100.0));
+    }
+
+    public void Dispose()
+    {
+        HabitService.OnChange -= OnStateChanged;
+    }
+}

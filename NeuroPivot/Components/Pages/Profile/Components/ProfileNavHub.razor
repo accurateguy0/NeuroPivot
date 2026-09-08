@@ -1,0 +1,33 @@
+@inject AppState AppState
+
+<div class="animated-fade-in profile-nav-hub-list">
+    <button class="profile-section-btn" @onclick='() => OnSelectSection.InvokeAsync("you")'>
+        <span class="btn-icon">👤</span>
+        <span class="choice-title">you</span>
+    </button>
+    <button class="profile-section-btn" @onclick='() => OnSelectSection.InvokeAsync("stats")'>
+        <span class="btn-icon">📊</span>
+        <span class="choice-title">stats</span>
+    </button>
+    <button class="profile-section-btn" @onclick='() => OnSelectSection.InvokeAsync("settings")'>
+        <span class="btn-icon">⚙️</span>
+        <span class="choice-title">settings</span>
+    </button>
+    <button class="profile-section-btn" @onclick='() => AppState.SetActiveView("change_goal_questionnaire")'>
+        <span class="btn-icon">🎯</span>
+        <span class="choice-title">choose another goal</span>
+    </button>
+    <button class="profile-section-btn" @onclick='() => AppState.SetActiveView("about")'>
+        <span class="btn-icon">📖</span>
+        <span class="choice-title">about</span>
+    </button>
+    <button class="profile-section-btn" @onclick='() => OnSelectSection.InvokeAsync("suggestions")'>
+        <span class="btn-icon">💡</span>
+        <span class="choice-title">suggestions</span>
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnSelectSection { get; set; }
+}

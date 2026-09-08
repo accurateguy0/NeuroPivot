@@ -1,0 +1,102 @@
+.modal-backdrop-overlay[b-cevo552874] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: modalOverlayFadeIn-b-cevo552874 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalOverlayFadeIn-b-cevo552874 {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.ltp-solid-square[b-cevo552874] {
+    background-color: #ffffff;
+    color: #2E282A;
+    border: 2px solid #7FB7BE;
+    padding: 2.5rem 2rem;
+    max-width: 520px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    animation: popupAppearing-b-cevo552874 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes popupAppearing-b-cevo552874 {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+[data-theme="dark"] .ltp-solid-square[b-cevo552874] {
+    background-color: #241e20;
+    color: #F8F9FA;
+    border: 2px solid #7FB7BE;
+}
+
+.ltp-title[b-cevo552874] {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+
+.ltp-sub[b-cevo552874] {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--accent-pink);
+    font-style: italic;
+    margin-bottom: 1.25rem;
+}
+
+.ltp-description[b-cevo552874] {
+    font-family: 'Nimbus Mono', 'Space Mono', monospace;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.ltp-options[b-cevo552874] {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-reinforce[b-cevo552874] {
+    background: #7FB7BE !important;
+    color: #2E282A !important;
+    border: none !important;
+    font-weight: 800 !important;
+    padding: 0.95rem !important;
+}
+
+.btn-reinforce:hover[b-cevo552874] {
+    background: #6ea4ab !important;
+}
+
+.btn-new-habits[b-cevo552874] {
+    background: #E6AACE !important;
+    color: #2E282A !important;
+    border: none !important;
+    font-weight: 800 !important;
+    padding: 0.95rem !important;
+}
+
+.btn-new-habits:hover[b-cevo552874] {
+    background: #df96c1 !important;
+}

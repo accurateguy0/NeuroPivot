@@ -1,0 +1,291 @@
+@inject AppState AppState
+@inject HabitService HabitService
+@inject IJSRuntime JSRuntime
+@using System.Globalization
+@implements IDisposable
+
+<div class="nobs-card animated-fade-in">
+    <h2 class="section-heading">
+        📊 stats
+    </h2>
+
+    <!-- Consecutive Streaks Meter -->
+    <div class="streak-meter-card">
+        <div class="streak-meter-header">
+            <div class="streak-meter-title-wrap">
+                <span class="streak-fire-icon">🔥</span>
+                <span class="streak-meter-text">Consecutive streaks: <strong class="streak-days-highlight">@FormatStreakDisplay(streakDays)</strong></span>
+            </div>
+            <div class="streak-badge @(isTodayQualified ? "qualified" : "pending")">
+                @(isTodayQualified ? "✓ Streak active today (4-6 habits done)" : $"{todayCount}/4 habits done today")
+            </div>
+        </div>
+
+        <div class="streak-track-container">
+            <div class="streak-track-bar @(isStreakBarScaling ? "scaling-up" : "")">
+                <div class="streak-fill-bar @(isStreakBarScaling ? "shimmering" : "")" style="width: @(streakPercentage)%"></div>
+            </div>
+            <div class="streak-scale-labels @(isStreakBarScaling ? "scaling-up" : "")">
+                @foreach (var label in scaleInfo.Labels)
+                {
+                    <span>@label</span>
+                }
+            </div>
+        </div>
+        
+        <p class="streak-info-footnote">
+            Streak increases when you complete <strong>4 to 6 habits</strong> on a given day.
+        </p>
+    </div>
+
+    <!-- 7-Day Consistency Calendar with Navigation Arrows -->
+    <div class="calendar-nav-header">
+        <button class="carousel-arrow-btn" @onclick="PrevWeek" title="Previous 7 days">‹</button>
+        <div class="calendar-month-title">
+            📅 @GetWeekTitle()
+            @if (weekOffset != 0)
+            {
+                <button class="btn-today-shortcut" @onclick="ResetToCurrentWeek" title="Jump to current week">Today</button>
+            }
+        </div>
+        <button class="carousel-arrow-btn" @onclick="NextWeek" title="Next 7 days">›</button>
+    </div>
+
+    <div class="calendar-7day-grid">
+        @foreach (var (day, dow, dayNum) in WeekDays())
+        {
+            <div class="calendar-day-card @(day.EarnedStar ? "starred" : (day.EarnedCheckmark ? "checked" : "")) @(day.Date.Date == DateTime.Today ? "is-today" : "") @(day.Date.Date == DateTime.Today && isTodayGlowing ? "glowing-today" : "")">
+                <div class="dow-label">
+                    @dow
+                </div>
+                <div class="day-num-label">
+                    @dayNum
+                </div>
+                @if (day.EarnedStar)
+                {
+                    <div class="day-star-icon" title="@day.CompletedCount / @day.TotalCount habits completed (All habits completed!)">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                }
+                else if (day.EarnedCheckmark)
+                {
+                    <div class="day-check-icon" title="@day.CompletedCount / @day.TotalCount habits completed">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                }
+                else
+                {
+                    <div class="day-empty-circle" title="@day.CompletedCount / @day.TotalCount habits completed">○</div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@if (showMilestoneModal)
+{
+    <div class="modal-backdrop-overlay" @onclick="CloseMilestoneModal">
+        <div class="milestone-solid-square" @onclick:stopPropagation="true">
+            <div class="milestone-badge-tag">@milestoneSubtitle</div>
+            <h3 class="milestone-modal-title">@milestoneTitle</h3>
+            <p class="milestone-modal-message">@milestoneMessage</p>
+            <div class="milestone-modal-actions">
+                <button class="nobs-btn btn-milestone-continue" @onclick="CloseMilestoneModal">
+                    ✨ Claim & Scale Up 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private int weekOffset = 0;
+    private bool isTodayGlowing = false;
+    private System.Threading.CancellationTokenSource? _glowCts;
+
+    private bool showMilestoneModal = false;
+    private int activeMilestoneTier = 0;
+    private string milestoneTitle = "";
+    private string milestoneSubtitle = "";
+    private string milestoneMessage = "";
+    private bool isStreakBarScaling = false;
+    private System.Threading.CancellationTokenSource? _scaleCts;
+
+    private int streakDays => HabitService.GetConsecutiveStreak();
+    private int todayCount => HabitService.GetCompletedTodayCount();
+    private bool isTodayQualified => HabitService.IsTodayStreakQualified();
+    private int streakPercentage => HabitService.GetStreakMeterPercentage();
+    private (int MaxDays, string[] Labels) scaleInfo => HabitService.GetStreakScaleInfo();
+
+    protected override void OnInitialized()
+    {
+        HabitService.OnChange += HandleStateChange;
+        AppState.OnChange += HandleStateChange;
+        CheckMilestonePopUp();
+    }
+
+    private void HandleStateChange()
+    {
+        CheckMilestonePopUp();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void CheckMilestonePopUp()
+    {
+        var (hasMilestone, tier, title, subtitle, msg) = HabitService.CheckUnacknowledgedStreakMilestone();
+        if (hasMilestone)
+        {
+            activeMilestoneTier = tier;
+            milestoneTitle = title;
+            milestoneSubtitle = subtitle;
+            milestoneMessage = msg;
+            showMilestoneModal = true;
+        }
+    }
+
+    private async Task CloseMilestoneModal()
+    {
+        showMilestoneModal = false;
+        int tierToAck = activeMilestoneTier;
+        await HabitService.AcknowledgeStreakMilestoneAsync(tierToAck);
+
+        // Confetti & Audio Shimmer celebration
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsConfetti.launch");
+            await JSRuntime.InvokeVoidAsync("nobsAudio.playShimmer", AppState.SoundVolume);
+        }
+        catch { }
+
+        // Trigger scale up animation on the streak fill bar
+        TriggerStreakBarScale();
+    }
+
+    private void TriggerStreakBarScale()
+    {
+        _scaleCts?.Cancel();
+        _scaleCts?.Dispose();
+        _scaleCts = new System.Threading.CancellationTokenSource();
+        var token = _scaleCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            await InvokeAsync(() =>
+            {
+                isStreakBarScaling = true;
+                StateHasChanged();
+            });
+
+            await Task.Delay(1400, token);
+
+            if (!token.IsCancellationRequested)
+            {
+                await InvokeAsync(() =>
+                {
+                    isStreakBarScaling = false;
+                    StateHasChanged();
+                });
+            }
+        }, token);
+    }
+
+    private string FormatStreakDisplay(int days)
+    {
+        if (days >= 365)
+        {
+            double yrs = Math.Round((double)days / 365.0, 1);
+            return $"{days} days ({yrs} {(yrs == 1.0 ? "year" : "years")})";
+        }
+        return $"{days} {(days == 1 ? "day" : "days")}";
+    }
+
+    private void PrevWeek()
+    {
+        weekOffset--;
+    }
+
+    private void NextWeek()
+    {
+        weekOffset++;
+    }
+
+    private void ResetToCurrentWeek()
+    {
+        weekOffset = 0;
+        TriggerTodayGlow();
+    }
+
+    private void TriggerTodayGlow()
+    {
+        _glowCts?.Cancel();
+        _glowCts?.Dispose();
+        _glowCts = new System.Threading.CancellationTokenSource();
+        var token = _glowCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            await InvokeAsync(() =>
+            {
+                isTodayGlowing = true;
+                StateHasChanged();
+            });
+
+            await Task.Delay(900, token);
+
+            if (!token.IsCancellationRequested)
+            {
+                await InvokeAsync(() =>
+                {
+                    isTodayGlowing = false;
+                    StateHasChanged();
+                });
+            }
+        }, token);
+    }
+
+    private string GetWeekTitle()
+    {
+        var today = DateTime.Today;
+        int daysSinceMonday = ((int)today.DayOfWeek - 1 + 7) % 7;
+        var monday = today.AddDays(-daysSinceMonday + (weekOffset * 7));
+        var sunday = monday.AddDays(6);
+
+        if (monday.Month == sunday.Month && monday.Year == sunday.Year)
+        {
+            return $"{monday.ToString("MMMM yyyy", CultureInfo.InvariantCulture)} ({monday.Day}–{sunday.Day})";
+        }
+        else if (monday.Year == sunday.Year)
+        {
+            return $"{monday.ToString("MMM d", CultureInfo.InvariantCulture)} – {sunday.ToString("MMM d, yyyy", CultureInfo.InvariantCulture)}";
+        }
+        else
+        {
+            return $"{monday.ToString("MMM d, yyyy", CultureInfo.InvariantCulture)} – {sunday.ToString("MMM d, yyyy", CultureInfo.InvariantCulture)}";
+        }
+    }
+
+    private IEnumerable<(DailyProgress day, string dow, int dayNum)> WeekDays()
+    {
+        string[] dowNames = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
+        var history = HabitService.GetLast7DaysHistory(weekOffset);
+        for (int i = 0; i < 7; i++)
+        {
+            var match = history.Count > i ? history[i] : new DailyProgress { Date = DateTime.Today, CompletedCount = 0 };
+            yield return (match, dowNames[i], match.Date.Day);
+        }
+    }
+
+    public void Dispose()
+    {
+        HabitService.OnChange -= HandleStateChange;
+        AppState.OnChange -= HandleStateChange;
+        _glowCts?.Cancel();
+        _glowCts?.Dispose();
+        _scaleCts?.Cancel();
+        _scaleCts?.Dispose();
+    }
+}

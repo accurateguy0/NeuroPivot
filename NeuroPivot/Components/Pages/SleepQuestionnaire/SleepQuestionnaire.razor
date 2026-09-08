@@ -1,0 +1,94 @@
+@page "/questionnaire/sleep"
+@using NeuroPivot.Components.Pages.SleepQuestionnaire.Components
+@inject SleepService SleepService
+@inject HabitService HabitService
+@inject AppState AppState
+@implements IDisposable
+
+<div class="nobs-container" style="max-width: 780px;">
+    <div class="sleep-q-header">
+        <h1 class="sleep-q-title">
+            Sleep <span class="highlight-blue">Diagnostic Protocol</span>
+        </h1>
+        <div class="sleep-q-step-text">
+            Question @activeStep of 3
+        </div>
+        <div class="sleep-q-step-track">
+            @for (int i = 1; i <= 3; i++)
+            {
+                int step = i;
+                <div class="step-indicator-bar @(step <= activeStep ? "active" : "")"></div>
+            }
+        </div>
+    </div>
+
+    <SleepDiagnosticSteps OnStepChanged="(s) => activeStep = s" OnGenerateAlerts="HandleGenerateAlerts" />
+</div>
+
+<SleepConfirmModal IsOpen="showPopUpModal"
+                   CalculatedCutoff="@calculatedCutoff"
+                   WakeTime="@wakeTimeStr"
+                   OnClose="() => showPopUpModal = false"
+                   OnConfirm="ConfirmChoicesAndProceed" />
+
+@code {
+    private int activeStep = 1;
+    private string bedTimeStr = "21:00";
+    private string wakeTimeStr = "06:00";
+    private string wellRestedInput = "groggy";
+    private bool showPopUpModal = false;
+    private string calculatedCutoff = "20:00";
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(SleepService.Model.IdealBedTime))
+            bedTimeStr = SleepService.Model.IdealBedTime;
+        if (!string.IsNullOrWhiteSpace(SleepService.Model.IdealWakeTime))
+            wakeTimeStr = SleepService.Model.IdealWakeTime;
+        if (!string.IsNullOrWhiteSpace(SleepService.Model.WellRestedFeeling))
+            wellRestedInput = SleepService.Model.WellRestedFeeling;
+        if (!string.IsNullOrWhiteSpace(SleepService.CalculatedElectronicsCutoff))
+            calculatedCutoff = SleepService.CalculatedElectronicsCutoff;
+
+        SleepService.OnChange += OnStateChanged;
+        AppState.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void HandleGenerateAlerts((string bedTime, string wakeTime, string wellRested) choices)
+    {
+        bedTimeStr = choices.bedTime;
+        wakeTimeStr = choices.wakeTime;
+        wellRestedInput = choices.wellRested;
+
+        if (TimeSpan.TryParse(bedTimeStr, out var bedTs))
+        {
+            var cutoffTs = bedTs.Subtract(TimeSpan.FromHours(1));
+            if (cutoffTs < TimeSpan.Zero) cutoffTs = cutoffTs.Add(TimeSpan.FromDays(1));
+            calculatedCutoff = $"{cutoffTs.Hours:D2}:{cutoffTs.Minutes:D2}";
+        }
+        showPopUpModal = true;
+    }
+
+    private void ConfirmChoicesAndProceed()
+    {
+        var model = new SleepQuestionnaireModel
+        {
+            IdealBedTime = bedTimeStr,
+            IdealWakeTime = wakeTimeStr,
+            WellRestedFeeling = wellRestedInput
+        };
+        SleepService.SaveQuestionnaire(model);
+        AppState.SetCurrentGoal("sleep");
+        HabitService.InitializeGoalHabit("sleep");
+        showPopUpModal = false;
+        AppState.SetActiveView("recommended");
+    }
+
+    public void Dispose()
+    {
+        SleepService.OnChange -= OnStateChanged;
+        AppState.OnChange -= OnStateChanged;
+    }
+}

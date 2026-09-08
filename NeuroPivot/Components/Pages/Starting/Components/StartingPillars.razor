@@ -1,0 +1,48 @@
+<div class="nobs-container">
+    <!-- 3 Core Protocol Pillars Section -->
+    <div class="pillars-section-wrapper">
+        <div class="pillars-list">
+            <div class="pillar-item">
+                <div class="pillar-number">1</div>
+                <div>
+                    <h4 class="pillar-title">hand-picked neuroscience protocols</h4>
+                    <p class="pillar-desc">
+                        curated neuroscience protocols that actually work.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pillar-item">
+                <div class="pillar-number">2</div>
+                <div>
+                    <h4 class="pillar-title">21-day long-term potentiation</h4>
+                    <p class="pillar-desc">
+                        establish long-term potentiation of the habits you want to keep for the rest of your life.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pillar-item">
+                <div class="pillar-number pillar-number-last">3</div>
+                <div>
+                    <h4 class="pillar-title">tailored to your unique goals</h4>
+                    <p class="pillar-desc">
+                        do something that you actually care about.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Call to Action -->
+    <div class="bottom-cta-box">
+        <button class="nobs-btn nobs-btn-blue btn-cta-bottom" @onclick="OnGetStarted">
+            Get Started →
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnGetStarted { get; set; }
+}

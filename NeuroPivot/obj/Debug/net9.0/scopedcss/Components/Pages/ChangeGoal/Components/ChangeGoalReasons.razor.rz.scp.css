@@ -1,0 +1,11 @@
+.actions-row[b-y8p14d8ycq] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-back-profile[b-y8p14d8ycq] {
+    background: rgba(46, 40, 42, 0.08) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}

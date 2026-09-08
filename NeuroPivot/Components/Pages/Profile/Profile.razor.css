@@ -1,0 +1,23 @@
+.profile-container {
+    padding-top: clamp(6.8rem, 12vh, 8.5rem) !important;
+    margin-top: 0 !important;
+}
+
+.profile-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.page-title-inter {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--text-primary);
+}
+
+.btn-back-hub {
+    margin-bottom: 1.5rem !important;
+    padding: 0.4rem 0.9rem !important;
+    font-size: 0.88rem !important;
+}

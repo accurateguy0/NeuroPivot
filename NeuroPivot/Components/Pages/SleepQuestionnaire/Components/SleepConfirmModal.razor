@@ -1,0 +1,45 @@
+@inject SleepService SleepService
+
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay">
+        <div class="modal-solid-square sleep-confirm-square animated-fade-in">
+            <div class="modal-top-bar">
+                <div class="modal-title">Confirm?</div>
+                <button class="btn-modal-close" @onclick="OnClose" aria-label="Close">✕</button>
+            </div>
+
+            <div class="alert-settings-list">
+                <div class="alert-setting-card">
+                    <div class="alert-setting-title">Turn off electronics at @CalculatedCutoff</div>
+                    <AppleToggle Value="@SleepService.CutoffAlertEnabled" ValueChanged="@((bool v) => SleepService.SetCutoffAlert(v))" />
+                </div>
+                <div class="alert-setting-card">
+                    <div class="alert-setting-title">Wake up at @WakeTime</div>
+                    <AppleToggle Value="@SleepService.WakeAlertEnabled" ValueChanged="@((bool v) => SleepService.SetWakeAlert(v))" />
+                </div>
+            </div>
+
+            <button class="nobs-btn nobs-btn-blue btn-confirm-proceed" @onclick="OnConfirm">
+                Confirm & Proceed →
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public string CalculatedCutoff { get; set; } = "";
+
+    [Parameter]
+    public string WakeTime { get; set; } = "";
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
+}

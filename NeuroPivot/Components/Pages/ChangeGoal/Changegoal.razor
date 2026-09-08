@@ -1,0 +1,30 @@
+@using NeuroPivot.Components.Pages.ChangeGoal.Components
+@inject AppState AppState
+@implements IDisposable
+
+<div class="nobs-container" style="max-width: 780px;">
+    <div class="change-goal-header">
+        <h1 class="change-goal-title">
+            Why would you like to <span class="highlight-blue">change your goal?</span>
+        </h1>
+        <p class="change-goal-desc">
+            this helps us better support you and other members towards their goals
+        </p>
+    </div>
+
+    <ChangeGoalReasons />
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        AppState.OnChange -= OnStateChanged;
+    }
+}

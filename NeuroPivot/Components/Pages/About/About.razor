@@ -1,0 +1,48 @@
+@using NeuroPivot.Components.Pages.About.Components
+@inject AppState AppState
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<div class="nobs-container about-container animated-fade-in" style="max-width: 920px;">
+    <!-- 1. Hero Section -->
+    <AboutHero />
+
+    <!-- 2. Feature Cards Grid -->
+    <AboutFeatureGrid />
+
+    <!-- 3. Origin Story & Slogan Carousel -->
+    <AboutOriginStory />
+
+    <!-- 4. Team & Engineering Council -->
+    <AboutTeamCouncil />
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += OnStateChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                await Task.Delay(150);
+                await JSRuntime.InvokeVoidAsync("nobsScroll.initScrollObserver");
+            }
+            catch
+            {
+                // Silently handle JS Interop pre-render exceptions
+            }
+        }
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        AppState.OnChange -= OnStateChanged;
+    }
+}

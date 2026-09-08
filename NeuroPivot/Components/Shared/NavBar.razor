@@ -1,0 +1,86 @@
+@inject AppState AppState
+@implements IDisposable
+@inject IJSRuntime JS
+@inject NavigationManager Nav
+
+@if (!ShouldHideHeader(AppState.ActiveView))
+{
+  <header class="nobs-header">
+    <div class="nav-side nav-left"></div>
+    <div class="nav-center">
+        <div class="logo-scene @(AppState.ActiveView != "landing" || !AppState.IsSessionLoaded ? "shrunk" : "")" style="@(!AppState.IsSessionLoaded ? "opacity: 0;" : "")">
+            <h1 class="nobs-logo" @onclick="HandleLogoClick">
+                <span class="logo-char">n</span>
+                <span class="logo-char">o</span>
+                <span class="logo-char-space">&nbsp;</span>
+                <span class="logo-char">b</span>
+                <span class="logo-char">s</span>
+            </h1>
+        </div>
+    </div>
+    
+    <div class="nav-side nav-right">
+        @if (ShouldShowNavLinks())
+        {
+            <nav class="nobs-nav">
+                <button class="nobs-nav-link @(AppState.ActiveView == "recommended" ? "active" : "")" 
+                        @onclick='() => AppState.SetActiveView("recommended")'>
+                    articles
+                </button>
+
+                <button class="nobs-nav-link @(AppState.ActiveView == "list" ? "active" : "")" 
+                        @onclick='() => AppState.SetActiveView("list")'>
+                    list
+                </button>
+
+                <button class="nobs-nav-link @(AppState.ActiveView == "profile" ? "active" : "")" 
+                        @onclick='() => AppState.OpenProfileHub()'>
+                    profile
+                </button>
+            </nav>
+        }
+    </div>
+</header>
+}
+
+@code {
+    protected override void OnInitialized() => AppState.OnChange += OnStateChanged;
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private static readonly string[] HiddenHeaderViews = new[]
+    {
+        "authentication",
+        "welcome_transition",
+        "select_goal",
+        "goal_select",
+        "focus_select",
+        "sleep_questionnaire",
+        "habit_questionnaire",
+        "eating_questionnaire",
+        "focus_questionnaire",
+        "change_goal_questionnaire"
+    };
+
+    private bool ShouldHideHeader(string view) =>
+        !string.IsNullOrEmpty(view) && Array.Exists(HiddenHeaderViews, v => v.Equals(view, StringComparison.OrdinalIgnoreCase));
+
+    private bool ShouldShowNavLinks() => AppState.IsLoggedIn && AppState.ActiveView != "landing" && !ShouldHideHeader(AppState.ActiveView);
+
+    private async Task HandleLogoClick()
+    {
+        var currentRelativeUri = Nav.ToBaseRelativePath(Nav.Uri);
+
+        if (!string.IsNullOrEmpty(currentRelativeUri))
+        {
+            Nav.NavigateTo("/");
+        }
+        else
+        {
+            AppState.SetActiveView("landing");
+            await JS.InvokeVoidAsync("eval", "window.scrollTo({top: 0, behavior: 'smooth'})");
+        }
+    }
+
+    public void Dispose() => AppState.OnChange -= OnStateChanged;
+}

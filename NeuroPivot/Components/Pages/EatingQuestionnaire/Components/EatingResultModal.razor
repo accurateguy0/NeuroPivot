@@ -1,0 +1,42 @@
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay">
+        <div class="modal-solid-square modal-quote-square animated-fade-in">
+            <div class="modal-top-bar">
+                <span class="modal-level-tag">
+                    Assessed Level: <span class="level-underline">@AssessedLevel</span>
+                </span>
+                <button class="btn-modal-close" @onclick="OnClose" aria-label="Close">✕</button>
+            </div>
+            <h2 class="modal-quote-title">
+                "@ResultQuoteTitle"
+            </h2>
+            <p class="modal-quote-body">
+                @ResultQuoteBody
+            </p>
+            <button class="nobs-btn btn-proceed-modal" @onclick="OnProceed">
+                Proceed to Recommended Protocols →
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public string AssessedLevel { get; set; } = "";
+
+    [Parameter]
+    public string ResultQuoteTitle { get; set; } = "";
+
+    [Parameter]
+    public string ResultQuoteBody { get; set; } = "";
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    public EventCallback OnProceed { get; set; }
+}

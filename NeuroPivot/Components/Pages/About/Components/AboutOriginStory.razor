@@ -1,0 +1,58 @@
+<div class="origin-story-section">
+    <div class="founder-tag">
+        Founder Journey
+    </div>
+
+    <h2 class="story-heading">
+        From Brain Fog to School #1: The Prime State Protocol
+    </h2>
+
+    <p class="scroll-fade-in story-paragraph">
+        I'm <strong class="highlight-primary">Dawid Kowalski</strong>, a 3rd year Cybersecurity student at SGGW in Warsaw, Poland. Back in high school, I was plagued by late-night doomscrolling, terrible sleep, and chronic brain fog. When I systematically fixed my sleep hygiene, dialed in my nutrition, and tracked my circadian rhythm, everything shifted. I went on to achieve <strong class="highlight-blue">#1 in my school in the advanced mathematics exam</strong>.
+    </p>
+
+    <p class="scroll-fade-in story-paragraph">
+        After university workload caused bad habits to creep back in, I built <strong class="highlight-primary">no bs</strong> together with my engineering partner <strong class="highlight-primary">Fabian Oleksiuk</strong> to return to my prime state and share these uncompromising tools for free with students worldwide.
+    </p>
+
+    <!-- Brand Slogans Arrow Carousel -->
+    <div class="scroll-fade-in slogan-carousel-container">
+        <div class="slogan-carousel-inner">
+            <button class="carousel-arrow-btn" @onclick="PrevSlogan">‹</button>
+            <div class="slogan-quote-box">
+                <span @key="sloganKey" class="slogan-text-animated @slideClass">
+                    “@slogans[currentSloganIndex]”
+                </span>
+            </div>
+            <button class="carousel-arrow-btn" @onclick="NextSlogan">›</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int currentSloganIndex = 0;
+    private int sloganKey = 0;
+    private string slideClass = "swipe-next";
+    private readonly string[] slogans = new[]
+    {
+        "Think Different",
+        "Think Big",
+        "zero-cost tool life change",
+        "Yes we can",
+        "Strip the noise. Elevate your cognition."
+    };
+
+    private void PrevSlogan()
+    {
+        currentSloganIndex = (currentSloganIndex - 1 + slogans.Length) % slogans.Length;
+        slideClass = "swipe-prev";
+        sloganKey++;
+    }
+
+    private void NextSlogan()
+    {
+        currentSloganIndex = (currentSloganIndex + 1) % slogans.Length;
+        slideClass = "swipe-next";
+        sloganKey++;
+    }
+}

@@ -1,0 +1,79 @@
+@using NeuroPivot.Components.Pages.Profile.Components
+@inject AppState AppState
+@inject HabitService HabitService
+@inject SleepService SleepService
+@implements IDisposable
+
+<div class="nobs-container profile-container" style="max-width: 780px;">
+    <div class="profile-header">
+        <h1 class="page-title-inter">profile</h1>
+    </div>
+
+    @if (activeSection == "dashboard")
+    {
+        <ProfileNavHub OnSelectSection="NavigateSection" />
+    }
+    else
+    {
+        <button class="nobs-btn btn-back-hub" @onclick='() => NavigateSection("dashboard")'>
+            ← Back to Profile Hub
+        </button>
+
+        @if (activeSection == "you")
+        {
+            <ProfileAccountSection />
+        }
+        else if (activeSection == "stats")
+        {
+            <ProfileStatsSection />
+        }
+        else if (activeSection == "settings")
+        {
+            <ProfileSettingsSection />
+        }
+        else if (activeSection == "suggestions")
+        {
+            <ProfileSuggestionsSection />
+        }
+    }
+</div>
+
+@code {
+    private string activeSection = "dashboard";
+
+    protected override void OnInitialized()
+    {
+        activeSection = !string.IsNullOrEmpty(AppState.ActiveProfileSection)
+            ? AppState.ActiveProfileSection
+            : "dashboard";
+
+        AppState.OnChange += OnStateChanged;
+        AppState.OnTick += OnStateChanged;
+        HabitService.OnChange += OnStateChanged;
+        SleepService.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged()
+    {
+        if (activeSection != AppState.ActiveProfileSection && !string.IsNullOrEmpty(AppState.ActiveProfileSection))
+        {
+            activeSection = AppState.ActiveProfileSection;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void NavigateSection(string section)
+    {
+        activeSection = section;
+        AppState.SetActiveProfileSection(section);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= OnStateChanged;
+        AppState.OnTick -= OnStateChanged;
+        HabitService.OnChange -= OnStateChanged;
+        SleepService.OnChange -= OnStateChanged;
+    }
+}

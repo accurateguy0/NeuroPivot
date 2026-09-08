@@ -1,0 +1,136 @@
+.logo-wordmark[b-ifmic05seq] {
+  cursor: pointer; 
+  user-select: none; 
+  font-family: var(--font-mono); 
+  font-size: 1.5rem; 
+  letter-spacing: -0.5px;
+}
+
+.nobs-header[b-ifmic05seq] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.2rem 2.5rem !important;
+    min-height: 5.8rem !important;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    pointer-events: auto;
+    background: rgba(var(--bg-rgb), 0.75) !important; 
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: none !important;
+    border-bottom: none !important;
+    transition: padding 0.3s ease, min-height 0.3s ease, background 0.3s ease;
+}
+
+.nav-side[b-ifmic05seq] {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.nav-left[b-ifmic05seq] {
+    justify-content: flex-start;
+}
+
+.nav-center[b-ifmic05seq] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-right[b-ifmic05seq] {
+    justify-content: flex-end;
+    pointer-events: auto;
+    z-index: 101;
+}
+
+.nobs-header.hidden[b-ifmic05seq] {
+    transform: translateY(-100%);
+}
+
+.nobs-nav-link[b-ifmic05seq] {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.nobs-nav-link:hover[b-ifmic05seq] {
+    opacity: 0.8;
+}
+
+/* Active navigation link */
+.nobs-nav-link.active[b-ifmic05seq] {
+    font-weight: 700;
+    color: var(--text-primary) !important;
+    border-bottom: 2px solid var(--text-primary) !important;
+    background: transparent;
+}
+
+.logo-scene[b-ifmic05seq] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* Allows click-through to buttons beneath */
+    z-index: 99;
+}
+
+.nobs-logo[b-ifmic05seq] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: clamp(4rem, min(30vw, 42vh), 25rem);
+    letter-spacing: -0.06em;
+    color: var(--text-primary);
+    margin-bottom: 30vh;
+    pointer-events: none;
+    transition: color 0.25s ease;
+}
+
+/* Shrunk header logo state */
+.logo-scene.shrunk[b-ifmic05seq] {
+    height: 5.8rem;
+    bottom: auto;
+    pointer-events: none; /* Keeps container transparent to clicks */
+}
+
+.logo-scene.shrunk .nobs-logo[b-ifmic05seq] {
+    font-size: 1.5rem !important;
+    margin-bottom: 0 !important;
+    transform: none !important;
+    cursor: pointer;
+    pointer-events: auto; /* ONLY the text 'no bs' receives click events */
+    color: var(--text-primary) !important;
+    mix-blend-mode: normal !important;
+}
+
+.logo-scene.shrunk .logo-char[b-ifmic05seq] {
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+.logo-char-space[b-ifmic05seq] {
+    display: inline-block;
+}
+
+.logo-char[b-ifmic05seq] {
+    display: inline-block;
+    will-change: transform, opacity;
+}

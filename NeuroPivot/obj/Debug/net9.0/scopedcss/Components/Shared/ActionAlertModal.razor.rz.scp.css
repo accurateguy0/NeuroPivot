@@ -1,0 +1,82 @@
+.modal-backdrop-overlay[b-81og6v6bet] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: modalOverlayFadeIn-b-81og6v6bet 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalOverlayFadeIn-b-81og6v6bet {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.alert-solid-square[b-81og6v6bet] {
+    background-color: #ffffff;
+    color: #2E282A;
+    border: 2px solid #E6AACE;
+    padding: 2.25rem 2rem;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: popupAppearing-b-81og6v6bet 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes popupAppearing-b-81og6v6bet {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+[data-theme="dark"] .alert-solid-square[b-81og6v6bet] {
+    background-color: #241e20;
+    color: #F8F9FA;
+    border: 2px solid #E6AACE;
+}
+
+.alert-title[b-81og6v6bet] {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #E6AACE;
+    margin-bottom: 1rem;
+}
+
+.alert-message[b-81og6v6bet] {
+    font-family: 'Nimbus Mono', 'Space Mono', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+}
+
+.btn-ok[b-81og6v6bet] {
+    width: 100%;
+    background: #2E282A;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 800;
+    padding: 0.8rem;
+}
+
+[data-theme="dark"] .btn-ok[b-81og6v6bet] {
+    background: #342d30;
+    color: #F8F9FA;
+}

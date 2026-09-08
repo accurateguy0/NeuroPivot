@@ -1,0 +1,18 @@
+@code {
+    [Parameter] public string Text { get; set; } = "";
+    [Parameter] public string Variant { get; set; } = "calm"; // low, med, high, calm, danger, warning, success, info
+    [Parameter] public string? Style { get; set; }
+
+    private string GetVariantClass() => Variant.ToLower() switch
+    {
+        "low" or "danger" => "badge-low",
+        "med" or "warning" => "badge-med",
+        "high" or "success" => "badge-high",
+        "calm" or "info" => "badge-calm",
+        _ => "badge-calm"
+    };
+}
+
+<span class="energy-badge @GetVariantClass()" style="@Style">
+    @Text
+</span>

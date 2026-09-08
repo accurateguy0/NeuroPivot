@@ -1,0 +1,29 @@
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay">
+        <div class="ltp-solid-square animated-fade-in">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🧠</div>
+            <h2 class="ltp-title">21-Day Milestone Achieved!</h2>
+            <h3 class="ltp-sub">Long-Term Potentiation (LTP)</h3>
+
+            <p class="ltp-description">
+                You've conquered the 21-day protocol! To permanently seal these synaptic neural pathways and make the changes automatic, science recommends reinforcing the protocol with another 21-day cycle.
+            </p>
+
+            <div class="ltp-options">
+                <button class="nobs-btn btn-reinforce" @onclick="OnReinforceSame">
+                    🔁 Reinforce Same Habits (Seal Neural Pathways)
+                </button>
+                <button class="nobs-btn btn-new-habits" @onclick="OnStartNewHabits">
+                    ✨ Start New 21-Day Cycle with Custom Habits
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnReinforceSame { get; set; }
+    [Parameter] public EventCallback OnStartNewHabits { get; set; }
+}

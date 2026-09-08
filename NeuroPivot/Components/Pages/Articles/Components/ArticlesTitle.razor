@@ -1,0 +1,23 @@
+@inject AppState AppState
+@implements IDisposable
+
+<div style="">
+  <h1 class="page-title-inter">
+      articles
+  </h1>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+
+    public void Dispose()
+    {
+        AppState.OnChange -= OnStateChanged;
+    }
+}

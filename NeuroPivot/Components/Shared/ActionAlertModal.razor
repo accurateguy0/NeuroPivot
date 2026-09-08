@@ -1,0 +1,20 @@
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay" @onclick="OnClose">
+        <div class="alert-solid-square" @onclick:stopPropagation="true">
+            <h3 class="alert-title">⚠️ Action Required</h3>
+            <p class="alert-message">
+                @Message
+            </p>
+            <button class="nobs-btn btn-ok" @onclick="OnClose">
+                OK
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public string Message { get; set; } = "";
+    [Parameter] public EventCallback OnClose { get; set; }
+}

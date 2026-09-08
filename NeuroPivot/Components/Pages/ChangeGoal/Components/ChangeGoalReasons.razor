@@ -1,0 +1,48 @@
+@inject AppState AppState
+
+<div class="questionnaire-container-square animated-fade-in">
+    <div class="vertical-radio-group" style="margin-bottom: 2.25rem;">
+        <label class="radio-item-label">
+            <input type="radio" name="changeGoalReason" value="achieved" checked="@(selectedReason == "achieved")" @onchange='() => selectedReason = "achieved"' />
+            <span>i achieved my goal</span>
+        </label>
+
+        <label class="radio-item-label">
+            <input type="radio" name="changeGoalReason" value="wrong_goal" checked="@(selectedReason == "wrong_goal")" @onchange='() => selectedReason = "wrong_goal"' />
+            <span>i chose the wrong goal at the start</span>
+        </label>
+
+        <label class="radio-item-label">
+            <input type="radio" name="changeGoalReason" value="urgent" checked="@(selectedReason == "urgent")" @onchange='() => selectedReason = "urgent"' />
+            <span>i have another goal which is more urgent</span>
+        </label>
+
+        <label class="radio-item-label">
+            <input type="radio" name="changeGoalReason" value="not_helpful" checked="@(selectedReason == "not_helpful")" @onchange='() => selectedReason = "not_helpful"' />
+            <span>i did not find the recommendations helpful for my original goal</span>
+        </label>
+
+        <label class="radio-item-label">
+            <input type="radio" name="changeGoalReason" value="try_different" checked="@(selectedReason == "try_different")" @onchange='() => selectedReason = "try_different"' />
+            <span>I want to try exercises from a different goal</span>
+        </label>
+    </div>
+
+    <div class="actions-row">
+        <button class="nobs-btn btn-back-profile" @onclick='() => AppState.SetActiveView("profile")'>
+            ← Back to Profile
+        </button>
+        <button class="nobs-btn nobs-btn-blue" style="padding: 0.85rem 2.2rem; font-weight: 800;" @onclick="SubmitReason">
+            Continue →
+        </button>
+    </div>
+</div>
+
+@code {
+    private string selectedReason = "achieved";
+
+    private void SubmitReason()
+    {
+        AppState.SetActiveView("focus_select");
+    }
+}

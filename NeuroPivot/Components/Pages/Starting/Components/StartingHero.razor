@@ -1,0 +1,20 @@
+<section class="intro-view">
+    <div class="hero-content-wrapper">
+        <div class="overflow-hidden">
+            <p class="hero-label-reveal">
+                achieve your goals now using neuroscience
+            </p>
+        </div>
+    </div>
+    <div class="hero-button-box">
+        <button class="nobs-btn-hero" @onclick="OnGetStarted">
+            <span class="btn-text">Get Started</span>
+            <span class="btn-arrow">→</span>
+        </button>
+    </div>
+</section>
+
+@code {
+    [Parameter]
+    public EventCallback OnGetStarted { get; set; }
+}

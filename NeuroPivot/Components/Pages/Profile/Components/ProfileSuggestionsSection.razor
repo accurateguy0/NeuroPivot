@@ -1,0 +1,37 @@
+@inject IJSRuntime JSRuntime
+
+<div class="nobs-card animated-fade-in">
+    <h2 class="section-heading">
+        💡 suggestions
+    </h2>
+    <p class="suggestions-desc">
+        Your message will be sent directly to the 'no bs' team. No bs.
+    </p>
+    <textarea @bind="suggestionText" rows="4" placeholder="Write your suggestion or protocol idea..." class="suggestions-textarea"></textarea>
+    <button class="nobs-btn nobs-btn-blue" style="padding: 0.75rem 1.5rem; font-weight: 800;" @onclick="SubmitSuggestion">
+        Send Suggestion →
+    </button>
+    @if (!string.IsNullOrEmpty(suggestionMsg))
+    {
+        <div class="suggestion-status-msg">@suggestionMsg</div>
+    }
+</div>
+
+@code {
+    private string suggestionText = "";
+    private string suggestionMsg = "";
+
+    private async Task SubmitSuggestion()
+    {
+        if (!string.IsNullOrWhiteSpace(suggestionText))
+        {
+            string subject = Uri.EscapeDataString("no bs App Suggestion");
+            string body = Uri.EscapeDataString(suggestionText);
+            string mailto = $"mailto:dawid.kowalski6789@gmail.com?subject={subject}&body={body}";
+            await JSRuntime.InvokeVoidAsync("open", mailto, "_blank");
+
+            suggestionMsg = "Thanks! Your suggestion email is ready to send.";
+            suggestionText = "";
+        }
+    }
+}

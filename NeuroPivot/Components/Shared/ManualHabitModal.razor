@@ -1,0 +1,39 @@
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay" @onclick="OnClose">
+        <div class="manual-habit-square" @onclick:stopPropagation="true">
+            <div class="modal-header-row">
+                <h3 class="modal-title">✍️ Write Habit Manually</h3>
+                <button class="btn-close-icon" @onclick="OnClose">✕</button>
+            </div>
+
+            <div class="input-container">
+                <label class="input-label">Habit Name</label>
+                <input type="text" @bind="habitName" @bind:event="oninput" placeholder="e.g. Cold Shower" class="habit-input" maxlength="20" />
+                <div class="char-counter @(habitName.Length >= 20 ? "char-counter-limit" : "")">@habitName.Length / 20</div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="nobs-btn btn-cancel" @onclick="OnClose">Cancel</button>
+                <button class="nobs-btn btn-save" @onclick="SaveHabit">Add Habit</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<string> OnSave { get; set; }
+
+    private string habitName = "";
+
+    private async Task SaveHabit()
+    {
+        if (!string.IsNullOrWhiteSpace(habitName))
+        {
+            await OnSave.InvokeAsync(habitName);
+            habitName = "";
+        }
+    }
+}

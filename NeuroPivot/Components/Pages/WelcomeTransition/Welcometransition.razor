@@ -1,0 +1,15 @@
+@page "/questionnaire/welcome_transition"
+@using NeuroPivot.Components.Pages.WelcomeTransition.Components
+@inject AppState AppState
+
+@if (AppState.ActiveView == "welcome_transition")
+{
+    <TransitionCard OnClick="Proceed" />
+}
+
+@code {
+    private void Proceed()
+    {
+        AppState.SetActiveView("authentication");
+    }
+}

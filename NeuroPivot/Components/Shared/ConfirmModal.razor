@@ -1,0 +1,22 @@
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay" @onclick="OnCancel">
+        <div class="modal-solid-square" @onclick:stopPropagation="true">
+            <h3 class="modal-title">Confirm?</h3>
+            <p class="modal-message">
+                @Message
+            </p>
+            <div class="modal-actions">
+                <button class="nobs-btn btn-cancel" @onclick="OnCancel">Cancel</button>
+                <button class="nobs-btn btn-confirm" @onclick="OnConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public string Message { get; set; } = "Are you sure? It will reset your progress.";
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+}

@@ -1,0 +1,84 @@
+@page "/questionnaire/focus"
+@using NeuroPivot.Components.Pages.FocusQuestionnaire.Components
+@inject AppState AppState
+@inject HabitService HabitService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<div class="nobs-container" style="max-width: 780px;">
+    <div class="focus-q-header">
+        <h1 class="focus-q-title">
+            Focus & Attention Protocol
+        </h1>
+        <div class="focus-q-step-text">
+            Step @activeStep of 5
+        </div>
+        <div class="focus-q-step-track">
+            @for (int i = 1; i <= 5; i++)
+            {
+                int stepNum = i;
+                <div class="step-indicator-bar @(stepNum <= activeStep ? "active" : "")"></div>
+            }
+        </div>
+    </div>
+
+    <FocusDiagnosticSteps OnStepChanged="(s) => activeStep = s" OnComplete="GenerateFocusRecommendation" />
+</div>
+
+<FocusResultModal IsOpen="showResultModal"
+                  AssessedLevel="@AssessedLevel"
+                  ResultQuoteTitle="@ResultQuoteTitle"
+                  ResultQuoteBody="@ResultQuoteBody"
+                  OnClose="() => showResultModal = false"
+                  OnProceed="ProceedToRecommended" />
+
+@code {
+    private int activeStep = 1;
+    private bool showResultModal = false;
+    private string ResultQuoteTitle = "";
+    private string ResultQuoteBody = "";
+    private string AssessedLevel = "";
+
+    protected override void OnInitialized() => AppState.OnChange += OnStateChanged;
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void GenerateFocusRecommendation((string category, string q1, string q2, string q3, string q4) answers)
+    {
+        int score = 0;
+        if (answers.q1 == "yes") score += 2;
+        if (answers.q2 == "no") score += 3;
+        if (answers.q3 == "yes") score += 2;
+        if (answers.q4 == "yes") score += 3;
+
+        if (score >= 7)
+        {
+            AssessedLevel = "fragmented";
+            ResultQuoteTitle = "constant context switching fractures neural real estate";
+            ResultQuoteBody = "Smartphones and short-form video shorten the loop between action and reinforcement, training impulsivity and fragmenting focus. A phone-free workspace protects your prefrontal cortex.";
+        }
+        else if (score >= 4)
+        {
+            AssessedLevel = "friction-prone";
+            ResultQuoteTitle = "motivation is a balance of pleasure and pain";
+            ResultQuoteBody = "Sustainable drive comes from attaching reward to the effort itself. Growth mindset and 90-minute ultradian blocks build reflexive focus.";
+        }
+        else
+        {
+            AssessedLevel = "focused";
+            ResultQuoteTitle = "visual fixation anchors mental focus";
+            ResultQuoteBody = "Where your eyes look, your attention follows. Focus your gaze on a single visual target for 30–60 seconds prior to deep work to engage prefrontal circuits.";
+        }
+
+        AppState.SetAddictionLevel(AssessedLevel, score);
+        showResultModal = true;
+    }
+
+    private void ProceedToRecommended()
+    {
+        showResultModal = false;
+        HabitService.InitializeGoalHabit("focus");
+        AppState.SetActiveView("recommended");
+    }
+
+    public void Dispose() => AppState.OnChange -= OnStateChanged;
+}

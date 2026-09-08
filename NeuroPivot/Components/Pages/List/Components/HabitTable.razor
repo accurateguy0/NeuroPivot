@@ -1,0 +1,86 @@
+@inject HabitService HabitService
+
+@if (HabitService.Habits.Count == 0)
+{
+    <p class="habit-empty-msg">
+        No habits configured yet. Click "+ add" below to configure your habits!
+    </p>
+}
+else
+{
+    <div class="habit-scroll-wrapper">
+        <table class="habit-table">
+            <thead>
+                <tr>
+                    <th class="th-name">Habit</th>
+                    @for (int d = 1; d <= 21; d++)
+                    {
+                        int dn = d;
+                        bool isCur = dn == HabitService.CurrentActiveDay;
+                        <th class="th-day @(isCur ? "th-active-day" : "")">
+                            <span>@($"{dn:D2}")</span>
+                        </th>
+                    }
+                    <th class="th-delete-sticky">Del</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var habit in HabitService.Habits)
+                {
+                    bool habitDoneToday = habit.IsCompletedOnDay(HabitService.CurrentActiveDay);
+                    <tr>
+                        <td class="td-name">
+                            <span class="habit-text-title @(habitDoneToday ? "completed" : "")">@habit.Name</span>
+                        </td>
+
+                        @for (int d = 1; d <= 21; d++)
+                        {
+                            int dn = d;
+                            bool isCur = dn == HabitService.CurrentActiveDay;
+                            bool isPast = dn < HabitService.CurrentActiveDay;
+
+                            <td class="td-day @(isCur ? "td-active-day" : "")">
+                                @if (isPast)
+                                {
+                                    <div class="past-day-status">
+                                        @(habit.IsCompletedOnDay(dn) ? "✓" : "–")
+                                    </div>
+                                }
+                                else if (isCur)
+                                {
+                                    <button class="todo-checkbox @(habit.IsCompletedOnDay(dn) ? "checked" : "")"
+                                            style="@(HabitService.IsDayLocked || habit.IsCompletedOnDay(dn) ? "cursor: default; opacity: 0.9;" : "")"
+                                            @onclick="() => OnToggleHabit.InvokeAsync((habit.Id, dn))">
+                                        @if (habit.IsCompletedOnDay(dn))
+                                        {
+                                            <span class="ltp-indicator">✅</span>
+                                        }
+                                    </button>
+                                }
+                                else
+                                {
+                                    <div class="future-day-status"></div>
+                                }
+                            </td>
+                        }
+
+                        <td class="td-delete-sticky">
+                            <button class="nobs-btn btn-delete-habit"
+                                    @onclick="() => OnPromptDelete.InvokeAsync(habit)">
+                                ✕
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<(string id, int day)> OnToggleHabit { get; set; }
+
+    [Parameter]
+    public EventCallback<HabitItem> OnPromptDelete { get; set; }
+}

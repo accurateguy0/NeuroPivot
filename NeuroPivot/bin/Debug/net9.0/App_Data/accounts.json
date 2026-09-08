@@ -1,0 +1,116 @@
+[
+  {
+    "Username": "admin",
+    "Password": "admin",
+    "CreatedAt": "2026-09-03T19:59:45.0239041Z",
+    "Habits": [
+      {
+        "Id": "8fcba2c3-695d-4517-b159-b24f10ce9e33",
+        "Name": "wake up at 6am",
+        "Description": "Wake up at 6:00 AM to align circadian cortisol pulse",
+        "Category": "Sleep",
+        "DaysCompleted": {
+          "1": true,
+          "2": true,
+          "4": true,
+          "5": false
+        }
+      },
+      {
+        "Id": "f1f5e75b-81fd-422f-a42e-13da9cae1fc4",
+        "Name": "exercise",
+        "Description": "Daily physical exertion and muscular recruitment",
+        "Category": "Focus",
+        "DaysCompleted": {
+          "1": true,
+          "2": true,
+          "4": true,
+          "5": true
+        }
+      },
+      {
+        "Id": "ba55ce59-28c5-4f2e-829e-a90cd9e0e195",
+        "Name": "walk",
+        "Description": "Outdoor panoramic optical flow and movement",
+        "Category": "Energy",
+        "DaysCompleted": {
+          "1": true,
+          "2": true,
+          "3": true,
+          "4": true,
+          "5": true
+        }
+      },
+      {
+        "Id": "1c520f17-85f3-49d1-9f7f-b912410baa0e",
+        "Name": "eat protein",
+        "Description": "High-quality morning protein to anchor amino acid pool",
+        "Category": "Nutrition",
+        "DaysCompleted": {
+          "1": true,
+          "2": true,
+          "3": true,
+          "4": true,
+          "5": true
+        }
+      },
+      {
+        "Id": "2d70ef62-e5aa-4bbf-a8a5-f44edadfa762",
+        "Name": "meditation",
+        "Description": "10 minutes open-monitoring attentional training",
+        "Category": "Focus",
+        "DaysCompleted": {
+          "1": true,
+          "2": true,
+          "3": true,
+          "4": true,
+          "5": true
+        }
+      },
+      {
+        "Id": "953d1705-1ab5-4183-a53e-e6902e4a22a0",
+        "Name": "no electronics 1h",
+        "Description": "No screens 1 hour before sleep to protect melatonin",
+        "Category": "Sleep",
+        "DaysCompleted": {
+          "1": true,
+          "2": true,
+          "3": true,
+          "4": false,
+          "5": false
+        }
+      }
+    ],
+    "CurrentActiveDay": 5,
+    "IsDayLocked": false,
+    "ChallengeComplete": false,
+    "ChallengeStartDate": "2026-09-03T00:00:00+02:00",
+    "LastActiveDate": "2026-09-07T00:00:00+02:00",
+    "ConsecutiveStreak": 5,
+    "LastStreakQualifyDate": "2026-09-07T00:00:00+02:00",
+    "AcknowledgedStreakMilestone": 3,
+    "CurrentGoal": "habits",
+    "AddictionLevel": "average",
+    "AddictionScore": 0,
+    "IsDarkMode": true,
+    "SoundVolume": 100,
+    "SleepNotificationsEnabled": true,
+    "WebsiteTimeSeconds": 8830,
+    "Role": "Science Optimizer",
+    "AvatarUrl": null,
+    "IdealBedTime": "21:00",
+    "IdealWakeTime": "06:00",
+    "CalculatedElectronicsCutoff": "20:00",
+    "CalculatedWakeupTime": "06:00",
+    "CutoffAlertEnabled": true,
+    "WakeAlertEnabled": true,
+    "WakeAlarmSound": "fm_bass",
+    "CutoffAlertSound": "zen_bell",
+    "CustomWakeAlarmDataUrl": null,
+    "CustomWakeAlarmFileName": null,
+    "CustomCutoffAlertDataUrl": null,
+    "CustomCutoffAlertFileName": null,
+    "LastCutoffAlertDate": "2026-09-07",
+    "LastWakeAlarmDate": null
+  }
+]

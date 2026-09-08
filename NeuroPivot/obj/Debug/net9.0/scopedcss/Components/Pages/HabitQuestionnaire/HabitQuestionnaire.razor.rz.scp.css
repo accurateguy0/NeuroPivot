@@ -1,0 +1,36 @@
+.habit-q-header[b-s4si3pydjw] {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.habit-q-title[b-s4si3pydjw] {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.habit-q-step-text[b-s4si3pydjw] {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+.habit-q-step-track[b-s4si3pydjw] {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.step-indicator-bar[b-s4si3pydjw] {
+    width: 28px;
+    height: 4px;
+    background: rgba(127, 183, 190, 0.25);
+    transition: background 0.3s ease;
+}
+
+.step-indicator-bar.active[b-s4si3pydjw] {
+    background: var(--accent-color);
+}

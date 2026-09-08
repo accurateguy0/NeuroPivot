@@ -1,0 +1,15 @@
+@inject HabitService HabitService
+
+@if (HabitService.Habits.Count < 6)
+{
+    <div class="habit-add-box">
+        <button class="nobs-btn btn-add-habit" @onclick="OnClick">
+            + add
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

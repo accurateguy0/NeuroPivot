@@ -1,0 +1,32 @@
+.step-question-label {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    color: inherit;
+}
+
+.step-radio-group {
+    margin-bottom: 2rem;
+}
+
+.step-nav-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.step-nav-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-step-next {
+    padding: 0.85rem 2rem !important;
+    font-weight: 800 !important;
+}
+
+.btn-back-light {
+    background: rgba(46, 40, 42, 0.08) !important;
+    color: var(--text-primary) !important;
+}

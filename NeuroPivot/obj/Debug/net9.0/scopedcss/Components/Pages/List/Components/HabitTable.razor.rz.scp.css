@@ -1,0 +1,149 @@
+.habit-empty-msg[b-1lx01py8yp] {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 2.5rem 0;
+}
+
+.habit-scroll-wrapper[b-1lx01py8yp] {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    border: 1px solid rgba(46, 40, 42, 0.15);
+}
+
+[data-theme="dark"] .habit-scroll-wrapper[b-1lx01py8yp] {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.habit-table[b-1lx01py8yp] {
+    width: 100%;
+    min-width: 680px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.habit-table tbody tr[b-1lx01py8yp] {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: listRowReveal-b-1lx01py8yp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
+}
+
+.habit-table tbody tr:nth-child(1)[b-1lx01py8yp] { animation-delay: 0.25s; }
+.habit-table tbody tr:nth-child(2)[b-1lx01py8yp] { animation-delay: 0.35s; }
+.habit-table tbody tr:nth-child(3)[b-1lx01py8yp] { animation-delay: 0.45s; }
+.habit-table tbody tr:nth-child(4)[b-1lx01py8yp] { animation-delay: 0.55s; }
+.habit-table tbody tr:nth-child(5)[b-1lx01py8yp] { animation-delay: 0.65s; }
+.habit-table tbody tr:nth-child(6)[b-1lx01py8yp] { animation-delay: 0.75s; }
+
+@keyframes listRowReveal-b-1lx01py8yp {
+    0% {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.th-name[b-1lx01py8yp], .td-name[b-1lx01py8yp] {
+    padding: 0.75rem 0.65rem;
+    font-weight: 800;
+    min-width: 135px;
+    color: inherit;
+    border-bottom: 1px solid rgba(46, 40, 42, 0.15);
+}
+
+[data-theme="dark"] .th-name[b-1lx01py8yp], [data-theme="dark"] .td-name[b-1lx01py8yp] {
+    border-bottom-color: rgba(255, 255, 255, 0.18);
+}
+
+.th-day[b-1lx01py8yp], .td-day[b-1lx01py8yp] {
+    padding: 0.55rem 0.15rem;
+    text-align: center;
+    min-width: 52px;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(46, 40, 42, 0.15);
+}
+
+[data-theme="dark"] .th-day[b-1lx01py8yp], [data-theme="dark"] .td-day[b-1lx01py8yp] {
+    border-bottom-color: rgba(255, 255, 255, 0.18);
+}
+
+.th-active-day[b-1lx01py8yp] {
+    background: rgba(127, 183, 190, 0.25);
+    font-weight: 800;
+}
+
+.td-active-day[b-1lx01py8yp] {
+    background: rgba(127, 183, 190, 0.15);
+}
+
+.th-delete-sticky[b-1lx01py8yp], .td-delete-sticky[b-1lx01py8yp] {
+    position: sticky;
+    right: 0;
+    background: #EFF6EE;
+    padding: 0.55rem;
+    text-align: center;
+    min-width: 72px;
+    z-index: 3;
+    border-left: 2px solid rgba(46, 40, 42, 0.18);
+    border-bottom: 1px solid rgba(46, 40, 42, 0.15);
+}
+
+[data-theme="dark"] .th-delete-sticky[b-1lx01py8yp], [data-theme="dark"] .td-delete-sticky[b-1lx01py8yp] {
+    background: #241e20 !important;
+    border-left-color: rgba(255, 255, 255, 0.2) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.past-day-status[b-1lx01py8yp] {
+    color: #34C759;
+    font-weight: 800;
+    user-select: none;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.btn-delete-habit[b-1lx01py8yp] {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+[data-theme="light"] .btn-delete-habit[b-1lx01py8yp] {
+    background: #ffffff !important;
+    color: #5c5558 !important;
+    border: 1px solid rgba(46, 40, 42, 0.2) !important;
+}
+
+[data-theme="light"] .btn-delete-habit:hover[b-1lx01py8yp] {
+    background: #ff6b6b !important;
+    color: #ffffff !important;
+    border-color: #ff6b6b !important;
+    transform: scale(1.08) !important;
+}
+
+[data-theme="dark"] .btn-delete-habit[b-1lx01py8yp] {
+    background: #342d30 !important;
+    color: #d0c8cb !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .btn-delete-habit:hover[b-1lx01py8yp] {
+    background: #ff6b6b !important;
+    color: #ffffff !important;
+    border-color: #ff6b6b !important;
+    transform: scale(1.08) !important;
+}

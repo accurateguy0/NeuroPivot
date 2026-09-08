@@ -1,0 +1,36 @@
+@page "/questionnaire/select_goal"
+@using NeuroPivot.Components.Pages.SelectGoal.Components
+@inject AppState AppState
+@inject HabitService HabitService
+@implements IDisposable
+
+<div class="nobs-container animated-fade-in" style="max-width: 680px; padding-top: 3rem;">
+    <div class="select-goal-header">
+        <h1 class="select-goal-title">
+            What would you like to <span class="title-pink">focus on?</span>
+        </h1>
+    </div>
+
+    <GoalChoiceCard OnSelectGoal="HandleSelectGoal" />
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void HandleSelectGoal((string goal, string targetView) selection)
+    {
+        AppState.SetCurrentGoal(selection.goal);
+        HabitService.InitializeGoalHabit(selection.goal);
+        AppState.SetActiveView(selection.targetView);
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= OnStateChanged;
+    }
+}

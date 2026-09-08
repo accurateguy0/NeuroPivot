@@ -1,0 +1,15 @@
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+svg {
+  display: block;
+  flex-shrink: 0;
+  animation: rotation 0.8s linear infinite;
+}

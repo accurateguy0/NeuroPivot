@@ -1,0 +1,95 @@
+@inject SleepService SleepService
+@inject AppState AppState
+@implements IDisposable
+
+@if (SleepService.IsAlertModalOpen)
+{
+    <div class="modal-backdrop-overlay">
+        <div class="sleep-alert-square animated-fade-in">
+            <div class="alert-icon-wrap ringing-pulse">
+                <span class="alert-emoji">@SleepService.ActiveAlertIcon</span>
+            </div>
+            
+            <div class="alert-clock-time">
+                @GetCurrentTimeString()
+            </div>
+
+            <h2 class="alert-title">@SleepService.ActiveAlertTitle</h2>
+            
+            <p class="alert-message">
+                @GetRealtimeAlertMessage()
+            </p>
+
+            <div class="alert-actions-grid">
+                <button class="nobs-btn btn-snooze-alarm" title="Snooze for 5 minutes" @onclick="() => SleepService.SnoozeAlert(5)">
+                    💤 Snooze (5m)
+                </button>
+                <button class="nobs-btn btn-turnoff-alarm" title="Turn off alarm" @onclick="SleepService.TurnOffAlert">
+                    ✕ Turn Off
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (SleepService.IsSnoozed && !SleepService.IsAlertModalOpen)
+{
+    <div class="snooze-floating-toast animated-fade-in">
+        <div class="snooze-info">
+            <span class="snooze-icon">💤</span>
+            <span class="snooze-text">Alarm snoozed: <strong>@FormatSnoozeTimer(SleepService.SnoozeRemainingSeconds)</strong></span>
+        </div>
+        <button class="nobs-btn btn-cancel-snooze" @onclick="SleepService.TurnOffAlert">
+            Dismiss
+        </button>
+    </div>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        SleepService.OnChange += OnStateChanged;
+        AppState.OnTick += OnTick;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void OnTick()
+    {
+        if (SleepService.IsAlertModalOpen || SleepService.IsSnoozed)
+        {
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private string GetCurrentTimeString()
+    {
+        return DateTime.Now.ToString("hh:mm tt");
+    }
+
+    private string GetRealtimeAlertMessage()
+    {
+        var nowStr = DateTime.Now.ToString("h:mm tt");
+        if (SleepService.ActiveAlertType == "cutoff")
+        {
+            return $"It is now {nowStr}. Turn off electronic screens to eliminate blue light exposure and initiate natural melatonin production.";
+        }
+        else
+        {
+            return $"Good morning! It is now {nowStr}. Step outside or view natural sunlight within 30–60 minutes of waking to anchor your circadian rhythm.";
+        }
+    }
+
+    private string FormatSnoozeTimer(int totalSeconds)
+    {
+        int mins = totalSeconds / 60;
+        int secs = totalSeconds % 60;
+        return $"{mins:D2}:{secs:D2}";
+    }
+
+    public void Dispose()
+    {
+        SleepService.OnChange -= OnStateChanged;
+        AppState.OnTick -= OnTick;
+    }
+}

@@ -1,0 +1,182 @@
+<div class="custom-time-picker">
+    <div class="time-unit-col">
+        <!-- ▲ = earlier hour (scroll down in value — "previous" means smaller visual) -->
+        <button type="button" class="time-step-btn" @onclick="DecrementHour">▲</button>
+        <div class="time-display-val">@($"{DisplayHour:D2}")</div>
+        <button type="button" class="time-step-btn" @onclick="IncrementHour">▼</button>
+    </div>
+
+    <div class="time-colon">:</div>
+
+    <div class="time-unit-col">
+        <button type="button" class="time-step-btn" @onclick="DecrementMinute">▲</button>
+        <div class="time-display-val">@($"{Minute:D2}")</div>
+        <button type="button" class="time-step-btn" @onclick="IncrementMinute">▼</button>
+    </div>
+
+    <div class="time-period-col">
+        <button type="button" class="period-toggle-btn @(IsPM ? "active" : "")" @onclick="TogglePeriod">
+            @(IsPM ? "PM" : "AM")
+        </button>
+        <div class="time-24h-sub">@($"{Hour24:D2}:{Minute:D2}")</div>
+    </div>
+</div>
+
+<style>
+    .custom-time-picker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #ffffff;
+        color: #2E282A;
+        border: 2px solid rgba(46, 40, 42, 0.3);
+        padding: 0.75rem 1.25rem;
+        user-select: none;
+    }
+
+    [data-theme="dark"] .custom-time-picker {
+        background: #241e20;
+        color: #F8F9FA;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .time-unit-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .time-step-btn {
+        background: transparent;
+        border: none;
+        color: inherit;
+        font-size: 0.75rem;
+        cursor: pointer;
+        padding: 2px 8px;
+        opacity: 0.6;
+        transition: opacity 0.15s ease, transform 0.1s ease;
+    }
+
+    .time-step-btn:hover {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    .time-display-val {
+        font-family: 'Nimbus Mono', 'Space Mono', monospace;
+        font-size: 1.5rem;
+        font-weight: 800;
+        min-width: 36px;
+        text-align: center;
+    }
+
+    .time-colon {
+        font-family: 'Nimbus Mono', 'Space Mono', monospace;
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0 2px;
+    }
+
+    .time-period-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin-left: 8px;
+    }
+
+    .period-toggle-btn {
+        background: #7FB7BE;
+        color: #2E282A;
+        border: none;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 0.85rem;
+        font-weight: 800;
+        padding: 4px 8px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+
+    .period-toggle-btn:hover {
+        background: #6ea4ab;
+    }
+
+    .time-24h-sub {
+        font-family: 'Nimbus Mono', monospace;
+        font-size: 0.72rem;
+        opacity: 0.65;
+    }
+</style>
+
+@code {
+    [Parameter] public string TimeValue { get; set; } = "23:00"; // "HH:mm" 24h format
+    [Parameter] public EventCallback<string> TimeValueChanged { get; set; }
+
+    private int Hour24 = 23;
+    private int Minute = 0;
+
+    protected override void OnParametersSet()
+    {
+        if (TimeSpan.TryParse(TimeValue, out var ts))
+        {
+            Hour24 = ts.Hours;
+            Minute = ts.Minutes;
+        }
+    }
+
+    private bool IsPM => Hour24 >= 12;
+
+    // DisplayHour shows 1–12 (12h format)
+    private int DisplayHour
+    {
+        get
+        {
+            int h = Hour24 % 12;
+            return h == 0 ? 12 : h;
+        }
+    }
+
+    // ▼ = go forward in time (increase Hour24)
+    private async Task IncrementHour()
+    {
+        Hour24 = (Hour24 + 1) % 24;
+        await EmitChange();
+    }
+
+    // ▲ = go backward in time (decrease Hour24)
+    private async Task DecrementHour()
+    {
+        Hour24 = (Hour24 - 1 + 24) % 24;
+        await EmitChange();
+    }
+
+    private async Task IncrementMinute()
+    {
+        Minute = (Minute + 15) % 60;
+        await EmitChange();
+    }
+
+    private async Task DecrementMinute()
+    {
+        Minute = (Minute - 15 + 60) % 60;
+        await EmitChange();
+    }
+
+    private async Task TogglePeriod()
+    {
+        // AM↔PM: flip between 0-11 and 12-23
+        if (Hour24 >= 12)
+            Hour24 -= 12;
+        else
+            Hour24 += 12;
+        await EmitChange();
+    }
+
+    private async Task EmitChange()
+    {
+        string formatted = $"{Hour24:D2}:{Minute:D2}";
+        TimeValue = formatted;
+        await TimeValueChanged.InvokeAsync(formatted);
+    }
+}

@@ -1,0 +1,34 @@
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public string? AccentColor { get; set; }
+    [Parameter] public RenderFragment? HeaderExtra { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string GetBorderStyle() => string.IsNullOrEmpty(AccentColor)
+        ? ""
+        : $"border-left: 4px solid {AccentColor}; transition: border-color 0.4s ease;";
+}
+
+<div class="glass-card" style="@GetBorderStyle()">
+    @if (!string.IsNullOrEmpty(Title) || HeaderExtra != null)
+    {
+        <div class="card-header">
+            @if (!string.IsNullOrEmpty(Title))
+            {
+                <h3 class="card-title">@Title</h3>
+            }
+            @if (HeaderExtra != null)
+            {
+                @HeaderExtra
+            }
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Subtitle))
+    {
+        <p class="card-subtitle">@Subtitle</p>
+    }
+
+    @ChildContent
+</div>

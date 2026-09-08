@@ -1,0 +1,36 @@
+.focus-q-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.focus-q-title {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.focus-q-step-text {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+.focus-q-step-track {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.step-indicator-bar {
+    width: 28px;
+    height: 4px;
+    background: rgba(127, 183, 190, 0.25);
+    transition: background 0.3s ease;
+}
+
+.step-indicator-bar.active {
+    background: var(--accent-pink, #FFB5A7);
+}

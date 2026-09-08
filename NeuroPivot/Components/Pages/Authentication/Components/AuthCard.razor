@@ -1,0 +1,200 @@
+@inject AccountService AccountService
+@inject AppState AppState
+@inject HabitService HabitService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="nobs-card auth-card">
+    <h1 class="auth-title">
+        @(isSigningIn ? "Welcome Back" : "Create Account")
+    </h1>
+    <div class="auth-toggle-group">
+        <button type="button" class="nobs-btn @(isSigningIn ? "nobs-btn-primary" : "")" style="flex: 1; padding: 0.6rem;" @onclick="() => SwitchMode(true)">
+            Sign In
+        </button>
+        <button type="button" class="nobs-btn @(!isSigningIn ? "nobs-btn-primary" : "")" style="flex: 1; padding: 0.6rem;" @onclick="() => SwitchMode(false)">
+            Sign Up
+        </button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="auth-error-banner">
+            <span class="auth-error-icon">⚠️</span>
+            <span>@errorMessage</span>
+        </div>
+    }
+
+    <div class="auth-form-fields">
+        <div>
+            <label class="auth-field-label">Username</label>
+            <input type="text"
+                   @bind="inputUsername"
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyDown"
+                   placeholder="e.g. user"
+                   class="auth-text-input" />
+        </div>
+        <div>
+            <label class="auth-field-label">Password</label>
+            <input type="password"
+                   @bind="inputPassword"
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyDown"
+                   placeholder="••••••••"
+                   class="auth-text-input" />
+        </div>
+        <button type="button" class="nobs-btn nobs-btn-blue btn-auth-submit" disabled="@isSubmitting" @onclick="SubmitAuth">
+            @if (isSubmitting)
+            {
+                <span>Processing...</span>
+            }
+            else
+            {
+                <span>@(isSigningIn ? "Sign In & Pivot" : "Create Account & Pivot")</span>
+            }
+        </button>
+    </div>
+    <button type="button" class="btn-guest-continue" @onclick="ContinueGuest">
+        Continue as guest without account →
+    </button>
+</div>
+
+@code {
+    private bool isSigningIn = true;
+    private string inputUsername = "";
+    private string inputPassword = "";
+    private string errorMessage = "";
+    private bool isSubmitting = false;
+
+    [Parameter]
+    public EventCallback<(string username, bool isSigningIn)> OnAuth { get; set; }
+
+    [Parameter]
+    public EventCallback OnGuest { get; set; }
+
+    private void SwitchMode(bool signingIn)
+    {
+        isSigningIn = signingIn;
+        errorMessage = "";
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SubmitAuth();
+        }
+    }
+
+    private async Task SubmitAuth()
+    {
+        if (isSubmitting) return;
+
+        errorMessage = "";
+        string username = inputUsername?.Trim() ?? "";
+        string password = inputPassword ?? "";
+
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            errorMessage = "Please enter your username.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please enter your password.";
+            return;
+        }
+
+        isSubmitting = true;
+        try
+        {
+            if (isSigningIn)
+            {
+                var result = await AccountService.SignInAsync(username, password);
+                if (!result.Success)
+                {
+                    errorMessage = result.ErrorMessage ?? "Sign in failed.";
+                    return;
+                }
+
+                await AppState.LoadUserAccountAsync(result.Account!);
+                HabitService.LoadUserAccount(result.Account!);
+
+                string targetView = (result.Account!.Habits.Count > 0 || !string.IsNullOrWhiteSpace(result.Account.CurrentGoal))
+                    ? "recommended"
+                    : "select_goal";
+
+                await AppState.SetActiveViewAsync(targetView);
+
+                if (OnAuth.HasDelegate)
+                {
+                    await OnAuth.InvokeAsync((username, true));
+                }
+
+                ReturnToAppShell();
+            }
+            else
+            {
+                var result = await AccountService.SignUpAsync(username, password);
+                if (!result.Success)
+                {
+                    errorMessage = result.ErrorMessage ?? "Sign up failed.";
+                    return;
+                }
+
+                await AppState.LoadUserAccountAsync(result.Account!);
+                HabitService.LoadUserAccount(result.Account!);
+
+                await AppState.SetActiveViewAsync("select_goal");
+
+                if (OnAuth.HasDelegate)
+                {
+                    await OnAuth.InvokeAsync((username, false));
+                }
+
+                ReturnToAppShell();
+            }
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private async Task ContinueGuest()
+    {
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        try
+        {
+            AccountService.SetActiveAccount(null);
+            await AppState.LoginAsync("Guest User", isReturning: false);
+            HabitService.ClearHabits();
+            await AppState.SetActiveViewAsync("select_goal");
+
+            if (OnGuest.HasDelegate)
+            {
+                await OnGuest.InvokeAsync();
+            }
+
+            ReturnToAppShell();
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void ReturnToAppShell()
+    {
+        var relative = Nav.ToBaseRelativePath(Nav.Uri);
+        if (relative.StartsWith("authentification", StringComparison.OrdinalIgnoreCase) ||
+            relative.StartsWith("authentication", StringComparison.OrdinalIgnoreCase))
+        {
+            Nav.NavigateTo("/");
+        }
+    }
+}

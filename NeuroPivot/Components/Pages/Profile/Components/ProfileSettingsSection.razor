@@ -1,0 +1,258 @@
+@inject AppState AppState
+@inject SleepService SleepService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<div class="nobs-card settings-card animated-fade-in @(isDollyZooming ? "dolly-zoom-active" : "")">
+    <h2 class="section-heading">
+        ⚙️ settings
+    </h2>
+    <div class="settings-list">
+        <!-- 1. Appearance Theme -->
+        <div class="setting-item">
+            <div>
+                <div class="setting-title">Appearance Theme</div>
+                <div class="setting-subtitle">Dark (default) or Light mode</div>
+            </div>
+            <button class="nobs-btn theme-toggle-btn @(isDollyZooming ? "theme-btn-pulse" : "")" @onclick="HandleThemeToggle">
+                @(AppState.IsDarkMode ? "🌙 Dark" : "☀️ Light")
+            </button>
+        </div>
+
+        <!-- 2. Sleep & Wake Routine -->
+        <div class="setting-item border-top">
+            <div class="setting-text-col">
+                <div class="setting-title">Sleep &amp; Wake Routine</div>
+            </div>
+            <button class="nobs-btn btn-change-sleeptime" @onclick="NavigateToSleepQuestionnaire">
+                Change wake up &amp; sleep time →
+            </button>
+        </div>
+
+        <!-- 3. Cutoff Alert -->
+        <div class="setting-group-box border-top">
+            <div class="setting-item">
+                <div class="setting-text-col">
+                    <div class="setting-title">Cutoff Alert (@FormatTime(SleepService.CalculatedElectronicsCutoff))</div>
+                    <div class="setting-subtitle">Electronics off 1h before bed</div>
+                </div>
+                <AppleToggle Value="@SleepService.CutoffAlertEnabled" ValueChanged="@((bool v) => SleepService.SetCutoffAlert(v))" />
+            </div>
+            
+            <div class="sound-picker-row">
+                <div class="sound-controls">
+                    <select class="nobs-sound-select" value="@SleepService.CutoffAlertSound" @onchange="OnCutoffSoundChanged">
+                        <option value="soft_pulse">Soft Pulse (Synthesizer)</option>
+                        <option value="gentle_chime">Gentle Chime (Synthesizer)</option>
+                        <option value="zen_bell">Zen Singing Bowl</option>
+                        <option value="kling_pulse">Kling Pulse</option>
+                        <option value="xiaomi_chimes">Xiaomi Chimes</option>
+                        <option value="528hz_tone">528Hz Pure Tone</option>
+                        <option value="digital_alarm">Digital Alarm Clock</option>
+                        <option value="fm_bass">FM Synth Bass</option>
+                        <option value="custom">@(string.IsNullOrEmpty(SleepService.CustomCutoffAlertFileName) ? "Custom Sound..." : $"Custom: {SleepService.CustomCutoffAlertFileName}")</option>
+                    </select>
+                    <InputFile id="cutoffFileInput" OnChange="HandleCutoffFileUpload" accept="audio/*" style="display: none;" />
+                    <button class="nobs-btn btn-preview-sound" title="Preview Alert Sound" @onclick="() => SleepService.PlaySoundPreviewAsync(SleepService.CutoffAlertSound, false)">
+                        ▶ Test
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Wake Alarm -->
+        <div class="setting-group-box border-top">
+            <div class="setting-item">
+                <div class="setting-text-col">
+                    <div class="setting-title">Wake Alarm (@FormatTime(SleepService.CalculatedWakeupTime))</div>
+                    <div class="setting-subtitle">Optimal morning wake-up alert</div>
+                </div>
+                <AppleToggle Value="@SleepService.WakeAlertEnabled" ValueChanged="@((bool v) => SleepService.SetWakeAlert(v))" />
+            </div>
+
+            <div class="sound-picker-row">
+                <div class="sound-controls">
+                    <select class="nobs-sound-select" value="@SleepService.WakeAlarmSound" @onchange="OnWakeSoundChanged">
+                        <option value="gentle_chime">Gentle Chime (Synthesizer)</option>
+                        <option value="soft_pulse">Soft Pulse (Synthesizer)</option>
+                        <option value="zen_bell">Zen Singing Bowl</option>
+                        <option value="528hz_tone">528Hz Pure Tone</option>
+                        <option value="digital_alarm">Digital Alarm Clock</option>
+                        <option value="fm_bass">FM Synth Bass</option>
+                        <option value="xiaomi_chimes">Xiaomi Chimes</option>
+                        <option value="kling_pulse">Kling Pulse</option>
+                        <option value="custom">@(string.IsNullOrEmpty(SleepService.CustomWakeAlarmFileName) ? "Custom Sound..." : $"Custom: {SleepService.CustomWakeAlarmFileName}")</option>
+                    </select>
+                    <InputFile id="wakeFileInput" OnChange="HandleWakeFileUpload" accept="audio/*" style="display: none;" />
+                    <button class="nobs-btn btn-preview-sound" title="Preview Alarm Sound" @onclick="() => SleepService.PlaySoundPreviewAsync(SleepService.WakeAlarmSound, true)">
+                        ▶ Test
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Volume Slider -->
+        <div class="chime-volume-container border-top">
+            <div class="volume-header">
+                <span class="setting-title">Chime / Alarm / Bass Volume</span>
+                <span class="volume-display">@AppState.SoundVolume%</span>
+            </div>
+            <input type="range" min="0" max="100" value="@AppState.SoundVolume" style="--val: @(AppState.SoundVolume)%;" @oninput="OnVolumeInput" @onchange="OnVolumeInput" class="volume-slider" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool isDollyZooming = false;
+    private System.Threading.CancellationTokenSource? dollyCts;
+
+    protected override void OnInitialized()
+    {
+        SleepService.OnChange += OnStateChanged;
+        AppState.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private string FormatTime(string? timeStr)
+    {
+        if (string.IsNullOrWhiteSpace(timeStr)) return "9:00 PM";
+        if (DateTime.TryParseExact(timeStr, "HH:mm", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var dt))
+        {
+            return dt.ToString("h:mm tt");
+        }
+        return timeStr;
+    }
+
+    private void NavigateToSleepQuestionnaire()
+    {
+        AppState.SetActiveView("sleep_questionnaire");
+    }
+
+    private async Task OnCutoffSoundChanged(ChangeEventArgs e)
+    {
+        var sound = e.Value?.ToString() ?? "soft_pulse";
+        if (sound == "custom")
+        {
+            await SleepService.SetCutoffAlertSoundAsync("custom");
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('cutoffFileInput')?.click()");
+            }
+            catch { }
+        }
+        else
+        {
+            await SleepService.SetCutoffAlertSoundAsync(sound);
+        }
+    }
+
+    private async Task OnWakeSoundChanged(ChangeEventArgs e)
+    {
+        var sound = e.Value?.ToString() ?? "gentle_chime";
+        if (sound == "custom")
+        {
+            await SleepService.SetWakeAlarmSoundAsync("custom");
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('wakeFileInput')?.click()");
+            }
+            catch { }
+        }
+        else
+        {
+            await SleepService.SetWakeAlarmSoundAsync(sound);
+        }
+    }
+
+    private async Task HandleCutoffFileUpload(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+            if (file != null)
+            {
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+                using var ms = new System.IO.MemoryStream();
+                await stream.CopyToAsync(ms);
+                var base64 = Convert.ToBase64String(ms.ToArray());
+                var dataUrl = $"data:{file.ContentType};base64,{base64}";
+                await SleepService.SetCustomCutoffAlertAudioAsync(dataUrl, file.Name);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error uploading cutoff audio: {ex.Message}");
+        }
+    }
+
+    private async Task HandleWakeFileUpload(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var file = e.File;
+            if (file != null)
+            {
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+                using var ms = new System.IO.MemoryStream();
+                await stream.CopyToAsync(ms);
+                var base64 = Convert.ToBase64String(ms.ToArray());
+                var dataUrl = $"data:{file.ContentType};base64,{base64}";
+                await SleepService.SetCustomWakeAlarmAudioAsync(dataUrl, file.Name);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error uploading wake audio: {ex.Message}");
+        }
+    }
+
+    private async Task HandleThemeToggle()
+    {
+        AppState.ToggleDarkMode();
+
+        dollyCts?.Cancel();
+        dollyCts = new System.Threading.CancellationTokenSource();
+        var token = dollyCts.Token;
+
+        isDollyZooming = false;
+        StateHasChanged();
+        await Task.Yield();
+
+        if (token.IsCancellationRequested) return;
+        isDollyZooming = true;
+        StateHasChanged();
+
+        try
+        {
+            await Task.Delay(550, token);
+            if (!token.IsCancellationRequested)
+            {
+                isDollyZooming = false;
+                StateHasChanged();
+            }
+        }
+        catch (TaskCanceledException) { }
+    }
+
+    private async Task OnVolumeInput(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int vol))
+        {
+            AppState.SetSoundVolume(vol);
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("nobsAudio.playFmSynthBass", vol);
+            }
+            catch { }
+        }
+    }
+
+    public void Dispose()
+    {
+        dollyCts?.Cancel();
+        dollyCts?.Dispose();
+        SleepService.OnChange -= OnStateChanged;
+        AppState.OnChange -= OnStateChanged;
+    }
+}

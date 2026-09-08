@@ -1,0 +1,330 @@
+@inject AppState AppState
+@inject AccountService AccountService
+@inject IJSRuntime JS
+
+<div class="nobs-card animated-fade-in">
+    <h2 class="section-heading">
+        👤 you
+    </h2>
+    
+    <div class="user-profile-header">
+        <label for="avatarUploadInput" class="profile-user-avatar profile-picture-avatar" title="Click to change profile picture">
+            @if (!string.IsNullOrEmpty(AppState.AvatarUrl))
+            {
+                <img src="@AppState.AvatarUrl" alt="Avatar" class="avatar-photo-round" />
+            }
+            else
+            {
+                <span>@(AppState.Username.Length > 0 ? AppState.Username.Substring(0, Math.Min(2, AppState.Username.Length)).ToUpper() : "U")</span>
+            }
+            <div class="avatar-hover-overlay">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+            </div>
+            <InputFile id="avatarUploadInput" OnChange="HandleAvatarChange" accept="image/*" style="display: none;" />
+        </label>
+
+        <div class="user-identity-box">
+            <!-- Username with Stylized Pencil Edit -->
+            <div class="identity-row">
+                @if (isEditingUsername)
+                {
+                    <div class="inline-edit-group">
+                        <input type="text"
+                               class="inline-edit-input"
+                               @bind="tempUsername"
+                               @bind:event="oninput"
+                               @onkeydown="HandleUsernameKeyDown"
+                               placeholder="Enter username" />
+                        <button type="button" class="btn-action-check" title="Save" @onclick="SaveUsername">✓</button>
+                        <button type="button" class="btn-action-cancel" title="Cancel" @onclick="CancelEditUsername">✕</button>
+                    </div>
+                }
+                else
+                {
+                    <span class="profile-username">@AppState.Username</span>
+                    <button type="button" class="btn-pencil-edit" title="Edit username" @onclick="StartEditUsername">
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </button>
+                }
+            </div>
+            @if (!string.IsNullOrEmpty(usernameFeedbackMsg))
+            {
+                <div class="edit-feedback-error">@usernameFeedbackMsg</div>
+            }
+
+            <!-- Role with Stylized Pencil Edit -->
+            <div class="identity-row">
+                @if (isEditingRole)
+                {
+                    <div class="inline-edit-group">
+                        <input type="text"
+                               class="inline-edit-input role-input"
+                               @bind="tempRole"
+                               @bind:event="oninput"
+                               @onkeydown="HandleRoleKeyDown"
+                               placeholder="e.g. Science Optimizer" />
+                        <button type="button" class="btn-action-check" title="Save" @onclick="SaveRole">✓</button>
+                        <button type="button" class="btn-action-cancel" title="Cancel" @onclick="CancelEditRole">✕</button>
+                    </div>
+                }
+                else
+                {
+                    <span class="profile-role">@AppState.UserRole</span>
+                    <button type="button" class="btn-pencil-edit" title="Edit role" @onclick="StartEditRole">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </button>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(avatarFeedbackMsg))
+            {
+                <div class="edit-feedback-error">@avatarFeedbackMsg</div>
+            }
+        </div>
+    </div>
+
+    <div class="password-change-box">
+        <h3 class="password-change-title">Change Password</h3>
+        <div class="password-input-group">
+            <input type="password" @bind="newPassword" placeholder="Enter new password" class="profile-text-input" />
+            <input type="password" @bind="confirmPassword" placeholder="Confirm new password" class="profile-text-input" />
+            <button class="nobs-btn nobs-btn-blue" style="padding: 0.6rem;" @onclick="SavePassword">Update Password</button>
+            @if (!string.IsNullOrEmpty(passwordMsg))
+            {
+                <span class="password-feedback-msg">@passwordMsg</span>
+            }
+        </div>
+    </div>
+
+    <div class="account-actions-box">
+        <button class="nobs-btn btn-logout" @onclick="LogOut">
+            <span style="font-size: 1.1rem; margin-right: 8px;">🚪</span>
+            <span>Log Out</span>
+        </button>
+
+        <button class="nobs-btn btn-delete-account" @onclick="ShowDeleteConfirmation">
+            <span style="font-size: 1.1rem; margin-right: 8px;">🗑️</span>
+            <span>Delete Account</span>
+        </button>
+    </div>
+</div>
+
+@if (showDeleteModal)
+{
+    <div class="modal-backdrop-overlay" @onclick="CancelDelete">
+        <div class="delete-confirm-modal animated-fade-in" @onclick:stopPropagation="true">
+            <div class="delete-modal-icon">⚠️</div>
+            <h3 class="delete-modal-title">Delete Account?</h3>
+            <p class="delete-modal-desc">
+                Are you sure you want to permanently delete <strong>@AppState.Username</strong>? All 21-day challenge progress, habits, streaks, and routines will be permanently removed.
+            </p>
+            <div class="delete-modal-actions">
+                <button class="nobs-btn btn-cancel-delete" @onclick="CancelDelete">
+                    Cancel
+                </button>
+                <button class="nobs-btn btn-confirm-delete" @onclick="ConfirmDeleteAccount">
+                    ✕ Yes, Delete Permanently
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string newPassword = "";
+    private string confirmPassword = "";
+    private string passwordMsg = "";
+
+    private bool isEditingUsername = false;
+    private string tempUsername = "";
+    private string usernameFeedbackMsg = "";
+
+    private bool isEditingRole = false;
+    private string tempRole = "";
+
+    private string avatarFeedbackMsg = "";
+    private bool showDeleteModal = false;
+
+    private void LogOut()
+    {
+        AppState.Logout();
+    }
+
+    private void ShowDeleteConfirmation()
+    {
+        showDeleteModal = true;
+    }
+
+    private void CancelDelete()
+    {
+        showDeleteModal = false;
+    }
+
+    private async Task ConfirmDeleteAccount()
+    {
+        showDeleteModal = false;
+        await AppState.DeleteCurrentAccountAsync();
+    }
+
+    private void StartEditUsername()
+    {
+        tempUsername = AppState.Username;
+        usernameFeedbackMsg = "";
+        isEditingUsername = true;
+    }
+
+    private void CancelEditUsername()
+    {
+        isEditingUsername = false;
+        usernameFeedbackMsg = "";
+    }
+
+    private async Task HandleUsernameKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SaveUsername();
+        }
+        else if (e.Key == "Escape")
+        {
+            CancelEditUsername();
+        }
+    }
+
+    private async Task SaveUsername()
+    {
+        usernameFeedbackMsg = "";
+        string trimmed = tempUsername?.Trim() ?? "";
+
+        if (string.IsNullOrWhiteSpace(trimmed))
+        {
+            usernameFeedbackMsg = "Username cannot be empty.";
+            return;
+        }
+
+        if (trimmed.Equals("Guest User", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("Guest", StringComparison.OrdinalIgnoreCase))
+        {
+            usernameFeedbackMsg = "This username is reserved.";
+            return;
+        }
+
+        var success = await AppState.UpdateUsernameAsync(trimmed);
+        if (!success)
+        {
+            usernameFeedbackMsg = "Username is already taken by another account.";
+            return;
+        }
+
+        isEditingUsername = false;
+        usernameFeedbackMsg = "";
+    }
+
+    private void StartEditRole()
+    {
+        tempRole = AppState.UserRole;
+        isEditingRole = true;
+    }
+
+    private void CancelEditRole()
+    {
+        isEditingRole = false;
+    }
+
+    private void HandleRoleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            SaveRole();
+        }
+        else if (e.Key == "Escape")
+        {
+            CancelEditRole();
+        }
+    }
+
+    private void SaveRole()
+    {
+        string trimmed = tempRole?.Trim() ?? "";
+        if (!string.IsNullOrWhiteSpace(trimmed))
+        {
+            AppState.SetUserRole(trimmed);
+        }
+        isEditingRole = false;
+    }
+
+    private async Task HandleAvatarChange(InputFileChangeEventArgs e)
+    {
+        avatarFeedbackMsg = "";
+        var file = e.File;
+        if (file == null) return;
+
+        if (file.Size > 2 * 1024 * 1024)
+        {
+            avatarFeedbackMsg = "Image must be less than 2MB.";
+            return;
+        }
+
+        try
+        {
+            var format = file.ContentType;
+            if (string.IsNullOrWhiteSpace(format) || !format.StartsWith("image/"))
+            {
+                format = "image/png";
+            }
+
+            var resized = await file.RequestImageFileAsync(format, 200, 200);
+            using var stream = resized.OpenReadStream(maxAllowedSize: 2 * 1024 * 1024);
+            using var ms = new System.IO.MemoryStream();
+            await stream.CopyToAsync(ms);
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var dataUrl = $"data:{format};base64,{base64}";
+            AppState.SetAvatarUrl(dataUrl);
+        }
+        catch
+        {
+            avatarFeedbackMsg = "Failed to load image. Please try another file.";
+        }
+    }
+
+    private async Task SavePassword()
+    {
+        if (AppState.Username.Equals("Guest User", StringComparison.OrdinalIgnoreCase))
+        {
+            passwordMsg = "Guest accounts cannot save a password. Please sign up to create a persistent account.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            passwordMsg = "Please enter a new password.";
+            return;
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            passwordMsg = "Passwords do not match. Please write the password twice.";
+            return;
+        }
+
+        var success = await AccountService.UpdatePasswordAsync(AppState.Username, newPassword);
+        if (success)
+        {
+            passwordMsg = "Password updated successfully.";
+            newPassword = "";
+            confirmPassword = "";
+        }
+        else
+        {
+            passwordMsg = "Failed to update password. Account not found.";
+        }
+    }
+}

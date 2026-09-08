@@ -1,0 +1,4 @@
+.about-container {
+    padding-top: clamp(6.8rem, 12vh, 8.5rem) !important;
+    margin-top: 0 !important;
+}

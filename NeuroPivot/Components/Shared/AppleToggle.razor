@@ -1,0 +1,61 @@
+<div class="apple-toggle @(Value ? "active" : "") @(Disabled ? "disabled" : "")" @onclick="Toggle">
+    <div class="apple-toggle-handle"></div>
+</div>
+
+<style>
+    .apple-toggle {
+        width: 46px;
+        height: 26px;
+        background-color: #E9E9EA;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.25s ease;
+        display: inline-block;
+        vertical-align: middle;
+        user-select: none;
+        flex-shrink: 0;
+        border-radius: 9999px !important;
+    }
+
+    [data-theme="dark"] .apple-toggle {
+        background-color: #39393D;
+    }
+
+    .apple-toggle.active {
+        background-color: #34C759 !important;
+    }
+
+    .apple-toggle.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .apple-toggle-handle {
+        width: 22px;
+        height: 22px;
+        background-color: #FFFFFF;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        border-radius: 50% !important;
+    }
+
+    .apple-toggle.active .apple-toggle-handle {
+        transform: translateX(20px);
+    }
+</style>
+
+@code {
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public EventCallback<bool> ValueChanged { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+
+    private async Task Toggle()
+    {
+        if (Disabled) return;
+        Value = !Value;
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

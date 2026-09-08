@@ -1,0 +1,79 @@
+@page "/questionnaire/eating"
+@using NeuroPivot.Components.Pages.EatingQuestionnaire.Components
+@inject AppState AppState
+@inject HabitService HabitService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<div class="nobs-container" style="max-width: 780px;">
+    <div class="eating-q-header">
+        <h1 class="eating-q-title">
+            Eating Diagnostic Protocol
+        </h1>
+        <div class="eating-q-step-text">
+            Step @activeStep of 4
+        </div>
+        <div class="eating-q-step-track">
+            @for (int i = 1; i <= 4; i++)
+            {
+                int stepNum = i;
+                <div class="step-indicator-bar @(stepNum <= activeStep ? "active" : "")"></div>
+            }
+        </div>
+    </div>
+
+    <EatingDiagnosticSteps OnStepChanged="(s) => activeStep = s" OnComplete="GenerateEatingRecommendation" />
+</div>
+
+<EatingResultModal IsOpen="showResultModal"
+                   AssessedLevel="@AssessedLevel"
+                   ResultQuoteTitle="@ResultQuoteTitle"
+                   ResultQuoteBody="@ResultQuoteBody"
+                   OnClose="() => showResultModal = false"
+                   OnProceed="ProceedToRecommended" />
+
+@code {
+    private int activeStep = 1;
+    private bool showResultModal = false;
+    private string ResultQuoteTitle = "";
+    private string ResultQuoteBody = "";
+    private string AssessedLevel = "";
+
+    protected override void OnInitialized() => AppState.OnChange += OnStateChanged;
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void GenerateEatingRecommendation((string q1, string q2, string q3, string q4) answers)
+    {
+        int score = 0;
+        if (answers.q1 == "no") score += 3;
+        if (answers.q2 == "often") score += 3;
+        else if (answers.q2 == "sometimes") score += 1;
+        if (answers.q3 == "yes") score += 2;
+        if (answers.q4 == "yes") score += 3;
+
+        if (score >= 6) {
+            AssessedLevel = "eating disorder";
+            ResultQuoteTitle = "Sounds like it's best to consult with a professional";
+            ResultQuoteBody = "Nutritional health is deeply personal. Professional guidance combined with supportive daily tools yields the safest recovery.";
+        } else if (score >= 3) {
+            AssessedLevel = "concerning";
+            ResultQuoteTitle = "this app supports you with the tools";
+            ResultQuoteBody = "We've loaded your dashboard with science-backed protocols for glucose stabilization and appetite regulation.";
+        } else {
+            AssessedLevel = "normal";
+            ResultQuoteTitle = "Let's work with this eating habit together";
+            ResultQuoteBody = "Nutritional timing and metabolic stabilization start with simple, consistent micro-habits.";
+        }
+
+        AppState.SetAddictionLevel(AssessedLevel, score);
+        showResultModal = true;
+    }
+
+    private void ProceedToRecommended() {
+        showResultModal = false;
+        HabitService.InitializeGoalHabit("eating");
+        AppState.SetActiveView("recommended");
+    }
+
+    public void Dispose() => AppState.OnChange -= OnStateChanged;
+}

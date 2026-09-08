@@ -1,0 +1,19 @@
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay">
+        <div class="celebration-solid-square">
+            <p class="celebration-text">
+                @(string.IsNullOrEmpty(Message) ? "keep up the good work. 2 more to being an overachiever:))" : Message)
+            </p>
+            <button class="nobs-btn btn-continue" @onclick="OnClose">
+                continue →
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public string? Message { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+}

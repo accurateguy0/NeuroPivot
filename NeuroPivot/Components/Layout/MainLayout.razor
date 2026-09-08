@@ -1,0 +1,28 @@
+@inherits LayoutComponentBase
+@inject AppState AppState
+@implements IDisposable
+
+<div class="main-layout-container" data-theme="@(AppState.IsDarkMode ? "dark" : "light")">
+    @Body
+    <SleepAlertModal />
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        AppState.OnChange -= OnStateChanged;
+    }
+}

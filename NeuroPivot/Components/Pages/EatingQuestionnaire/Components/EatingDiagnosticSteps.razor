@@ -1,0 +1,97 @@
+<div class="questionnaire-container-square animated-fade-in">
+    @if (currentStep == 1)
+    {
+        <div>
+            <label class="step-question-label">
+                1. Can you control your eating?
+            </label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label">
+                    <input type="radio" name="eatQ1" value="yes" checked="@(eatQ1 == "yes")" @onchange='() => eatQ1 = "yes"' />
+                    <span>Yes</span>
+                </label>
+                <label class="radio-item-label">
+                    <input type="radio" name="eatQ1" value="no" checked="@(eatQ1 == "no")" @onchange='() => eatQ1 = "no"' />
+                    <span>No</span>
+                </label>
+            </div>
+            <div class="step-nav-right">
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(2)">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 2)
+    {
+        <div>
+            <label class="step-question-label">
+                2. How often do you think obsessively about food, calories or body shape?
+            </label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label"><input type="radio" name="eatQ2" value="rarely" checked="@(eatQ2 == "rarely")" @onchange='() => eatQ2 = "rarely"' /><span>Rarely</span></label>
+                <label class="radio-item-label"><input type="radio" name="eatQ2" value="sometimes" checked="@(eatQ2 == "sometimes")" @onchange='() => eatQ2 = "sometimes"' /><span>Sometimes</span></label>
+                <label class="radio-item-label"><input type="radio" name="eatQ2" value="often" checked="@(eatQ2 == "often")" @onchange='() => eatQ2 = "often"' /><span>Often</span></label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(1)">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(3)">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 3)
+    {
+        <div>
+            <label class="step-question-label">
+                3. Do you eat differently around others, compared to being alone?
+            </label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label"><input type="radio" name="eatQ3" value="yes" checked="@(eatQ3 == "yes")" @onchange='() => eatQ3 = "yes"' /><span>Yes</span></label>
+                <label class="radio-item-label"><input type="radio" name="eatQ3" value="no" checked="@(eatQ3 == "no")" @onchange='() => eatQ3 = "no"' /><span>No</span></label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(2)">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(4)">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 4)
+    {
+        <div>
+            <label class="step-question-label">
+                4. Do you feel a need to compensate for eating too much or too little?
+            </label>
+            <div class="vertical-radio-group step-radio-group">
+                <label class="radio-item-label"><input type="radio" name="eatQ4" value="yes" checked="@(eatQ4 == "yes")" @onchange='() => eatQ4 = "yes"' /><span>Yes</span></label>
+                <label class="radio-item-label"><input type="radio" name="eatQ4" value="no" checked="@(eatQ4 == "no")" @onchange='() => eatQ4 = "no"' /><span>No</span></label>
+            </div>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(3)">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="SubmitChoices">Generate Protocol →</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private int currentStep = 1;
+    private string eatQ1 = "yes";
+    private string eatQ2 = "rarely";
+    private string eatQ3 = "no";
+    private string eatQ4 = "no";
+
+    [Parameter]
+    public EventCallback<int> OnStepChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<(string q1, string q2, string q3, string q4)> OnComplete { get; set; }
+
+    private void SetStep(int step)
+    {
+        currentStep = step;
+        OnStepChanged.InvokeAsync(step);
+    }
+
+    private void SubmitChoices()
+    {
+        OnComplete.InvokeAsync((eatQ1, eatQ2, eatQ3, eatQ4));
+    }
+}

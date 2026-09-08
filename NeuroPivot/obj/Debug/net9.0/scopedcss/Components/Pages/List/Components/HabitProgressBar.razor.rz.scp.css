@@ -1,0 +1,36 @@
+.habit-progress-box[b-lrdi2vtlat] {
+    margin-bottom: 1.5rem;
+}
+
+.habit-progress-label[b-lrdi2vtlat] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.habit-progress-track[b-lrdi2vtlat] {
+    background: rgba(127, 183, 190, 0.15);
+    height: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+}
+
+[data-theme="dark"] .habit-progress-track[b-lrdi2vtlat] {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] .habit-progress-track[b-lrdi2vtlat] {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.habit-progress-fill[b-lrdi2vtlat] {
+    background: linear-gradient(90deg, #7FB7BE, #E6AACE, var(--accent-pink, #FF6B6B));
+    height: 100%;
+    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}

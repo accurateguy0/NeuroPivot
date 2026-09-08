@@ -1,0 +1,34 @@
+.energy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-low {
+  background: rgba(244, 63, 94, 0.15);
+  color: hsl(var(--color-danger));
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.badge-med {
+  background: rgba(245, 158, 11, 0.15);
+  color: hsl(var(--color-warning));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-high {
+  background: rgba(16, 185, 129, 0.15);
+  color: hsl(var(--color-success));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-calm {
+  background: rgba(6, 182, 212, 0.15);
+  color: hsl(var(--color-info));
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}

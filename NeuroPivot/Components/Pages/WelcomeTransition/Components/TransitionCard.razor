@@ -1,0 +1,17 @@
+@inject AppState AppState
+
+<div class="fullscreen-transition-container" @onclick="OnClick">
+    <div class="fullscreen-transition-card animated-fade-in">
+        <h1 class="welcome-text-glow">
+            @(AppState.WelcomeMessageType == "returning" ? "Welcome back" : "no bs")
+        </h1>
+        <p class="click-to-proceed-sub">
+            Click anywhere on the page to proceed →
+        </p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

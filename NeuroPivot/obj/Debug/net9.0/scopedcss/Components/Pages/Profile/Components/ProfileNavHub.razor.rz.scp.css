@@ -1,0 +1,49 @@
+.profile-nav-hub-list[b-184lgkvdth] {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-icon[b-184lgkvdth] {
+    font-size: 1.4rem;
+}
+
+.profile-section-btn[b-184lgkvdth] {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 1.25rem 1.75rem;
+    border: 1px solid var(--border-color);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease;
+    text-align: left;
+    width: 100%;
+    opacity: 0;
+    animation: slowProfileBtnAppear-b-184lgkvdth 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.profile-section-btn:nth-child(1)[b-184lgkvdth] { animation-delay: 0.05s; }
+.profile-section-btn:nth-child(2)[b-184lgkvdth] { animation-delay: 0.18s; }
+.profile-section-btn:nth-child(3)[b-184lgkvdth] { animation-delay: 0.31s; }
+.profile-section-btn:nth-child(4)[b-184lgkvdth] { animation-delay: 0.44s; }
+.profile-section-btn:nth-child(5)[b-184lgkvdth] { animation-delay: 0.57s; }
+.profile-section-btn:nth-child(6)[b-184lgkvdth] { animation-delay: 0.70s; }
+
+.profile-section-btn:hover[b-184lgkvdth] {
+    transform: scale(1.01);
+    border-color: var(--accent-color);
+    background: var(--bg-card);
+}
+
+@keyframes slowProfileBtnAppear-b-184lgkvdth {
+    0% {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

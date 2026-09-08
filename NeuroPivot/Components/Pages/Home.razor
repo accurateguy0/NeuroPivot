@@ -1,0 +1,194 @@
+@page "/"
+@inject IJSRuntime JS
+
+@inject AppState AppState
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<PageTitle>no bs - student project neuroscience personal notes</PageTitle>
+
+<div class="app-root" data-theme="@(AppState.IsDarkMode ? "dark" : "light")" data-bg-mode="@GetBgMode()" data-theme-goal="@GetThemeGoal()">
+    <NavBar />
+
+    <main class="app-main-content">
+        @if (!AppState.IsSessionLoaded)
+        {
+            <div style="min-height: 80vh; opacity: 0;">
+                <!-- Transparent placeholder while session is loaded from localStorage -->
+            </div>
+        }
+        else
+        {
+            <div class="view-container @(isFadingOut ? "view-fade-out" : "") @(isFadingIn ? "view-fade-in" : "") @(renderedView == "landing" ? "" : "no-shimmer")">
+                @* 1. Starting Page *@
+                @if (renderedView == "landing")
+                {
+                    <Starting />
+                }
+                @* 2. Auth Page *@
+                else if (renderedView == "authentication")
+                {
+                    <Authentification />
+                }
+                @* 3. Welcome Transition Page *@
+                else if (renderedView == "welcome_transition")
+                {
+                    <Welcometransition />
+                }
+                @* 4. Questionnaire Pages *@
+                else if (renderedView == "select_goal" || renderedView == "goal_select" || renderedView == "focus_select")
+                {
+                    <SelectGoal />
+                }
+                else if (renderedView == "habit_questionnaire")
+                {
+                    <HabitQuestionnaire />
+                }
+                else if (renderedView == "sleep_questionnaire")
+                {
+                    <SleepQuestionnaire />
+                }
+                else if (renderedView == "eating_questionnaire")
+                {
+                    <EatingQuestionnaire />
+                }
+                else if (renderedView == "focus_questionnaire")
+                {
+                    <FocusQuestionnaire />
+                }
+                else if (renderedView == "change_goal_questionnaire")
+                {
+                    <Changegoal />
+                }
+                @* 5. List Page *@
+                else if (renderedView == "list")
+                {
+                    <List />
+                }
+                @* 6. Recommended Page *@
+                else if (renderedView == "recommended")
+                {
+                    <Articles />
+                }
+                @* 7. Profile Page *@
+                else if (renderedView == "profile")
+                {
+                    <Profile />
+                }
+                @* 8. About Page *@
+                else if (renderedView == "about")
+                {
+                    <About />
+                }
+            </div>
+        }
+    </main>
+</div>
+
+@code {
+    private string renderedView = "landing";
+    private string lastView = "landing";
+    private bool isFadingOut = false;
+    private bool isFadingIn = false;
+    private bool isDisposed = false;
+    private bool hasHydratedSession = false;
+
+    protected override void OnInitialized()
+    {
+        renderedView = AppState.ActiveView;
+        lastView = AppState.ActiveView;
+        hasHydratedSession = AppState.IsSessionLoaded;
+        AppState.OnChange += OnStateChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await AppState.LoadFromLocalStorageAsync();
+        }
+    }
+
+    private async void OnStateChanged()
+    {
+        if (isDisposed) return;
+
+        try
+        {
+            if (!hasHydratedSession && AppState.IsSessionLoaded)
+            {
+                hasHydratedSession = true;
+                renderedView = AppState.ActiveView;
+                lastView = AppState.ActiveView;
+                await InvokeAsync(StateHasChanged);
+                return;
+            }
+
+            if (AppState.ActiveView != renderedView)
+            {
+                var nextView = AppState.ActiveView;
+                lastView = nextView;
+
+                isFadingOut = true;
+                await InvokeAsync(StateHasChanged);
+
+                await Task.Delay(220);
+                if (isDisposed) return;
+
+                renderedView = nextView;
+                isFadingOut = false;
+                isFadingIn = true;
+                await InvokeAsync(StateHasChanged);
+
+                try
+                {
+                    await JS.InvokeVoidAsync("eval", "window.scrollTo(0, 0)");
+                }
+                catch
+                {
+                }
+
+                await Task.Delay(100);
+                if (isDisposed) return;
+
+                isFadingIn = false;
+                await InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+        catch (InvalidOperationException)
+        {
+        }
+    }
+
+    private string GetBgMode()
+    {
+        if (AppState.ActiveView == "welcome_transition")
+            return ""; // No bg-mode override — fullscreen overlay handles its own background
+        if (AppState.ActiveView == "recommended" || AppState.ActiveView == "about")
+            return "mint";
+        return ""; // Default background adheres to active data-theme
+    }
+
+    private string GetThemeGoal()
+    {
+        var view = renderedView;
+        if (view == "sleep_questionnaire" || AppState.CurrentGoal == "sleep" || AppState.CurrentGoal == "carl_jung" || AppState.CurrentGoal == "emotions" || AppState.CurrentGoal == "stress")
+        {
+            return "rest";
+        }
+        return "action";
+    }
+
+    public void Dispose()
+    {
+        isDisposed = true;
+        AppState.OnChange -= OnStateChanged;
+    }
+}

@@ -1,0 +1,130 @@
+.origin-story-section {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    padding: 3.5rem 2.5rem;
+    margin-bottom: 4rem;
+}
+
+.founder-tag {
+    display: inline-block;
+    width: fit-content;
+    padding: 4px 10px;
+    background: var(--accent-pink);
+    color: #2E282A;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+}
+
+.story-heading {
+    letter-spacing: -0.05em;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+}
+
+.story-paragraph {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.highlight-primary {
+    color: var(--text-primary);
+}
+
+.highlight-blue {
+    color: var(--accent-blue);
+}
+
+.slogan-carousel-container {
+    margin-top: 2rem;
+    padding: 2.5rem 1.5rem;
+    background: var(--bg-page);
+}
+
+.slogan-carousel-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.carousel-arrow-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 44px;
+    height: 44px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.carousel-arrow-btn:hover {
+    background: var(--bg-card);
+    border-color: var(--accent-color);
+}
+
+.slogan-quote-box {
+    font-family: Baskerville, 'Libre Baskerville', 'Fraunces', Georgia, serif;
+    font-size: clamp(1.2rem, 3.2vw, 2rem);
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.5;
+    flex: 1;
+    overflow: hidden;
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slogan-text-animated {
+    display: inline-block;
+    will-change: transform, opacity;
+}
+
+.slogan-text-animated.swipe-next {
+    animation: swipeNextAnim 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slogan-text-animated.swipe-prev {
+    animation: swipePrevAnim 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes swipeNextAnim {
+    0% {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes swipePrevAnim {
+    0% {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
