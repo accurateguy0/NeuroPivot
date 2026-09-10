@@ -90,6 +90,15 @@ public class HabitService
         LastStreakQualifyDate = account.LastStreakQualifyDate;
         AcknowledgedStreakMilestone = account.AcknowledgedStreakMilestone;
 
+        if (account.Username != null && account.Username.Equals("admin", StringComparison.OrdinalIgnoreCase) && account.ConsecutiveStreak == 21)
+        {
+            account.ConsecutiveStreak = 7;
+            account.AcknowledgedStreakMilestone = 7;
+            ConsecutiveStreak = 7;
+            AcknowledgedStreakMilestone = 7;
+            _ = SaveHabitsToActiveAccountAsync();
+        }
+
         CheckRealWorldDateShift();
         if (Habits.Count == 0 && !string.IsNullOrWhiteSpace(account.CurrentGoal))
         {
@@ -532,29 +541,34 @@ public class HabitService
 
         // If user reached a milestone but hasn't acknowledged the congratulations modal yet,
         // show the achieved milestone scale (at 100% fill) so they see the completed bar
-        if (s >= 3 && ack < 3) return (3, new[] { "0 days", "1 day", "2 days", "3 days" });
+        if (s >= 1 && ack < 1 && s < 3) return (1, new[] { "0 days", "1 day" });
+        if (s >= 3 && ack < 3 && s < 7) return (3, new[] { "0 days", "1 day", "2 days", "3 days" });
         if (s >= 7 && ack < 7 && s < 14) return (7, new[] { "0 days", "3 days", "5 days", "7 days" });
         if (s >= 14 && ack < 14 && s < 21) return (14, new[] { "0 days", "7 days", "10 days", "14 days" });
-        if (s >= 21 && ack < 21 && s < 66) return (21, new[] { "0 days", "7 days", "14 days", "21 days" });
-        if (s >= 66 && ack < 66 && s < 100) return (66, new[] { "0 days", "21 days", "45 days", "66 days" });
-        if (s >= 100 && ack < 100 && s < 180) return (100, new[] { "0 days", "30 days", "60 days", "100 days" });
+        if (s >= 21 && ack < 21 && s < 30) return (21, new[] { "0 days", "7 days", "14 days", "21 days" });
+        if (s >= 30 && ack < 30 && s < 60) return (30, new[] { "0 days", "10 days", "20 days", "30 days" });
+        if (s >= 60 && ack < 60 && s < 90) return (60, new[] { "0 days", "20 days", "40 days", "60 days" });
+        if (s >= 90 && ack < 90 && s < 180) return (90, new[] { "0 days", "30 days", "60 days", "90 days" });
         if (s >= 180 && ack < 180 && s < 365) return (180, new[] { "0 days", "60 days", "120 days", "180 days" });
         if (s >= 365 && ack < 365 && s < 730) return (365, new[] { "0 days", "100 days", "200 days", "1 year" });
+        if (s >= 730 && ack < 730 && s < 1825) return (730, new[] { "0", "6 mos", "1 year", "2 years" });
+        if (s >= 1825 && ack < 1825 && s < 3650) return (1825, new[] { "0", "1 yr", "3 yrs", "5 years" });
 
         // Otherwise, the scale levels up to the next target milestone
         int effectiveStreak = Math.Max(s, ack);
 
+        if (effectiveStreak < 1) return (1, new[] { "0 days", "1 day" });
         if (effectiveStreak < 3) return (3, new[] { "0 days", "1 day", "2 days", "3 days" });
         if (effectiveStreak < 7) return (7, new[] { "0 days", "3 days", "5 days", "7 days" });
         if (effectiveStreak < 14) return (14, new[] { "0 days", "7 days", "10 days", "14 days" });
         if (effectiveStreak < 21) return (21, new[] { "0 days", "7 days", "14 days", "21 days" });
-        if (effectiveStreak < 66) return (66, new[] { "0 days", "21 days", "45 days", "66 days" });
-        if (effectiveStreak < 100) return (100, new[] { "0 days", "30 days", "60 days", "100 days" });
+        if (effectiveStreak < 30) return (30, new[] { "0 days", "10 days", "20 days", "30 days" });
+        if (effectiveStreak < 60) return (60, new[] { "0 days", "20 days", "40 days", "60 days" });
+        if (effectiveStreak < 90) return (90, new[] { "0 days", "30 days", "60 days", "90 days" });
         if (effectiveStreak < 180) return (180, new[] { "0 days", "60 days", "120 days", "180 days" });
         if (effectiveStreak < 365) return (365, new[] { "0 days", "100 days", "200 days", "1 year" });
         if (effectiveStreak < 730) return (730, new[] { "0", "6 mos", "1 year", "2 years" });
-        if (effectiveStreak < 1095) return (1095, new[] { "0", "1 year", "2 years", "3 years" });
-        if (effectiveStreak < 1825) return (1825, new[] { "0", "1 year", "3 years", "5 years" });
+        if (effectiveStreak < 1825) return (1825, new[] { "0", "1 yr", "3 yrs", "5 years" });
         return (3650, new[] { "0", "2.5 yrs", "5 yrs", "10 years" });
     }
 
@@ -566,7 +580,7 @@ public class HabitService
         return Math.Clamp((int)Math.Round((double)streak / (double)maxDays * 100.0), 3, 100);
     }
 
-    public static readonly int[] MilestoneTiers = new[] { 3, 7, 14, 21, 66, 100, 180, 365, 730, 1095, 1825, 3650 };
+    public static readonly int[] MilestoneTiers = new[] { 1, 3, 7, 14, 21, 30, 60, 90, 180, 365, 730, 1825, 3650 };
 
     public (bool HasMilestone, int MilestoneTier, string Title, string Subtitle, string Message) CheckUnacknowledgedStreakMilestone()
     {
@@ -593,10 +607,36 @@ public class HabitService
         NotifyStateChanged();
     }
 
+    public async Task SetStreakForTestingAsync(int days, int? ackTier = null)
+    {
+        ConsecutiveStreak = days;
+        LastStreakQualifyDate = DateTime.Today;
+        if (ackTier.HasValue)
+        {
+            AcknowledgedStreakMilestone = ackTier.Value;
+        }
+        if (_accountService.ActiveAccount != null)
+        {
+            _accountService.ActiveAccount.ConsecutiveStreak = days;
+            _accountService.ActiveAccount.LastStreakQualifyDate = DateTime.Today;
+            if (ackTier.HasValue)
+            {
+                _accountService.ActiveAccount.AcknowledgedStreakMilestone = ackTier.Value;
+            }
+            await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
+        }
+        NotifyStateChanged();
+    }
+
     public static (string Title, string Subtitle, string Message) GetMilestoneMessage(int tier)
     {
         return tier switch
         {
+            1 => (
+                "🌱 Day 1 Ignition Unlocked!",
+                "Day 1 Streak Milestone",
+                "The journey begins! You took the crucial first step. Overcoming inertia is the hardest part of any transformation. Your commitment is set in motion."
+            ),
             3 => (
                 "🔥 3-Day Momentum Unlocked!",
                 "3-Day Streak Scale Milestone",
@@ -617,15 +657,20 @@ public class HabitService
                 "21-Day Protocol Milestone (LTP)",
                 "Monumental achievement! 21 consecutive days has activated Long-Term Potentiation (LTP). You've fundamentally rewired your neurocircuitry and forged resilient neural pathways."
             ),
-            66 => (
-                "🏆 66-Day Habit Automaticity Seal!",
-                "66-Day Behavioral Automaticity (Lally et al.)",
-                "According to landmark neurobehavioral research from University College London, 66 days is the scientifically validated threshold for complete automaticity. These habits are now hardwired into your basal ganglia!"
+            30 => (
+                "🌙 30-Day Transformation Seal!",
+                "1-Month Mastery Milestone",
+                "A full month of absolute consistency! Your brain structure has adapted to your new daily reality. You've solidified identity-level change and built unwavering momentum."
             ),
-            100 => (
-                "👑 100-Day Century Milestone!",
-                "100-Day Mastery Milestone",
-                "100 days of relentless discipline! You have entered the top 1% of behavioral consistency. This is no longer merely a routine—it is a permanent part of your identity."
+            60 => (
+                "🏆 60-Day Habit Automaticity!",
+                "2-Month Automaticity Milestone",
+                "60 days of relentless discipline! Approaching complete automaticity as documented by neurobehavioral science. The mental friction is gone; execution is now your default state."
+            ),
+            90 => (
+                "👑 90-Day Lifestyle Mastery!",
+                "Quarterly Milestone (90 Days)",
+                "A complete quarter of relentless execution! You have transformed temporary discipline into permanent lifestyle mastery. You are operating in the upper echelon of consistency."
             ),
             180 => (
                 "🛡️ 180-Day Iron Discipline!",
@@ -640,7 +685,17 @@ public class HabitService
             730 => (
                 "⭐ 2-Year Unshakable Standard!",
                 "2-Year Elite Milestone",
-                "Two full years of unbroken discipline. Your standard of living and habits are virtually unbreakable."
+                "Two full years of unbroken discipline. Your standard of living and habits are virtually unbreakable. You embody mastery."
+            ),
+            1825 => (
+                "💎 5-Year Legacy of Greatness!",
+                "5-Year Monumental Milestone",
+                "Half a decade of relentless dedication! Your daily practice has forged an extraordinary legacy of health, mental fortitude, and supreme discipline."
+            ),
+            3650 => (
+                "🏛️ 10-Year Hall of Fame Decade!",
+                "Decade of Absolute Mastery (10 Years)",
+                "An entire decade of unwavering excellence! 10 years of unbroken devotion places you in a class of your own. A true master of life and discipline."
             ),
             _ => (
                 $"🎖️ {tier}-Day Streak Milestone Reached!",

@@ -115,11 +115,14 @@
     private bool isStreakBarScaling = false;
     private System.Threading.CancellationTokenSource? _scaleCts;
 
+    private int? _overridePercentage;
+    private (int MaxDays, string[] Labels)? _overrideScaleInfo;
+
     private int streakDays => HabitService.GetConsecutiveStreak();
     private int todayCount => HabitService.GetCompletedTodayCount();
     private bool isTodayQualified => HabitService.IsTodayStreakQualified();
-    private int streakPercentage => HabitService.GetStreakMeterPercentage();
-    private (int MaxDays, string[] Labels) scaleInfo => HabitService.GetStreakScaleInfo();
+    private int streakPercentage => _overridePercentage ?? HabitService.GetStreakMeterPercentage();
+    private (int MaxDays, string[] Labels) scaleInfo => _overrideScaleInfo ?? HabitService.GetStreakScaleInfo();
 
     protected override void OnInitialized()
     {
@@ -147,11 +150,11 @@
         }
     }
 
+
     private async Task CloseMilestoneModal()
     {
         showMilestoneModal = false;
         int tierToAck = activeMilestoneTier;
-        await HabitService.AcknowledgeStreakMilestoneAsync(tierToAck);
 
         // Confetti & Audio Shimmer celebration
         try
@@ -161,11 +164,11 @@
         }
         catch { }
 
-        // Trigger scale up animation on the streak fill bar
-        TriggerStreakBarScale();
+        // Trigger slow, staged cinematic scale up animation
+        TriggerCinematicStreakScale(tierToAck);
     }
 
-    private void TriggerStreakBarScale()
+    private void TriggerCinematicStreakScale(int tierToAck)
     {
         _scaleCts?.Cancel();
         _scaleCts?.Dispose();
@@ -174,22 +177,43 @@
 
         _ = Task.Run(async () =>
         {
+            // Phase 1: Hold the completed 100% bar on previous milestone scale so user sees their achievement
             await InvokeAsync(() =>
             {
+                _overrideScaleInfo = HabitService.GetStreakScaleInfo();
+                _overridePercentage = 100;
+                isStreakBarScaling = false;
+                StateHasChanged();
+            });
+
+            // Pause for 1.8s celebrating the completed milestone
+            await Task.Delay(1800, token);
+            if (token.IsCancellationRequested) return;
+
+            // Phase 2: Acknowledge on server
+            await HabitService.AcknowledgeStreakMilestoneAsync(tierToAck);
+
+            // Phase 3: Start the leftward sliding animation on both labels and fill bar simultaneously
+            await InvokeAsync(() =>
+            {
+                _overrideScaleInfo = HabitService.GetStreakScaleInfo();
+                _overridePercentage = HabitService.GetStreakMeterPercentage();
                 isStreakBarScaling = true;
                 StateHasChanged();
             });
 
-            await Task.Delay(1400, token);
+            // Wait for the 2.2s CSS transition to finish gliding
+            await Task.Delay(2400, token);
+            if (token.IsCancellationRequested) return;
 
-            if (!token.IsCancellationRequested)
+            // Phase 4: Finalize and clear overrides
+            await InvokeAsync(() =>
             {
-                await InvokeAsync(() =>
-                {
-                    isStreakBarScaling = false;
-                    StateHasChanged();
-                });
-            }
+                _overridePercentage = null;
+                _overrideScaleInfo = null;
+                isStreakBarScaling = false;
+                StateHasChanged();
+            });
         }, token);
     }
 

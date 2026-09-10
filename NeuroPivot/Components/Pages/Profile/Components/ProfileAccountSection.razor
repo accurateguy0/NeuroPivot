@@ -92,29 +92,35 @@
         </div>
     </div>
 
-    <div class="password-change-box">
-        <h3 class="password-change-title">Change Password</h3>
-        <div class="password-input-group">
-            <input type="password" @bind="newPassword" placeholder="Enter new password" class="profile-text-input" />
-            <input type="password" @bind="confirmPassword" placeholder="Confirm new password" class="profile-text-input" />
-            <button class="nobs-btn nobs-btn-blue" style="padding: 0.6rem;" @onclick="SavePassword">Update Password</button>
-            @if (!string.IsNullOrEmpty(passwordMsg))
-            {
-                <span class="password-feedback-msg">@passwordMsg</span>
-            }
+    @if (!isGuestUser)
+    {
+        <div class="password-change-box">
+            <h3 class="password-change-title">Change Password</h3>
+            <div class="password-input-group">
+                <input type="password" @bind="newPassword" placeholder="Enter new password" class="profile-text-input" />
+                <input type="password" @bind="confirmPassword" placeholder="Confirm new password" class="profile-text-input" />
+                <button class="nobs-btn nobs-btn-blue" style="padding: 0.6rem;" @onclick="SavePassword">Update Password</button>
+                @if (!string.IsNullOrEmpty(passwordMsg))
+                {
+                    <span class="password-feedback-msg">@passwordMsg</span>
+                }
+            </div>
         </div>
-    </div>
+    }
 
     <div class="account-actions-box">
         <button class="nobs-btn btn-logout" @onclick="LogOut">
             <span style="font-size: 1.1rem; margin-right: 8px;">🚪</span>
-            <span>Log Out</span>
+            <span>@(isGuestUser ? "Exit Guest Mode" : "Log Out")</span>
         </button>
 
-        <button class="nobs-btn btn-delete-account" @onclick="ShowDeleteConfirmation">
-            <span style="font-size: 1.1rem; margin-right: 8px;">🗑️</span>
-            <span>Delete Account</span>
-        </button>
+        @if (!isGuestUser)
+        {
+            <button class="nobs-btn btn-delete-account" @onclick="ShowDeleteConfirmation">
+                <span style="font-size: 1.1rem; margin-right: 8px;">🗑️</span>
+                <span>Delete Account</span>
+            </button>
+        }
     </div>
 </div>
 
@@ -140,6 +146,11 @@
 }
 
 @code {
+    private bool isGuestUser =>
+        !AppState.IsLoggedIn ||
+        AppState.Username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) ||
+        AccountService.ActiveAccount == null;
+
     private string newPassword = "";
     private string confirmPassword = "";
     private string passwordMsg = "";
@@ -161,6 +172,7 @@
 
     private void ShowDeleteConfirmation()
     {
+        if (isGuestUser) return;
         showDeleteModal = true;
     }
 

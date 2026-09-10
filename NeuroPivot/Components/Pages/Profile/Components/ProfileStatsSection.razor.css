@@ -73,6 +73,8 @@
 }
 
 .streak-track-container {
+    container-type: inline-size;
+    position: relative;
     margin-bottom: 0.6rem;
 }
 
@@ -83,6 +85,11 @@
     border-radius: 6px;
     overflow: hidden;
     position: relative;
+    transition: box-shadow 0.4s ease;
+}
+
+.streak-track-bar.scaling-up {
+    box-shadow: 0 0 16px rgba(127, 183, 190, 0.45);
 }
 
 .streak-fill-bar {
@@ -90,7 +97,7 @@
     background: linear-gradient(90deg, #7FB7BE 0%, #FF6B6B 35%, rgba(255, 255, 255, 0.85) 50%, #FF6B6B 65%, #7FB7BE 100%);
     background-size: 250% 100%;
     border-radius: 6px;
-    transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: width 2.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     animation: barPeriodicShine 30s ease-in-out infinite;
 }
 
@@ -100,34 +107,85 @@
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.75rem;
     color: var(--text-muted);
-    margin-top: 4px;
-    transition: color 0.3s ease;
+    margin-top: 6px;
+    transition: color 0.4s ease;
+    position: relative;
 }
 
 .streak-scale-labels span {
-    transition: transform 0.3s ease, color 0.3s ease;
+    transition: transform 0.4s ease, color 0.4s ease;
+    display: inline-block;
+    will-change: transform;
 }
 
+/* The achieved milestone label gliding left in exact lockstep with the retracting meter tip */
+.streak-scale-labels.scaling-up span:nth-child(2) {
+    animation: achievedLabelShiftLeft 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    font-weight: 700;
+}
+
+@keyframes achievedLabelShiftLeft {
+    0% {
+        transform: translateX(calc(66.67cqw - 24px));
+        color: #f59e0b;
+        text-shadow: 0 0 12px rgba(245, 158, 11, 0.7);
+    }
+    40% {
+        color: var(--accent-blue, #7FB7BE);
+        text-shadow: 0 0 8px rgba(127, 183, 190, 0.5);
+    }
+    100% {
+        transform: translateX(0);
+        color: var(--text-muted);
+        text-shadow: none;
+    }
+}
+
+/* Intermediate milestone sliding in from right */
+.streak-scale-labels.scaling-up span:nth-child(3) {
+    animation: midLabelShiftLeft 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes midLabelShiftLeft {
+    0% {
+        transform: translateX(33.33cqw);
+        opacity: 0;
+    }
+    40% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* The newly unlocked target milestone pulsing and scaling at the right */
 .streak-scale-labels.scaling-up span:last-child {
-    animation: labelScaleHighlight 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: targetLabelScaleAndSlide 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     color: var(--accent-blue, #7FB7BE);
     font-weight: 800;
 }
 
-@keyframes labelScaleHighlight {
+@keyframes targetLabelScaleAndSlide {
     0% {
-        transform: scale(1);
+        transform: translateX(20px) scale(0.9);
+        opacity: 0;
     }
-    30% {
-        transform: scale(1.35);
+    25% {
+        transform: translateX(0) scale(1.35);
         color: #f59e0b;
+        text-shadow: 0 0 14px rgba(245, 158, 11, 0.7);
+        opacity: 1;
     }
-    70% {
-        transform: scale(1.15);
+    65% {
+        transform: scale(1.18);
         color: var(--accent-blue, #7FB7BE);
+        text-shadow: 0 0 10px rgba(127, 183, 190, 0.6);
     }
     100% {
         transform: scale(1);
+        text-shadow: none;
     }
 }
 
@@ -314,7 +372,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.78);
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--bg-rgb, 28, 24, 25), 0.85);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     display: flex;
@@ -330,6 +391,8 @@
 }
 
 .milestone-solid-square {
+    margin: auto;
+    box-sizing: border-box;
     background-color: var(--bg-card, #ffffff);
     color: var(--text-primary, #2E282A);
     border: 2px solid var(--accent-blue, #7FB7BE);

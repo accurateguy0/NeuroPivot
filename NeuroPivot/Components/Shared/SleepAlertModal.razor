@@ -2,7 +2,7 @@
 @inject AppState AppState
 @implements IDisposable
 
-@if (SleepService.IsAlertModalOpen)
+@if (SleepService.IsAlertModalOpen && ShouldDisplayAlert)
 {
     <div class="modal-backdrop-overlay">
         <div class="sleep-alert-square animated-fade-in">
@@ -32,7 +32,7 @@
     </div>
 }
 
-@if (SleepService.IsSnoozed && !SleepService.IsAlertModalOpen)
+@if (SleepService.IsSnoozed && !SleepService.IsAlertModalOpen && ShouldDisplayAlert)
 {
     <div class="snooze-floating-toast animated-fade-in">
         <div class="snooze-info">
@@ -46,9 +46,18 @@
 }
 
 @code {
+    private bool ShouldDisplayAlert =>
+        AppState.IsLoggedIn &&
+        !AppState.Username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) &&
+        AppState.ActiveView != "landing" &&
+        AppState.ActiveView != "authentication" &&
+        AppState.ActiveView != "authentification" &&
+        AppState.ActiveView != "welcome_transition";
+
     protected override void OnInitialized()
     {
         SleepService.OnChange += OnStateChanged;
+        AppState.OnChange += OnStateChanged;
         AppState.OnTick += OnTick;
     }
 
@@ -90,6 +99,7 @@
     public void Dispose()
     {
         SleepService.OnChange -= OnStateChanged;
+        AppState.OnChange -= OnStateChanged;
         AppState.OnTick -= OnTick;
     }
 }

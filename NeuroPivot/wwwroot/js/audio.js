@@ -611,7 +611,7 @@ window.nobsAudio = {
             // Audio files from wwwroot/sounds/
             switch (soundName) {
                 case 'zen_bell':
-                    return this.playFileAudio('sounds/Zen_Singing_Bowl.mp3', vol);
+                    return this.playFileAudio('sounds/Zen_Singing_Bowl.m4a', vol);
                 case '528hz_tone':
                 case 'binaural_pulse':
                     return this.playFileAudio('sounds/528hz-pure-tone.mp3', vol);
@@ -686,7 +686,7 @@ window.nobsAudio = {
             // Audio files from wwwroot/sounds/
             switch (soundName) {
                 case 'zen_bell':
-                    return this.playFileAudio('sounds/Zen_Singing_Bowl.mp3', vol);
+                    return this.playFileAudio('sounds/Zen_Singing_Bowl.m4a', vol);
                 case 'fm_bass':
                     return this.playFileAudio('sounds/FM_synth_bass.wav', vol);
                 case '528hz_tone':

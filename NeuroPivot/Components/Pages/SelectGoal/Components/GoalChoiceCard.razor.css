@@ -20,7 +20,7 @@
 
 .choice-card-btn:hover {
     transform: translateY(-2px) scale(1.01);
-    border-color: var(--accent-color);
+    border-color: var(--accent-color, #7FB7BE);
     background: var(--bg-card);
 }
 
@@ -29,4 +29,70 @@
     font-size: 1.3rem;
     font-weight: 800;
     color: var(--text-primary);
+    text-transform: lowercase;
+}
+
+.choice-subtitle {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+    text-transform: lowercase;
+}
+
+.choice-arrow {
+    font-size: 1.5rem;
+    font-weight: 700;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+.choice-arrow.blue {
+    color: var(--accent-blue, #7FB7BE);
+}
+
+.choice-arrow.pink {
+    color: var(--accent-pink, #FF6B6B);
+}
+
+.choice-card-btn:hover .choice-arrow {
+    transform: translateX(4px);
+}
+
+/* Subcategory View Navigation & Header */
+.subcategory-view-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.btn-sub-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    text-transform: lowercase;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+}
+
+.btn-sub-back:hover {
+    border-color: var(--accent-blue, #7FB7BE);
+    color: var(--accent-blue, #7FB7BE);
+    background: var(--bg-card);
+    transform: translateX(-3px);
 }

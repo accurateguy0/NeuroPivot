@@ -1,2 +1,0 @@
-wwwroot\app.css
-C:\Users\FabianOleksiuk\Downloads\NeuroPivot\NeuroPivot\wwwroot\app.css

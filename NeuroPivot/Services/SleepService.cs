@@ -230,6 +230,25 @@ public class SleepService : IDisposable
     private async void HandleTick()
     {
         if (_disposed) return;
+
+        // 1. Do not trigger alarms on landing, auth, or welcome transition views
+        if (_appState.ActiveView == "landing" ||
+            _appState.ActiveView == "authentication" ||
+            _appState.ActiveView == "authentification" ||
+            _appState.ActiveView == "welcome_transition")
+        {
+            return;
+        }
+
+        // 2. Alarms/alerts are user-specific: only trigger for the specific logged-in user
+        if (!_appState.IsLoggedIn ||
+            _accountService.ActiveAccount == null ||
+            _appState.Username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) ||
+            !QuestionnaireCompleted)
+        {
+            return;
+        }
+
         var now = DateTime.Now;
         string todayStr = now.ToString("yyyy-MM-dd");
 

@@ -267,6 +267,11 @@ public class AccountService
         {
             merged["admin"] = CreateDefaultAdminAccount();
         }
+        else if (merged.TryGetValue("admin", out var adminAcct) && adminAcct.ConsecutiveStreak == 21)
+        {
+            adminAcct.ConsecutiveStreak = 7;
+            adminAcct.AcknowledgedStreakMilestone = 7;
+        }
 
         var result = merged.Values.ToList();
 
@@ -453,6 +458,7 @@ public class AccountService
     public async Task<bool> DeleteAccountAsync(string username)
     {
         if (string.IsNullOrWhiteSpace(username)) return false;
+        if (username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) || username.Equals("Guest", StringComparison.OrdinalIgnoreCase)) return false;
 
         var accounts = await GetAllAccountsAsync();
         var toRemove = accounts.FirstOrDefault(a => a.Username.Equals(username.Trim(), StringComparison.OrdinalIgnoreCase));
