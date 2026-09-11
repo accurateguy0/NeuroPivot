@@ -11,17 +11,18 @@
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    padding: 1.25rem;
+    padding: 2.5rem 1.5rem;
     box-sizing: border-box;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .urge-modal-square {
-    width: 95vw;
-    max-width: 980px;
-    height: 88vh;
-    max-height: 720px;
-    min-height: 620px;
+    width: 90vw;
+    max-width: 940px;
+    height: 84vh;
+    max-height: 680px;
+    min-height: 520px;
     background: var(--bg-card, #241e20);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -34,6 +35,7 @@
     border-radius: 16px;
     position: relative;
     overflow: hidden;
+    cursor: default;
 }
 
 [data-theme="light"] .urge-modal-square {
@@ -66,7 +68,9 @@
 
 .modal-close-btn {
     background: transparent;
-    border: 1px solid transparent;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     color: var(--text-primary);
     font-size: 1.35rem;
     font-weight: 700;
@@ -82,7 +86,9 @@
 
 .modal-close-btn:hover {
     color: var(--accent-pink, #FF6B6B);
-    border-color: var(--border-color);
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     background: rgba(255, 107, 107, 0.1);
 }
 
@@ -143,33 +149,7 @@
     overflow: hidden;
 }
 
-.spotify-arc-pattern-bg {
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 260px;
-    height: 260px;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.40;
-    overflow: hidden;
-}
 
-[data-theme="light"] .spotify-arc-pattern-bg {
-    opacity: 0.18;
-}
-
-.spotify-radar-arcs {
-    width: 100%;
-    height: 100%;
-    transform: rotate(0deg);
-    animation: slowRadarRotate 40s linear infinite;
-}
-
-@keyframes slowRadarRotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
 
 .spotify-data-scroll-container {
     position: relative;
@@ -519,11 +499,11 @@
     -webkit-filter: none;
     opacity: 1;
     transform: scale(1);
-    transition: filter 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.25s ease;
+    transition: filter 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.2s ease;
     will-change: transform, filter, opacity;
 }
 
@@ -539,31 +519,33 @@
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
 
-/* Active Focal Card (Subtle highlight in staircase) */
+/* Active Focal Card (Z-index layering in staircase) */
 .produx-diagonal-card.active-focus {
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22), 0 0 10px rgba(127, 183, 190, 0.15);
-    border-color: var(--accent-blue, #7FB7BE);
     z-index: 60;
 }
 
-/* Produx Hover Cascade: Hovered card gets top priority crisp focus, siblings softly blurred */
-.produx-diagonal-track.has-hover .produx-diagonal-card:not(.is-hovered),
-.produx-diagonal-track:has(.produx-diagonal-card:hover) .produx-diagonal-card:not(:hover) {
-    filter: blur(1.5px) !important;
-    -webkit-filter: blur(1.5px) !important;
-    opacity: 0.70 !important;
-    transform: scale(0.98) !important;
+/* Produx Hover Spotlight: When track has-hover, blur out sibling cards that are NOT .is-hovered */
+.produx-diagonal-track.has-hover .produx-diagonal-card:not(.is-hovered) {
+    filter: blur(2.5px) !important;
+    -webkit-filter: blur(2.5px) !important;
+    opacity: 0.55 !important;
+    transform: scale(0.97) !important;
 }
 
-.produx-diagonal-track .produx-diagonal-card.is-hovered,
-.produx-diagonal-track .produx-diagonal-card:hover {
+/* Hovered Card: Sharp unblurred focus & elevation ONLY on the card containing the cursor */
+.produx-diagonal-card.is-hovered {
     filter: none !important;
     -webkit-filter: none !important;
     opacity: 1 !important;
-    transform: scale(1.03) !important;
+    transform: translateY(-6px) scale(1.03) !important;
     z-index: 100 !important;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28), 0 0 12px rgba(127, 183, 190, 0.18) !important;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(127, 183, 190, 0.25) !important;
     border-color: var(--accent-blue, #7FB7BE) !important;
+}
+
+.produx-diagonal-card.is-favorite-card {
+    border-color: rgba(127, 183, 190, 0.45);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 12px rgba(127, 183, 190, 0.25);
 }
 
 .produx-card-header {
@@ -575,6 +557,20 @@
 
 .produx-header-info {
     flex: 1;
+}
+
+.produx-title-star-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.produx-fav-star {
+    font-size: 1.05rem;
+    line-height: 1;
+    color: var(--accent-color, #7FB7BE);
+    filter: drop-shadow(0 0 4px rgba(127, 183, 190, 0.5));
 }
 
 .produx-card-title {
@@ -596,10 +592,13 @@
     flex: 1;
     min-height: 125px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.45rem;
     margin: 0.6rem 0;
 }
 
+.produx-gratitude-text,
 .produx-quote-text {
     font-family: var(--font-soft-serif, 'Fraunces', 'Libre Baskerville', Georgia, serif);
     font-style: italic;
@@ -645,6 +644,30 @@
     font-weight: 700;
     color: var(--text-muted);
     letter-spacing: 0.08em;
+}
+
+/* ================================================= */
+/* SCENE 2: SPARK SCENE (TOP CENTER HEADLINE)        */
+/* ================================================= */
+.spark-scene {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.spark-scene .slide-headline {
+    position: absolute;
+    top: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    z-index: 10;
 }
 
 /* ================================================= */
@@ -699,7 +722,8 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 35;
+    z-index: 50;
+    pointer-events: auto !important;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -721,6 +745,7 @@
 .video-center-play-btn .play-icon-triangle {
     margin-left: 4px;
     line-height: 1;
+    pointer-events: none !important;
 }
 
 .video-center-play-btn:hover {
@@ -772,10 +797,29 @@
 /* ================================================= */
 /* SLIDE 4 BIOPHILIC NATURE BREATHING (UNBOXED)      */
 /* ================================================= */
+.nature-breathing-scene {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.nature-breathing-scene .slide-headline {
+    text-align: center;
+    width: 100%;
+    margin: 0 auto 0.85rem auto;
+}
+
 .nature-breathing-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 1rem;
+    width: 100%;
 }
 
 .breath-deck-container {
@@ -783,7 +827,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 0.5rem;
+    margin: 0.5rem auto 0 auto;
+    width: 100%;
+    max-width: 620px;
+    text-align: center;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.breath-deck-container.is-ended {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden;
 }
 
 .breath-live-status-pill {
@@ -791,7 +845,7 @@
     align-items: center;
     justify-content: center;
     gap: 1.25rem;
-    padding: 0.5rem 0;
+    padding: 0.25rem 0;
     background: transparent;
     border: none;
     box-shadow: none;
@@ -800,19 +854,96 @@
 
 .phase-live-label {
     font-family: var(--font-mono, 'Nimbus Mono', 'Space Mono', monospace);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     color: var(--accent-blue, #7FB7BE);
     text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.breath-live-status-pill.intro-listen .phase-live-label {
+    color: #F4A261;
+}
+
+.breath-live-status-pill.prepare-phase .phase-live-label {
+    color: #E76F51;
+}
+
+.breath-live-status-pill.inhale-deep .phase-live-label {
+    color: var(--accent-blue, #7FB7BE);
+}
+
+.breath-live-status-pill.exhale-long .phase-live-label {
+    color: var(--accent-pink, #FF6B6B);
+}
+
+.breath-live-status-pill.phase-complete .phase-live-label {
+    color: #2A9D8F;
 }
 
 .phase-live-timer {
     font-family: var(--font-heading, 'Inter', system-ui, -apple-system, sans-serif);
-    font-size: 2rem;
+    font-size: 1.85rem;
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1;
+}
+
+.breath-live-caption-box {
+    margin-top: 0.4rem;
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1.25rem;
+    background: rgba(127, 183, 190, 0.06);
+    border: 1px solid rgba(127, 183, 190, 0.18);
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .breath-live-caption-box {
+    background: rgba(127, 183, 190, 0.12);
+    border-color: rgba(127, 183, 190, 0.32);
+}
+
+.breath-caption-text {
+    font-family: var(--font-heading, 'Inter', system-ui, -apple-system, sans-serif);
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--text-primary);
+    margin: 0;
+    transition: opacity 0.2s ease;
+}
+
+.skip-intro-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: rgba(244, 162, 97, 0.15);
+    border: 1px solid rgba(244, 162, 97, 0.4);
+    color: #F4A261;
+    font-family: var(--font-mono, 'Nimbus Mono', 'Space Mono', monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.skip-intro-pill-btn:hover {
+    background: rgba(244, 162, 97, 0.28);
+    border-color: #F4A261;
+    transform: translateY(-1px);
 }
 
 /* ================================================= */

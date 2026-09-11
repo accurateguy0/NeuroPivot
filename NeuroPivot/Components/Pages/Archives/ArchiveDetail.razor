@@ -1,0 +1,117 @@
+@page "/archives/{Day:int?}"
+@inject AppState AppState
+@inject HabitService HabitService
+@using System.Globalization
+
+<div class="nobs-container archive-detail-container" style="max-width: 820px;">
+    <button class="nobs-btn btn-back-archives" @onclick="GoBackToArchives">
+        ← Back to Archives
+    </button>
+
+    @{
+        int targetDay = Day ?? AppState.SelectedArchiveDay;
+        if (targetDay < 1) targetDay = 1;
+        var selDate = HabitService.ChallengeStartDate.AddDays(targetDay - 1).Date;
+        var selLog = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == selDate);
+        int habitsDone = HabitService.Habits.Count(h => h.IsCompletedOnDay(targetDay));
+        int totalHabits = HabitService.Habits.Count > 0 ? HabitService.Habits.Count : 6;
+        var dayRelapses = AppState.RelapseLogs.Where(r => r.ChallengeDay == targetDay || r.Timestamp.Date == selDate).ToList();
+        bool isFav = AppState.IsDayFavorited(targetDay);
+    }
+
+    <div class="archive-detail-card animated-fade-in @(isFav ? "favorited-card" : "")">
+        <div class="archive-card-top">
+            <div class="archive-date-heading">
+                <div class="archive-title-star-row">
+                    <h2 class="archive-date-title @(dayRelapses.Count > 0 ? "has-friction" : "")">@selDate.ToString("dd.MM.yyyy")</h2>
+                    <button type="button" 
+                            class="btn-star-detail @(isFav ? "is-fav" : "")" 
+                            @onclick="() => AppState.ToggleFavoriteDay(targetDay)"
+                            >
+                        <span class="star-icon">@(isFav ? "★" : "☆")</span>
+                        <span class="star-text">@(isFav ? "favourite" : "favourite")</span>
+                    </button>
+                </div>
+                <span class="archive-date-weekday">@selDate.ToString("dddd, d MMMM yyyy", CultureInfo.InvariantCulture)</span>
+            </div>
+        </div>
+
+        <div class="archive-card-content">
+            <div class="archive-mood-text">
+                mood: <span class="mood-highlight">@(selLog != null && !string.IsNullOrWhiteSpace(selLog.MoodTag) ? FormatMoodTag(selLog.MoodTag) : "not recorded")</span>
+            </div>
+
+            @if (selLog != null && !string.IsNullOrWhiteSpace(selLog.GratitudeNote))
+            {
+                <div class="archive-field gratitude-field">
+                    <span class="field-label">gratitude</span>
+                    <p class="field-value gratitude-val">@selLog.GratitudeNote</p>
+                </div>
+            }
+
+            @if (selLog != null && !string.IsNullOrWhiteSpace(selLog.Note))
+            {
+                <div class="archive-field reflection-field">
+                    <span class="field-label">thoughts</span>
+                    <p class="field-value">@selLog.Note</p>
+                </div>
+            }
+            else if (targetDay == 1 && !string.IsNullOrWhiteSpace(AppState.InitialHabitMotivation))
+            {
+                <div class="archive-field reflection-field">
+                    <span class="field-label">origin commitment</span>
+                    <p class="field-value">@AppState.InitialHabitMotivation</p>
+                </div>
+            }
+
+            <div class="archive-habits-summary">
+                <span class="field-label">habits executed:</span>
+                <span class="habits-count-pill">@habitsDone / @totalHabits habits done</span>
+            </div>
+
+            @if (dayRelapses.Count > 0)
+            {
+                <div class="archive-slips-box">
+                    <span class="field-label text-warning">friction recorded (@dayRelapses.Count):</span>
+                    @foreach (var slip in dayRelapses)
+                    {
+                        <div class="archive-slip-item">
+                            <span>trigger: @slip.TriggerCategory | somatic: @slip.HaltState</span>
+                            @if (!string.IsNullOrWhiteSpace(slip.FrictionFailure))
+                            {
+                                <p class="slip-failure">friction: @slip.FrictionFailure</p>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(slip.CalibrationAction))
+                            {
+                                <p class="slip-calib">adjustment: @slip.CalibrationAction</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int? Day { get; set; }
+
+    private void GoBackToArchives()
+    {
+        AppState.OpenArchives();
+    }
+
+    private string FormatMoodTag(string tag)
+    {
+        return tag switch
+        {
+            "sharp" or "high_energy" => "🔥 high energy",
+            "good" or "focused" => "✨ good",
+            "ok" => "👌 ok",
+            "low_energy" => "🌧 low energy",
+            "poor" or "high_friction" => "📉 poor",
+            _ => "⚡ disciplined"
+        };
+    }
+}

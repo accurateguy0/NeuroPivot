@@ -3,45 +3,103 @@
 
 @if (IsOpen)
 {
-    <div class="modal-backdrop-overlay">
+    <div class="modal-backdrop-overlay" @onclick="HandleClose">
         <div class="nobs-modal-card checkin-modal-square animated-fade-in" @onclick:stopPropagation="true">
             
-            <div class="checkin-modal-header">
-                <div class="checkin-badge">⚡ Day @HabitService.CurrentActiveDay Check-in</div>
-                <button type="button" class="modal-close-btn" @onclick="HandleClose">✕</button>
-            </div>
+            @* step 1: how you feel today? *@
+            @if (currentStep == 1)
+            {
+                <div class="checkin-body animated-fade-in">
+                    <h3 class="checkin-title">how you feel today?</h3>
+                    <p class="checkin-subtext">select your current somatic energy & baseline state.</p>
 
-            <div class="checkin-body">
-                <h3 class="checkin-title">How is your energy and friction today?</h3>
-                <p class="checkin-subtext">A 3-second daily log to build self-awareness and track your cognitive baseline.</p>
+                    <div class="mood-tags-grid">
+                        @foreach (var tag in MoodTags)
+                        {
+                            <button type="button" 
+                                    class="btn-checkin-mood @(!string.IsNullOrEmpty(selectedMoodTag) && selectedMoodTag == tag.Key ? "active" : "")" 
+                                    @onclick="() => SelectMood(tag.Key)">
+                                <span class="mood-emoji">@tag.Emoji</span>
+                                <span class="mood-text">@tag.Label</span>
+                            </button>
+                        }
+                    </div>
 
-                <div class="mood-tags-grid">
-                    @foreach (var tag in MoodTags)
-                    {
+                    <div class="modal-footer-nav">
+                        <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="HandleClose">skip</button>
                         <button type="button" 
-                                class="btn-checkin-mood @(selectedMoodTag == tag.Key ? "active" : "")" 
-                                @onclick="() => selectedMoodTag = tag.Key">
-                            <span class="mood-emoji">@tag.Emoji</span>
-                            <span class="mood-text">@tag.Label</span>
+                                class="nobs-btn nobs-btn-blue" 
+                                disabled="@string.IsNullOrWhiteSpace(selectedMoodTag)"
+                                @onclick="NextStep">
+                            next →
                         </button>
-                    }
+                    </div>
                 </div>
+            }
 
-                <div class="checkin-note-box">
-                    <label class="note-label">Optional Thought / Reflection (1 sentence):</label>
-                    <input type="text" 
-                           class="nobs-input checkin-text-input" 
-                           placeholder="e.g. Sharp morning focus, feeling strong against cravings..." 
-                           @bind="noteText" />
-                </div>
+            @* step 2: what are you grateful about today? *@
+            @if (currentStep == 2)
+            {
+                <div class="checkin-body animated-fade-in">
+                    <h3 class="checkin-title">what are you grateful about today?</h3>
+                    <p class="checkin-subtext">a daily gratitude anchor to prime dopamine pathways (20–150 letters).</p>
 
-                <div class="modal-footer-nav">
-                    <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="HandleClose">Skip</button>
-                    <button type="button" class="nobs-btn nobs-btn-blue" @onclick="HandleSave">
-                        💾 Save Check-in →
-                    </button>
+                    <div class="checkin-note-box">
+                        <textarea class="nobs-input checkin-essay-input" 
+                                  rows="5"
+                                  maxlength="150"
+                                  placeholder="write freely about what anchored your gratitude today... (20 to 150 letters)" 
+                                  @bind="gratitudeText"
+                                  @bind:event="oninput"
+                                  @onkeydown="HandleGratitudeKeyDown"></textarea>
+                        
+                        <div class="word-counter-row">
+                            @{
+                                int letters = GetLetterCount(gratitudeText);
+                            }
+                            <span class="word-counter-badge @(letters >= 20 && letters <= 150 ? "valid" : "pending")">
+                                @(letters >= 20 ? $"✓ {letters} / 150 letters" : $"{letters} / 150 letters (min 20)")
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer-nav">
+                        <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="PrevStep">← back</button>
+                        <button type="button" 
+                                class="nobs-btn nobs-btn-blue" 
+                                disabled="@(GetLetterCount(gratitudeText) < 20 || GetLetterCount(gratitudeText) > 150)"
+                                @onclick="NextStep">
+                            next →
+                        </button>
+                    </div>
                 </div>
-            </div>
+            }
+
+            @* step 3: optional thought / reflection *@
+            @if (currentStep == 3)
+            {
+                <div class="checkin-body animated-fade-in">
+                    <h3 class="checkin-title">optional thought / reflection</h3>
+                    <p class="checkin-subtext">capture any cognitive friction, breakthroughs, wins, or reflections on today.</p>
+
+                    <div class="checkin-note-box">
+                        <textarea class="nobs-input checkin-essay-input" 
+                                  rows="5"
+                                  placeholder="write your reflection, friction points, mental breakthroughs, or notes on your cognitive baseline..." 
+                                  @bind="noteText"
+                                  @bind:event="oninput"
+                                  @onkeydown="HandleNoteKeyDown"></textarea>
+                    </div>
+
+                    <div class="modal-footer-nav">
+                        <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="PrevStep">← back</button>
+                        <button type="button" class="nobs-btn nobs-btn-blue" @onclick="HandleSave">
+                            💾 save check-in →
+                        </button>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
 }
@@ -53,33 +111,105 @@
     [Parameter]
     public EventCallback OnClose { get; set; }
 
-    private string selectedMoodTag = "focused";
+    private int currentStep = 1;
+    private string selectedMoodTag = "";
+    private string gratitudeText = "";
     private string noteText = "";
+    private bool _lastIsOpen = false;
 
     private static readonly (string Key, string Emoji, string Label)[] MoodTags = new[]
     {
-        ("sharp", "🔥", "High Energy"),
-        ("focused", "⚡", "Focused"),
-        ("low_energy", "🌧", "Low Energy"),
-        ("high_friction", "⚔️", "High Friction")
+        ("sharp", "🔥", "high energy"),
+        ("good", "✨", "good"),
+        ("ok", "👌", "ok"),
+        ("low_energy", "🌧", "low energy"),
+        ("poor", "📉", "poor")
     };
 
     protected override void OnParametersSet()
     {
-        if (IsOpen)
+        if (IsOpen && !_lastIsOpen)
         {
+            _lastIsOpen = true;
+            currentStep = 1;
+            selectedMoodTag = ""; // strictly unchosen by default
             var todayLog = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == DateTime.Today);
             if (todayLog != null)
             {
-                selectedMoodTag = todayLog.MoodTag;
+                gratitudeText = todayLog.GratitudeNote;
                 noteText = todayLog.Note;
             }
+            else
+            {
+                gratitudeText = "";
+                noteText = "";
+            }
+        }
+        else if (!IsOpen)
+        {
+            _lastIsOpen = false;
+        }
+    }
+
+    private void SelectMood(string tagKey)
+    {
+        selectedMoodTag = tagKey;
+    }
+
+    private int GetLetterCount(string text)
+    {
+        return text?.Length ?? 0;
+    }
+
+    private void NextStep()
+    {
+        if (currentStep == 1 && string.IsNullOrWhiteSpace(selectedMoodTag))
+        {
+            return;
+        }
+        int count = GetLetterCount(gratitudeText);
+        if (currentStep == 2 && (count < 20 || count > 150))
+        {
+            return;
+        }
+        if (currentStep < 3)
+        {
+            currentStep++;
+        }
+    }
+
+    private void PrevStep()
+    {
+        if (currentStep > 1)
+        {
+            currentStep--;
+        }
+    }
+
+    private void HandleGratitudeKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && (e.CtrlKey || e.MetaKey))
+        {
+            int count = GetLetterCount(gratitudeText);
+            if (count >= 20 && count <= 150)
+            {
+                NextStep();
+            }
+        }
+    }
+
+    private async Task HandleNoteKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && (e.CtrlKey || e.MetaKey))
+        {
+            await HandleSave();
         }
     }
 
     private async Task HandleSave()
     {
-        HabitService.LogDailyMood(selectedMoodTag, noteText);
+        string moodToSave = string.IsNullOrWhiteSpace(selectedMoodTag) ? "good" : selectedMoodTag;
+        HabitService.LogDailyMood(moodToSave, noteText, gratitudeText);
         await OnClose.InvokeAsync();
     }
 

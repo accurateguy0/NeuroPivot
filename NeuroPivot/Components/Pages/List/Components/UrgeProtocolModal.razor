@@ -1,18 +1,25 @@
 @inject HabitService HabitService
 @inject AppState AppState
 @inject IJSRuntime JSRuntime
+@using System.Globalization
 @implements IDisposable
 
 @if (IsOpen)
 {
-    <div class="modal-backdrop-overlay" id="urgeModalBackdrop" @onclick="HandleCancel">
+    <div class="modal-backdrop-overlay" id="urgeModalBackdrop">
         <!-- Centered Pinned Modal Card with PRODUX Scrollytelling -->
         <div class="nobs-modal-card urge-modal-square animated-fade-in" 
              id="urgePinnedCard"
              @onclick:stopPropagation="true">
             
-            <!-- Background Ambient Music: The City of Lost Hope -->
-            <audio id="urgeBgMusic" src="sounds/the_city_of_lost_hope.mp3" preload="auto" loop></audio>
+            <!-- Background Ambient Music ("The City of Lost Hope") -->
+            <audio id="urgeBgMusic" src="sounds/the_city_of_lost_hope.mp3" preload="auto"></audio>
+
+            <!-- Biophilic Heart Coherence Guided Breathing Audio -->
+            <audio id="breathingAudioPlayer" preload="auto" playsinline>
+                <source src="sounds/breathing_exercise.mp3" type="audio/mpeg" />
+                <source src="sounds/breathing_exercise.m4a" type="audio/mp4" />
+            </audio>
 
             <!-- Modal Header: Persistent '✕' Close Button -->
             <div class="urge-modal-header">
@@ -26,16 +33,6 @@
                 
                 <!-- SCENE 0: PERSISTENCE WRAPPED (Continuous Vertical Scroll Stream) -->
                 <div id="urge-scene-0" class="urge-scene-layer spotify-scene">
-                    <!-- Spotify Wrapped Concentric Radar Arc Background Element -->
-                    <div class="spotify-arc-pattern-bg">
-                        <svg viewBox="0 0 240 240" fill="none" class="spotify-radar-arcs" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="240" cy="240" r="220" stroke="rgba(255,255,255,0.04)" stroke-width="10" stroke-dasharray="16 16"/>
-                            <circle cx="240" cy="240" r="175" stroke="var(--accent-blue, #7FB7BE)" stroke-width="12" opacity="0.22"/>
-                            <circle cx="240" cy="240" r="130" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
-                            <circle cx="240" cy="240" r="85" stroke="var(--accent-pink, #FF6B6B)" stroke-width="12" opacity="0.20"/>
-                            <circle cx="240" cy="240" r="45" stroke="var(--accent-blue, #7FB7BE)" stroke-width="10" opacity="0.45"/>
-                        </svg>
-                    </div>
 
                     <!-- Vertical Scroll Stream Container -->
                     <div class="spotify-data-scroll-container" id="spotifyDataScrollContainer">
@@ -138,56 +135,71 @@
                                 <div class="produx-diagonal-viewport">
                                     <div class="produx-diagonal-track" id="produxDiagonalTrack">
                                         @{
-                                            int maxCardDay = Math.Max(HabitService.CurrentActiveDay, 3);
+                                            var diaryCards = GetDayDiaryCards();
                                         }
-                                        @for (int d = 1; d <= maxCardDay; d++)
+                                        @for (int i = 0; i < diaryCards.Count; i++)
                                         {
-                                            int dayNum = d;
-                                            var log = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == HabitService.ChallengeStartDate.AddDays(dayNum - 1).Date);
-                                            int idx = dayNum - 1;
+                                            int dayNum = diaryCards[i];
+                                            var cardDate = HabitService.ChallengeStartDate.AddDays(dayNum - 1).Date;
+                                            var log = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == cardDate);
+                                            int idx = i;
                                             double leftPx = idx * 360.0;
                                             double topPx = idx * 75.0;
+                                            bool isFav = AppState.IsDayFavorited(dayNum);
                                             
-                                            <div class="produx-diagonal-card @(dayNum == 1 ? "day-1-origin" : "")"
+                                            <div class="produx-diagonal-card @(dayNum == 1 ? "day-1-origin" : "") @(isFav ? "is-favorite-card" : "")"
                                                  style="left: @(leftPx)px; top: @(topPx)px;"
                                                  data-index="@idx">
                                                 
                                                 <div class="produx-card-header">
                                                     <div class="produx-header-info">
-                                                        <h4 class="produx-card-title">
-                                                            day @dayNum
-                                                        </h4>
+                                                        <div class="produx-title-star-row">
+                                                            <h4 class="produx-card-title">
+                                                                @cardDate.ToString("dddd, d MMMM yyyy", CultureInfo.InvariantCulture)
+                                                            </h4>
+                                                            @if (isFav)
+                                                            {
+                                                                <span class="produx-fav-star" title="Memorable / Starred Day">⭐</span>
+                                                            }
+                                                        </div>
                                                         <p class="produx-card-sub">
-                                                            @(dayNum == 1 ? "Origin Motivation" : (log != null ? FormatMoodTag(log.MoodTag) : (dayNum <= HabitService.CurrentActiveDay ? "Routine Execution" : "Discipline Target")))
+                                                            @(isFav ? "⭐ Memorable Reflection" : (dayNum == 1 ? "Origin Motivation" : (log != null ? FormatMoodTag(log.MoodTag) : (dayNum <= HabitService.CurrentActiveDay ? "Routine Execution" : "Discipline Target"))))
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 <div class="produx-card-body">
-                                                    @if (dayNum == 1)
+                                                    @if (dayNum <= HabitService.CurrentActiveDay)
                                                     {
-                                                        <p class="produx-quote-text">
-                                                            "@(!string.IsNullOrWhiteSpace(AppState.InitialHabitMotivation) ? AppState.InitialHabitMotivation : "I committed to breaking this loop to reclaim my mental clarity, energy, and self-respect.")"
-                                                        </p>
-                                                    }
-                                                    else if (dayNum <= HabitService.CurrentActiveDay)
-                                                    {
-                                                        @if (log != null && !string.IsNullOrWhiteSpace(log.Note))
+                                                        @if (log != null && (!string.IsNullOrWhiteSpace(log.GratitudeNote) || !string.IsNullOrWhiteSpace(log.Note)))
                                                         {
-                                                            <p class="produx-quote-text">"@log.Note"</p>
+                                                            @if (!string.IsNullOrWhiteSpace(log.GratitudeNote))
+                                                            {
+                                                                <p class="produx-gratitude-text">@log.GratitudeNote</p>
+                                                            }
+                                                            @if (!string.IsNullOrWhiteSpace(log.Note))
+                                                            {
+                                                                <p class="produx-quote-text">@log.Note</p>
+                                                            }
+                                                        }
+                                                        else if (dayNum == 1)
+                                                        {
+                                                            <p class="produx-quote-text">
+                                                                @(!string.IsNullOrWhiteSpace(AppState.InitialHabitMotivation) ? AppState.InitialHabitMotivation : "I committed to breaking this loop to reclaim my mental clarity, energy, and self-respect.")
+                                                            </p>
                                                         }
                                                         else if (dayNum == HabitService.CurrentActiveDay)
                                                         {
-                                                            <p class="produx-quote-text">"You are facing peak friction right now. Don't compromise your past work."</p>
+                                                            <p class="produx-quote-text">You are facing peak friction right now. Don't compromise your past work.</p>
                                                         }
                                                         else
                                                         {
-                                                            <p class="produx-quote-text muted">"Showed up and executed protocol with unbroken consistency."</p>
+                                                            <p class="produx-quote-text muted">Showed up and executed protocol with unbroken consistency.</p>
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        <p class="produx-quote-text muted">"Every urge you surf today guarantees victory on this future milestone."</p>
+                                                        <p class="produx-quote-text muted">Every urge you surf today guarantees victory on this future milestone.</p>
                                                     }
                                                 </div>
 
@@ -216,6 +228,7 @@
 
                 <!-- SCENE 2: THE RAW SPARK (Cinematic Motivation Video) -->
                 <div id="urge-scene-2" class="urge-scene-layer spark-scene" style="display: none; opacity: 0;">
+                    <h2 class="slide-headline">you've come this far...</h2>
                     <div id="shuzoExpandingBox" class="hero-expanding-video-box">
                         <video id="shuzoVideoPlayer" 
                                 class="hero-cinematic-video" 
@@ -233,9 +246,11 @@
                             <button type="button" 
                                     id="shuzoPlayCenterBtn" 
                                     class="video-center-play-btn visible" 
+                                    onclick="if (window.nobsProduxScrollytelling) { window.nobsProduxScrollytelling.replayShuzo(); } event.stopPropagation();"
                                     @onclick="ReplayShuzo" 
+                                    @onclick:stopPropagation="true"
                                     aria-label="Replay Motivation Video">
-                                <span class="play-icon-triangle">▶</span>
+                                <span class="play-icon-triangle" style="pointer-events: none;">▶</span>
                             </button>
                         }
 
@@ -270,25 +285,23 @@
                     </div>
                 </div>
 
-                <!-- SCENE 3: BIOPHILIC PHYSIOLOGICAL SIGH -->
+                <!-- SCENE 3: BIOPHILIC BREATHING EXERCISE -->
                 <div id="urge-scene-3" class="urge-scene-layer nature-breathing-scene" style="display: none; opacity: 0;">
-                    <h2 class="slide-headline">The Physiological Sigh</h2>
+                    <h2 class="slide-headline">Breathing Exercise</h2>
 
                     <div class="hero-expanding-video-box nature-video-frame" id="natureExpandingBox">
                         <video id="natureVideoPlayer" 
-                                src="videos/nature_wildlife.mp4"
                                 class="hero-cinematic-video" 
                                 autoplay 
                                 muted 
                                 playsinline 
-                                loop 
                                 preload="auto"
                                 @onclick="HandleNatureVideoClick">
                             <source src="videos/nature_wildlife.mp4" type="video/mp4" />
                             <source src="videos/water_beach_video.mp4" type="video/mp4" />
                         </video>
 
-                        <!-- Sound Toggle Pill Button for Nature Video -->
+                        <!-- Sound Toggle Pill Button for Nature Sound Only -->
                         <button type="button" 
                                 id="natureSoundBtn" 
                                 class="video-sound-btn" 
@@ -319,9 +332,17 @@
                     </div>
 
                     <div class="breath-deck-container">
-                        <div class="breath-live-status-pill @breathPhaseClass">
-                            <span class="phase-live-label">@breathPhaseText</span>
-                            <span class="phase-live-timer">@breathSecondsRemaining s</span>
+                        <div class="breath-live-status-pill intro-listen" id="breathLivePill">
+                            <span class="phase-live-label" id="phaseLiveLabel">HRV PROTOCOL INTRO</span>
+                            <span class="phase-live-timer" id="phaseLiveTimer">0:25</span>
+                        </div>
+                        <div class="breath-live-caption-box" id="breathLiveCaptionBox">
+                            <p class="breath-caption-text" id="breathCaptionText">
+                                Coherent breathing specifically for heart rate variability (HRV).
+                            </p>
+                            <button type="button" id="skipIntroBtn" class="skip-intro-pill-btn" onclick="if (window.nobsProduxScrollytelling) window.nobsProduxScrollytelling.skipIntro();" title="Jump straight to the 5-minute breathing chimes">
+                                ⚡ Skip Intro (Jump to 0:25)
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -381,7 +402,7 @@
 
     // Video Player State - Default sound is strictly OFF (muted = true)
     private bool isShuzoMuted = true;
-    private bool isNatureMuted = true;
+    private bool isBreathingMuted = false;
     private bool isShuzoEnded = false;
 
     private async Task HandleShuzoEnded()
@@ -413,16 +434,7 @@
         StateHasChanged();
         try
         {
-            await JSRuntime.InvokeVoidAsync("eval", @"
-                if (window.nobsProduxScrollytelling) {
-                    window.nobsProduxScrollytelling._shuzoEnded = false;
-                }
-                const v = document.getElementById('shuzoVideoPlayer');
-                if (v) {
-                    v.currentTime = 0;
-                    v.play().catch(() => {});
-                }
-            ");
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.replayShuzo");
         }
         catch { }
     }
@@ -432,48 +444,52 @@
         isShuzoMuted = !isShuzoMuted;
         try
         {
-            await JSRuntime.InvokeVoidAsync("eval", $@"
+            var mutedVal = isShuzoMuted ? "true" : "false";
+            await JSRuntime.InvokeVoidAsync("eval", @"
                 const v = document.getElementById('shuzoVideoPlayer');
-                if (v) {{
-                    v.muted = {isShuzoMuted.ToString().ToLower()};
-                }}
+                if (v) {
+                    v.muted = " + mutedVal + @";
+                }
             ");
         }
         catch { }
     }
+
+    private bool isNatureMuted = false;
 
     private async Task ToggleNatureSound()
     {
         isNatureMuted = !isNatureMuted;
         try
         {
-            await JSRuntime.InvokeVoidAsync("eval", $@"
-                const v = document.getElementById('natureVideoPlayer');
-                if (v) {{
-                    v.muted = {isNatureMuted.ToString().ToLower()};
-                    if (v.paused) {{
-                        v.play().catch(() => {{}});
-                    }}
-                }}
+            var mutedVal = isNatureMuted ? "true" : "false";
+            await JSRuntime.InvokeVoidAsync("eval", @"
+                const isMuted = " + mutedVal + @";
+                const nv = document.getElementById('natureVideoPlayer');
+                if (nv) {
+                    nv.muted = isMuted;
+                    if (!isMuted) {
+                        nv.volume = 0.35;
+                        if (nv.paused) nv.play().catch(() => {});
+                    } else {
+                        nv.volume = 0;
+                    }
+                }
+                if (window.nobsProduxScrollytelling) {
+                    window.nobsProduxScrollytelling.toggleNatureSound(isMuted);
+                }
             ");
         }
         catch { }
     }
 
+    private Task ToggleBreathingSound() => ToggleNatureSound();
+
     private async Task HandleNatureVideoClick()
     {
         try
         {
-            await JSRuntime.InvokeVoidAsync("eval", @"
-                const v = document.getElementById('natureVideoPlayer');
-                if (v) {
-                    if (v.paused) {
-                        v.play().catch(() => {});
-                    } else {
-                        v.pause();
-                    }
-                }
-            ");
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.switchNatureVideo");
         }
         catch { }
     }
@@ -485,25 +501,22 @@
         isBgMusicMuted = !isBgMusicMuted;
         try
         {
-            await JSRuntime.InvokeVoidAsync("eval", $@"
+            var mutedVal = isBgMusicMuted ? "true" : "false";
+            await JSRuntime.InvokeVoidAsync("eval", @"
                 const bg = document.getElementById('urgeBgMusic');
-                if (bg) {{
-                    bg.muted = {isBgMusicMuted.ToString().ToLower()};
-                    if (!bg.muted && bg.paused) {{
+                if (bg) {
+                    bg.muted = " + mutedVal + @";
+                    if (!bg.muted && bg.paused) {
                         bg.volume = 0.45;
-                        bg.play().catch(() => {{}});
-                    }}
-                }}
+                        bg.play().catch(() => {});
+                    }
+                }
             ");
         }
         catch { }
     }
 
-    // Breathing Timer State
-    private System.Threading.CancellationTokenSource? _breathCts;
-    private string breathPhaseClass = "inhale-deep";
-    private string breathPhaseText = "DEEP INHALE NOSE";
-    private int breathSecondsRemaining = 4;
+    // Breathing Timer State (Heart Coherence / HRV: 5s Inhale / 5s Exhale)
     private bool _wasOpen = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -513,14 +526,18 @@
             _wasOpen = true;
             isBgMusicMuted = false;
             isShuzoMuted = true;
-            isNatureMuted = true;
+            isNatureMuted = false;
             isShuzoEnded = false;
-            StartBreathingSequence();
             try
             {
                 await JSRuntime.InvokeVoidAsync("eval", @"
+                    if (window.nobsProduxScrollytelling) {
+                        window.nobsProduxScrollytelling.init(true);
+                    }
                     const bg = document.getElementById('urgeBgMusic');
                     if (bg) {
+                        bg.loop = false;
+                        bg._hasPlayedOnce = false;
                         bg.muted = false;
                         bg.volume = 0.45;
                         bg.currentTime = 0;
@@ -529,22 +546,19 @@
                     const sv = document.getElementById('shuzoVideoPlayer');
                     if (sv) { sv.muted = true; }
                     const nv = document.getElementById('natureVideoPlayer');
-                    if (nv) { nv.muted = true; }
-                    if (window.nobsProduxScrollytelling) {
-                        window.nobsProduxScrollytelling.init(true);
+                    if (nv) { nv.muted = true; nv.volume = 0.35; }
+                    const ba = document.getElementById('breathingAudioPlayer');
+                    if (ba) {
+                        ba.muted = false;
+                        ba.volume = 0.85;
+                        ba.loop = false;
+                        ba.currentTime = 0;
                     }
                     setTimeout(() => {
                         const bg2 = document.getElementById('urgeBgMusic');
-                        if (bg2 && bg2.paused && !bg2.muted) {
+                        if (bg2 && bg2.paused && !bg2.muted && !bg2._hasPlayedOnce) {
                             bg2.volume = 0.45;
                             bg2.play().catch(() => {});
-                        }
-                        const sv2 = document.getElementById('shuzoVideoPlayer');
-                        if (sv2) { sv2.muted = true; }
-                        const nv2 = document.getElementById('natureVideoPlayer');
-                        if (nv2) { nv2.muted = true; }
-                        if (window.nobsProduxScrollytelling) {
-                            window.nobsProduxScrollytelling.init(true);
                         }
                     }, 80);
                 ");
@@ -575,116 +589,50 @@
         catch { }
     }
 
+    private List<int> GetDayDiaryCards()
+    {
+        int currentDay = HabitService.CurrentActiveDay;
+        int maxAvailableDay = Math.Max(currentDay, 3);
+        
+        // If total days are within 42, return all days 1..maxAvailableDay
+        if (maxAvailableDay <= 42)
+        {
+            return Enumerable.Range(1, maxAvailableDay).ToList();
+        }
+
+        // When exceeding 42 cards, prioritize:
+        // 1. Day 1 (Origin)
+        // 2. Today (currentDay)
+        // 3. Favorited / Memorable days (AppState.FavoriteArchiveDays)
+        // 4. Fill remaining slots with recent days
+        var selected = new HashSet<int> { 1, currentDay };
+
+        foreach (var fav in AppState.FavoriteArchiveDays.Where(d => d >= 1 && d <= maxAvailableDay))
+        {
+            selected.Add(fav);
+            if (selected.Count >= 42) break;
+        }
+
+        for (int d = maxAvailableDay; d >= 1 && selected.Count < 42; d--)
+        {
+            selected.Add(d);
+        }
+
+        // Keep chronological order intact
+        return selected.OrderBy(d => d).ToList();
+    }
+
     private string FormatMoodTag(string tag)
     {
         return tag switch
         {
-            "sharp" => "🔥 High Energy",
-            "focused" => "⚡ Focused",
-            "low_energy" => "🌧 Low Energy",
-            "high_friction" => "⚔️ High Friction",
-            _ => "⚡ Disciplined"
+            "sharp" or "high_energy" => "🔥 high energy",
+            "good" or "focused" => "✨ good",
+            "ok" => "👌 ok",
+            "low_energy" => "🌧 low energy",
+            "poor" or "high_friction" => "📉 poor",
+            _ => "⚡ disciplined"
         };
-    }
-
-    private void StartBreathingSequence()
-    {
-        _breathCts?.Cancel();
-        _breathCts?.Dispose();
-        _breathCts = new System.Threading.CancellationTokenSource();
-        var token = _breathCts.Token;
-
-        _ = Task.Run(async () =>
-        {
-            while (!token.IsCancellationRequested)
-            {
-                // Phase 1: Deep Inhale Nose (4s)
-                await InvokeAsync(() =>
-                {
-                    breathPhaseClass = "inhale-deep";
-                    breathPhaseText = "DEEP INHALE THROUGH NOSE";
-                    breathSecondsRemaining = 4;
-                    StateHasChanged();
-                });
-                for (int s = 4; s >= 1; s--)
-                {
-                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
-                    await Task.Delay(1000, token);
-                    if (token.IsCancellationRequested) return;
-                }
-
-                // Phase 2: Brief Hold / Pause (1.5s)
-                await InvokeAsync(() =>
-                {
-                    breathPhaseClass = "pause-hold";
-                    breathPhaseText = "BRIEF PAUSE";
-                    breathSecondsRemaining = 1;
-                    StateHasChanged();
-                });
-                await Task.Delay(1500, token);
-                if (token.IsCancellationRequested) return;
-
-                // Phase 3: Sharp Top-Up Inhale (2s)
-                await InvokeAsync(() =>
-                {
-                    breathPhaseClass = "inhale-topup";
-                    breathPhaseText = "SHARP TOP-UP INHALE";
-                    breathSecondsRemaining = 2;
-                    StateHasChanged();
-                });
-                for (int s = 2; s >= 1; s--)
-                {
-                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
-                    await Task.Delay(1000, token);
-                    if (token.IsCancellationRequested) return;
-                }
-
-                // Phase 4: Full Lung Hold (2s)
-                await InvokeAsync(() =>
-                {
-                    breathPhaseClass = "pause-hold";
-                    breathPhaseText = "HOLD";
-                    breathSecondsRemaining = 2;
-                    StateHasChanged();
-                });
-                for (int s = 2; s >= 1; s--)
-                {
-                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
-                    await Task.Delay(1000, token);
-                    if (token.IsCancellationRequested) return;
-                }
-
-                // Phase 5: Slow Extended Exhale Mouth (8s)
-                await InvokeAsync(() =>
-                {
-                    breathPhaseClass = "exhale-long";
-                    breathPhaseText = "SLOW EXTENDED SIGH (MOUTH)";
-                    breathSecondsRemaining = 8;
-                    StateHasChanged();
-                });
-                for (int s = 8; s >= 1; s--)
-                {
-                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
-                    await Task.Delay(1000, token);
-                    if (token.IsCancellationRequested) return;
-                }
-
-                // Phase 6: Grounding Pause (2s)
-                await InvokeAsync(() =>
-                {
-                    breathPhaseClass = "pause-hold";
-                    breathPhaseText = "PAUSE & GROUND";
-                    breathSecondsRemaining = 2;
-                    StateHasChanged();
-                });
-                for (int s = 2; s >= 1; s--)
-                {
-                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
-                    await Task.Delay(1000, token);
-                    if (token.IsCancellationRequested) return;
-                }
-            }
-        }, token);
     }
 
     private async Task HandleFinishAction(string actionName)
@@ -692,7 +640,6 @@
         _wasOpen = false;
         await HabitService.LogUrgeSurfedAsync();
         StopAllAudio();
-        _breathCts?.Cancel();
         await OnClose.InvokeAsync();
     }
 
@@ -700,7 +647,6 @@
     {
         _wasOpen = false;
         StopAllAudio();
-        _breathCts?.Cancel();
         await OnClose.InvokeAsync();
     }
 
@@ -718,6 +664,8 @@
                 if (v1) { v1.pause(); }
                 const v2 = document.getElementById('natureVideoPlayer');
                 if (v2) { v2.pause(); }
+                const ba = document.getElementById('breathingAudioPlayer');
+                if (ba) { ba.pause(); ba.currentTime = 0; }
             ");
         }
         catch { }
@@ -726,7 +674,5 @@
     public void Dispose()
     {
         StopAllAudio();
-        _breathCts?.Cancel();
-        _breathCts?.Dispose();
     }
 }

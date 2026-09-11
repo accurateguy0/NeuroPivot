@@ -56,6 +56,18 @@ public class SleepService : IDisposable
     private System.Threading.CancellationTokenSource? _snoozeCts;
     private bool _disposed;
 
+    public bool ShouldAllowSleepAlerts =>
+        !_disposed &&
+        _appState.IsLoggedIn &&
+        _accountService.ActiveAccount != null &&
+        !_appState.Username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) &&
+        QuestionnaireCompleted &&
+        _appState.CurrentGoal.Equals("sleep", StringComparison.OrdinalIgnoreCase) &&
+        _appState.ActiveView != "landing" &&
+        _appState.ActiveView != "authentication" &&
+        _appState.ActiveView != "authentification" &&
+        _appState.ActiveView != "welcome_transition";
+
     public SleepService(LocalStorageService localStorage, IJSRuntime jsRuntime, AppState appState, AccountService accountService)
     {
         _localStorage = localStorage;
@@ -65,11 +77,23 @@ public class SleepService : IDisposable
 
         _appState.OnUserLoaded += LoadUserAccount;
         _appState.OnUserLoggedOut += Reset;
+        _appState.OnChange += OnAppStateChanged;
         _appState.OnTick += HandleTick;
 
         if (_accountService.ActiveAccount != null)
         {
             LoadUserAccount(_accountService.ActiveAccount);
+        }
+    }
+
+    private void OnAppStateChanged()
+    {
+        if (!ShouldAllowSleepAlerts)
+        {
+            if (IsAlertModalOpen || IsSnoozed || _alarmLoopCts != null || _snoozeCts != null)
+            {
+                TurnOffAlert();
+            }
         }
     }
 
@@ -231,21 +255,13 @@ public class SleepService : IDisposable
     {
         if (_disposed) return;
 
-        // 1. Do not trigger alarms on landing, auth, or welcome transition views
-        if (_appState.ActiveView == "landing" ||
-            _appState.ActiveView == "authentication" ||
-            _appState.ActiveView == "authentification" ||
-            _appState.ActiveView == "welcome_transition")
+        // If sleep alerts are NOT allowed right now, kill any active alarm or snooze immediately!
+        if (!ShouldAllowSleepAlerts)
         {
-            return;
-        }
-
-        // 2. Alarms/alerts are user-specific: only trigger for the specific logged-in user
-        if (!_appState.IsLoggedIn ||
-            _accountService.ActiveAccount == null ||
-            _appState.Username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) ||
-            !QuestionnaireCompleted)
-        {
+            if (IsAlertModalOpen || IsSnoozed || _alarmLoopCts != null || _snoozeCts != null)
+            {
+                TurnOffAlert();
+            }
             return;
         }
 
@@ -296,6 +312,12 @@ public class SleepService : IDisposable
 
     public async Task TriggerCutoffAlertAsync()
     {
+        if (!ShouldAllowSleepAlerts || !CutoffAlertEnabled)
+        {
+            TurnOffAlert();
+            return;
+        }
+
         ActiveAlertType = "cutoff";
         ActiveAlertTitle = "Electronics Cutoff Alert";
         ActiveAlertMessage = $"It is now {FormatTime(CalculatedElectronicsCutoff)}. Turn off electronic screens to eliminate blue light exposure and initiate natural melatonin production.";
@@ -315,6 +337,12 @@ public class SleepService : IDisposable
 
     public async Task TriggerWakeAlarmAsync()
     {
+        if (!ShouldAllowSleepAlerts || !WakeAlertEnabled)
+        {
+            TurnOffAlert();
+            return;
+        }
+
         ActiveAlertType = "wake";
         ActiveAlertTitle = "Circadian Wake Alarm";
         ActiveAlertMessage = $"Good morning! It is now {FormatTime(CalculatedWakeupTime)}. Step outside or view natural sunlight within 30–60 minutes of waking to anchor your circadian rhythm.";
@@ -342,7 +370,7 @@ public class SleepService : IDisposable
         _ = Task.Run(async () =>
         {
             var endTime = DateTime.UtcNow.AddMinutes(3); // Ring for up to 3 minutes
-            while (!token.IsCancellationRequested && DateTime.UtcNow < endTime && IsAlertModalOpen)
+            while (!token.IsCancellationRequested && DateTime.UtcNow < endTime && IsAlertModalOpen && ShouldAllowSleepAlerts)
             {
                 try
                 {
@@ -357,7 +385,11 @@ public class SleepService : IDisposable
                 }
                 catch { }
 
-                if (token.IsCancellationRequested || !IsAlertModalOpen) break;
+                if (token.IsCancellationRequested || !IsAlertModalOpen || !ShouldAllowSleepAlerts)
+                {
+                    TurnOffAlert();
+                    break;
+                }
 
                 // 1-second break after the sound finishes playing before repeating
                 try
@@ -371,9 +403,13 @@ public class SleepService : IDisposable
             }
 
             // If 3 minutes elapsed without user interaction, auto-snooze for 5 minutes!
-            if (!token.IsCancellationRequested && DateTime.UtcNow >= endTime && IsAlertModalOpen)
+            if (!token.IsCancellationRequested && DateTime.UtcNow >= endTime && IsAlertModalOpen && ShouldAllowSleepAlerts)
             {
                 SnoozeAlert(5);
+            }
+            else if (!ShouldAllowSleepAlerts)
+            {
+                TurnOffAlert();
             }
         }, token);
     }
@@ -405,6 +441,12 @@ public class SleepService : IDisposable
 
     public void SnoozeAlert(int minutes = 5)
     {
+        if (!ShouldAllowSleepAlerts)
+        {
+            TurnOffAlert();
+            return;
+        }
+
         _alarmLoopCts?.Cancel();
         _alarmLoopCts?.Dispose();
         _alarmLoopCts = null;
@@ -430,6 +472,12 @@ public class SleepService : IDisposable
         {
             while (SnoozeRemainingSeconds > 0 && !token.IsCancellationRequested)
             {
+                if (!ShouldAllowSleepAlerts)
+                {
+                    TurnOffAlert();
+                    return;
+                }
+
                 try
                 {
                     await Task.Delay(1000, token);
@@ -445,6 +493,12 @@ public class SleepService : IDisposable
             if (!token.IsCancellationRequested)
             {
                 IsSnoozed = false;
+                if (!ShouldAllowSleepAlerts)
+                {
+                    TurnOffAlert();
+                    return;
+                }
+
                 if (alertType == "wake")
                 {
                     await TriggerWakeAlarmAsync();
@@ -496,6 +550,7 @@ public class SleepService : IDisposable
         _snoozeCts?.Dispose();
         _appState.OnUserLoaded -= LoadUserAccount;
         _appState.OnUserLoggedOut -= Reset;
+        _appState.OnChange -= OnAppStateChanged;
         _appState.OnTick -= HandleTick;
     }
 

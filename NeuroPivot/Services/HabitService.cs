@@ -566,13 +566,14 @@ public class HabitService
         return (int)Math.Round((double)qualifiedDays / (double)CurrentActiveDay * 100.0);
     }
 
-    public void LogDailyMood(string moodTag, string note)
+    public void LogDailyMood(string moodTag, string note, string gratitude = "")
     {
         var entry = new DailyMoodEntry
         {
             Date = DateTime.Today,
             MoodTag = moodTag,
             Note = note?.Trim() ?? "",
+            GratitudeNote = gratitude?.Trim() ?? "",
             HabitsCompletedOnDay = GetCompletedTodayCount(),
             TotalHabitsCount = Habits.Count > 0 ? Habits.Count : 6
         };

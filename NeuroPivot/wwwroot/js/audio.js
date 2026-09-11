@@ -555,6 +555,12 @@ window.nobsAudio = {
                 this._activeAudioResolve();
                 this._activeAudioResolve = null;
             }
+            if (this.audioCtx) {
+                try {
+                    this.audioCtx.close().catch(() => {});
+                } catch (e) { }
+                this.audioCtx = null;
+            }
         } catch (e) { }
     },
 

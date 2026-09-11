@@ -580,140 +580,33 @@
     color: var(--text-muted);
 }
 
-.fl-empty-state {
+.fl-header-actions {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.85rem 1rem;
-    background: rgba(127, 183, 190, 0.04);
-    border: 1px solid var(--border-color);
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    color: var(--text-muted);
-}
-
-.empty-bullet {
-    color: var(--accent-blue, #7FB7BE);
-}
-
-.fl-entries-list {
-    display: flex;
-    flex-direction: column;
     gap: 0.75rem;
 }
 
-.fl-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
-    border-left: 3px solid var(--accent-pink, #E6AACE);
-}
-
-.fl-card-top {
-    display: flex;
-    justify-content: space-between;
+.btn-history-archives {
+    background: rgba(127, 183, 190, 0.12);
+    border: 1px solid var(--accent-blue, #7FB7BE);
+    color: var(--accent-blue, #7FB7BE);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: 0.4rem;
 }
 
-.fl-tag.trigger {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--accent-pink, #E6AACE);
-    background: rgba(230, 170, 206, 0.08);
-    padding: 0.2rem 0.5rem;
+.btn-history-archives:hover {
+    background: var(--accent-blue, #7FB7BE);
+    color: #121212;
+    transform: translateY(-1px);
 }
 
-.fl-time {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--text-muted);
-}
 
-.fl-card-halt,
-.fl-card-body,
-.fl-card-fix {
-    font-size: 0.86rem;
-    display: flex;
-    gap: 0.4rem;
-    line-height: 1.45;
-}
-
-.fl-label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    min-width: 110px;
-}
-
-.fl-val {
-    color: var(--text-primary);
-}
-
-.fl-val-fix {
-    color: var(--accent-blue, #7FB7BE);
-    font-weight: 600;
-}
-
-/* ================================================= */
-/* DAILY MOOD HISTORY                                */
-/* ================================================= */
-.mood-history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.mood-log-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    padding: 0.75rem 1rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-}
-
-.ml-date-wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-}
-
-.ml-date {
-    color: var(--text-primary);
-    font-weight: 700;
-}
-
-.ml-habits {
-    color: var(--text-muted);
-}
-
-.ml-tag {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: inline-block;
-    padding: 0.15rem 0.5rem;
-    background: rgba(127, 183, 190, 0.08);
-    color: var(--accent-blue, #7FB7BE);
-}
-
-.ml-tag.sharp { color: #ff9f43; background: rgba(255, 159, 67, 0.1); }
-.ml-tag.focused { color: var(--accent-blue, #7FB7BE); background: rgba(127, 183, 190, 0.1); }
-.ml-tag.low_energy { color: #54a0ff; background: rgba(84, 160, 255, 0.1); }
-.ml-tag.high_friction { color: var(--accent-pink, #E6AACE); background: rgba(230, 170, 206, 0.1); }
-
-.ml-note {
-    font-size: 0.88rem;
-    color: var(--text-primary);
-    font-style: italic;
-    line-height: 1.45;
-}
 

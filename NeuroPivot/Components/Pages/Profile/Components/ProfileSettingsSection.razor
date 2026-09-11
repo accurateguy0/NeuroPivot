@@ -19,77 +19,80 @@
             </button>
         </div>
 
-        <!-- 2. Sleep & Wake Routine -->
-        <div class="setting-item border-top">
-            <div class="setting-text-col">
-                <div class="setting-title">Sleep &amp; Wake Routine</div>
-            </div>
-            <button class="nobs-btn btn-change-sleeptime" @onclick="NavigateToSleepQuestionnaire">
-                Change wake up &amp; sleep time →
-            </button>
-        </div>
-
-        <!-- 3. Cutoff Alert -->
-        <div class="setting-group-box border-top">
-            <div class="setting-item">
+        @if (AppState.CurrentGoal?.Equals("sleep", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            <!-- 2. Sleep & Wake Routine -->
+            <div class="setting-item border-top">
                 <div class="setting-text-col">
-                    <div class="setting-title">Cutoff Alert (@FormatTime(SleepService.CalculatedElectronicsCutoff))</div>
-                    <div class="setting-subtitle">Electronics off 1h before bed</div>
+                    <div class="setting-title">Sleep &amp; Wake Routine</div>
                 </div>
-                <AppleToggle Value="@SleepService.CutoffAlertEnabled" ValueChanged="@((bool v) => SleepService.SetCutoffAlert(v))" />
-            </div>
-            
-            <div class="sound-picker-row">
-                <div class="sound-controls">
-                    <select class="nobs-sound-select" value="@SleepService.CutoffAlertSound" @onchange="OnCutoffSoundChanged">
-                        <option value="soft_pulse">Soft Pulse (Synthesizer)</option>
-                        <option value="gentle_chime">Gentle Chime (Synthesizer)</option>
-                        <option value="zen_bell">Zen Singing Bowl</option>
-                        <option value="kling_pulse">Kling Pulse</option>
-                        <option value="xiaomi_chimes">Xiaomi Chimes</option>
-                        <option value="528hz_tone">528Hz Pure Tone</option>
-                        <option value="digital_alarm">Digital Alarm Clock</option>
-                        <option value="fm_bass">FM Synth Bass</option>
-                        <option value="custom">@(string.IsNullOrEmpty(SleepService.CustomCutoffAlertFileName) ? "Custom Sound..." : $"Custom: {SleepService.CustomCutoffAlertFileName}")</option>
-                    </select>
-                    <InputFile id="cutoffFileInput" OnChange="HandleCutoffFileUpload" accept="audio/*" style="display: none;" />
-                    <button class="nobs-btn btn-preview-sound" title="Preview Alert Sound" @onclick="() => SleepService.PlaySoundPreviewAsync(SleepService.CutoffAlertSound, false)">
-                        ▶ Test
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. Wake Alarm -->
-        <div class="setting-group-box border-top">
-            <div class="setting-item">
-                <div class="setting-text-col">
-                    <div class="setting-title">Wake Alarm (@FormatTime(SleepService.CalculatedWakeupTime))</div>
-                    <div class="setting-subtitle">Optimal morning wake-up alert</div>
-                </div>
-                <AppleToggle Value="@SleepService.WakeAlertEnabled" ValueChanged="@((bool v) => SleepService.SetWakeAlert(v))" />
+                <button class="nobs-btn btn-change-sleeptime" @onclick="NavigateToSleepQuestionnaire">
+                    Change wake up &amp; sleep time →
+                </button>
             </div>
 
-            <div class="sound-picker-row">
-                <div class="sound-controls">
-                    <select class="nobs-sound-select" value="@SleepService.WakeAlarmSound" @onchange="OnWakeSoundChanged">
-                        <option value="gentle_chime">Gentle Chime (Synthesizer)</option>
-                        <option value="soft_pulse">Soft Pulse (Synthesizer)</option>
-                        <option value="zen_bell">Zen Singing Bowl</option>
-                        <option value="528hz_tone">528Hz Pure Tone</option>
-                        <option value="digital_alarm">Digital Alarm Clock</option>
-                        <option value="fm_bass">FM Synth Bass</option>
-                        <option value="xiaomi_chimes">Xiaomi Chimes</option>
-                        <option value="kling_pulse">Kling Pulse</option>
-                        <option value="custom">@(string.IsNullOrEmpty(SleepService.CustomWakeAlarmFileName) ? "Custom Sound..." : $"Custom: {SleepService.CustomWakeAlarmFileName}")</option>
-                    </select>
-                    <InputFile id="wakeFileInput" OnChange="HandleWakeFileUpload" accept="audio/*" style="display: none;" />
-                    <button class="nobs-btn btn-preview-sound" title="Preview Alarm Sound" @onclick="() => SleepService.PlaySoundPreviewAsync(SleepService.WakeAlarmSound, true)">
-                        ▶ Test
-                    </button>
+            <!-- 3. Cutoff Alert -->
+            <div class="setting-group-box border-top">
+                <div class="setting-item">
+                    <div class="setting-text-col">
+                        <div class="setting-title">Cutoff Alert (@FormatTime(SleepService.CalculatedElectronicsCutoff))</div>
+                        <div class="setting-subtitle">Electronics off 1h before bed</div>
+                    </div>
+                    <AppleToggle Value="@SleepService.CutoffAlertEnabled" ValueChanged="@((bool v) => SleepService.SetCutoffAlert(v))" />
+                </div>
+                
+                <div class="sound-picker-row">
+                    <div class="sound-controls">
+                        <select class="nobs-sound-select" value="@SleepService.CutoffAlertSound" @onchange="OnCutoffSoundChanged">
+                            <option value="soft_pulse">Soft Pulse (Synthesizer)</option>
+                            <option value="gentle_chime">Gentle Chime (Synthesizer)</option>
+                            <option value="zen_bell">Zen Singing Bowl</option>
+                            <option value="kling_pulse">Kling Pulse</option>
+                            <option value="xiaomi_chimes">Xiaomi Chimes</option>
+                            <option value="528hz_tone">528Hz Pure Tone</option>
+                            <option value="digital_alarm">Digital Alarm Clock</option>
+                            <option value="fm_bass">FM Synth Bass</option>
+                            <option value="custom">@(string.IsNullOrEmpty(SleepService.CustomCutoffAlertFileName) ? "Custom Sound..." : $"Custom: {SleepService.CustomCutoffAlertFileName}")</option>
+                        </select>
+                        <InputFile id="cutoffFileInput" OnChange="HandleCutoffFileUpload" accept="audio/*" style="display: none;" />
+                        <button class="nobs-btn btn-preview-sound" title="Preview Alert Sound" @onclick="() => SleepService.PlaySoundPreviewAsync(SleepService.CutoffAlertSound, false)">
+                            ▶ Test
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- 4. Wake Alarm -->
+            <div class="setting-group-box border-top">
+                <div class="setting-item">
+                    <div class="setting-text-col">
+                        <div class="setting-title">Wake Alarm (@FormatTime(SleepService.CalculatedWakeupTime))</div>
+                        <div class="setting-subtitle">Optimal morning wake-up alert</div>
+                    </div>
+                    <AppleToggle Value="@SleepService.WakeAlertEnabled" ValueChanged="@((bool v) => SleepService.SetWakeAlert(v))" />
+                </div>
+
+                <div class="sound-picker-row">
+                    <div class="sound-controls">
+                        <select class="nobs-sound-select" value="@SleepService.WakeAlarmSound" @onchange="OnWakeSoundChanged">
+                            <option value="gentle_chime">Gentle Chime (Synthesizer)</option>
+                            <option value="soft_pulse">Soft Pulse (Synthesizer)</option>
+                            <option value="zen_bell">Zen Singing Bowl</option>
+                            <option value="528hz_tone">528Hz Pure Tone</option>
+                            <option value="digital_alarm">Digital Alarm Clock</option>
+                            <option value="fm_bass">FM Synth Bass</option>
+                            <option value="xiaomi_chimes">Xiaomi Chimes</option>
+                            <option value="kling_pulse">Kling Pulse</option>
+                            <option value="custom">@(string.IsNullOrEmpty(SleepService.CustomWakeAlarmFileName) ? "Custom Sound..." : $"Custom: {SleepService.CustomWakeAlarmFileName}")</option>
+                        </select>
+                        <InputFile id="wakeFileInput" OnChange="HandleWakeFileUpload" accept="audio/*" style="display: none;" />
+                        <button class="nobs-btn btn-preview-sound" title="Preview Alarm Sound" @onclick="() => SleepService.PlaySoundPreviewAsync(SleepService.WakeAlarmSound, true)">
+                            ▶ Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
 
         <!-- 5. Volume Slider -->
         <div class="chime-volume-container border-top">

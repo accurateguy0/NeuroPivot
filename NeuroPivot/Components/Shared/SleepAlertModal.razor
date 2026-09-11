@@ -46,13 +46,7 @@
 }
 
 @code {
-    private bool ShouldDisplayAlert =>
-        AppState.IsLoggedIn &&
-        !AppState.Username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) &&
-        AppState.ActiveView != "landing" &&
-        AppState.ActiveView != "authentication" &&
-        AppState.ActiveView != "authentification" &&
-        AppState.ActiveView != "welcome_transition";
+    private bool ShouldDisplayAlert => SleepService.ShouldAllowSleepAlerts;
 
     protected override void OnInitialized()
     {

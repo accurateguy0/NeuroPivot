@@ -1,0 +1,61 @@
+@page "/archives"
+@inject AppState AppState
+@inject HabitService HabitService
+@inject IJSRuntime JSRuntime
+@using System.Globalization
+
+<div class="nobs-container archives-container" style="max-width: 820px;">
+    <button class="nobs-btn btn-back-hub" @onclick="GoBackToProfile">
+        ← Back to Profile
+    </button>
+
+    <div class="archives-header">
+        <h1 class="page-title-inter">archives</h1>
+        <p class="archives-subtext">Select a date to review your gratitude, reflections, and consistency logs.</p>
+    </div>
+
+    <div class="archives-list-container animated-fade-in">
+        @{
+            int totalDays = Math.Max(HabitService.CurrentActiveDay, 1);
+        }
+        @for (int d = totalDays; d >= 1; d--)
+        {
+            int dayIdx = d;
+            var date = HabitService.ChallengeStartDate.AddDays(dayIdx - 1).Date;
+            var log = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == date);
+            int done = HabitService.Habits.Count(h => h.IsCompletedOnDay(dayIdx));
+            int total = HabitService.Habits.Count > 0 ? HabitService.Habits.Count : 6;
+            bool hasFriction = AppState.RelapseLogs.Any(r => r.ChallengeDay == dayIdx || r.Timestamp.Date == date);
+            bool isFav = AppState.IsDayFavorited(dayIdx);
+
+            <button type="button" class="archive-date-row @(isFav ? "favorited-row" : "")" @onclick="() => SelectArchiveDay(dayIdx)">
+                <div class="row-left">
+                    <button type="button" 
+                            class="btn-star-fav @(isFav ? "is-fav" : "")" 
+                            @onclick="() => AppState.ToggleFavoriteDay(dayIdx)" 
+                            @onclick:stopPropagation="true"
+                            title="@(isFav ? "Memorable day (Favorited) - Click to unstar" : "Star as memorable day")">
+                        @(isFav ? "★" : "☆")
+                    </button>
+                    <span class="row-date-text @(hasFriction ? "has-friction" : "")">@date.ToString("dd.MM.yyyy")</span>
+                </div>
+                <div class="row-right">
+                    <span class="row-habits-done">✓ @done/@total done</span>
+                </div>
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    private void GoBackToProfile()
+    {
+        AppState.SetActiveProfileSection("stats");
+        AppState.SetActiveView("profile");
+    }
+
+    private void SelectArchiveDay(int day)
+    {
+        AppState.OpenArchiveDetail(day);
+    }
+}

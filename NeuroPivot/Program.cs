@@ -27,13 +27,41 @@ app.UseHttpsRedirection();
 
 var provider = new FileExtensionContentTypeProvider();
 provider.Mappings[".mp4"] = "video/mp4";
+provider.Mappings[".m4a"] = "audio/mp4";
+provider.Mappings[".mp3"] = "audio/mpeg";
+provider.Mappings[".wav"] = "audio/wav";
+provider.Mappings[".webm"] = "video/webm";
+provider.Mappings[".ogg"] = "audio/ogg";
+provider.Mappings[".aac"] = "audio/aac";
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    ContentTypeProvider = provider
+    ContentTypeProvider = provider,
+    ServeUnknownFileTypes = true
 });
 
 app.UseAntiforgery();
+
+app.MapGet("/sounds/{fileName}", (string fileName, IWebHostEnvironment env) =>
+{
+    var filePath = Path.Combine(env.WebRootPath, "sounds", fileName);
+    if (!File.Exists(filePath)) return Results.NotFound();
+
+    var ext = Path.GetExtension(fileName).ToLowerInvariant();
+    var contentType = ext switch
+    {
+        ".m4a" => "audio/mp4",
+        ".mp4" => "video/mp4",
+        ".mp3" => "audio/mpeg",
+        ".wav" => "audio/wav",
+        ".webm" => "video/webm",
+        ".ogg" => "audio/ogg",
+        ".aac" => "audio/aac",
+        _ => "application/octet-stream"
+    };
+
+    return Results.File(filePath, contentType: contentType, enableRangeProcessing: true);
+});
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()

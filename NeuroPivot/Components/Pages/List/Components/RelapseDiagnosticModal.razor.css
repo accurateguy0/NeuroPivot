@@ -29,19 +29,10 @@
 
 .relapse-modal-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 0.85rem;
-}
-
-.relapse-badge {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent-pink, #E6AACE);
-    font-weight: 700;
 }
 
 .modal-close-btn {

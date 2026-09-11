@@ -36,6 +36,7 @@ public class AppState : IDisposable
     public List<DailyMoodEntry> DailyMoodLogs { get; private set; } = new();
     public List<RelapseEntry> RelapseLogs { get; private set; } = new();
     public int UrgesSurfedCount { get; private set; } = 0;
+    public List<int> FavoriteArchiveDays { get; private set; } = new();
 
     // User Profile
     public string UserRole { get; private set; } = "Science Optimizer";
@@ -43,6 +44,7 @@ public class AppState : IDisposable
 
     // Profile Sub-section (dashboard, you, stats, settings, suggestions)
     public string ActiveProfileSection { get; private set; } = "dashboard";
+    public int SelectedArchiveDay { get; private set; } = 1;
 
     // Session Timer
     public int WebsiteTimeSeconds { get; private set; } = 0;
@@ -96,6 +98,34 @@ public class AppState : IDisposable
         SetActiveView("profile");
     }
 
+    public void OpenArchives()
+    {
+        SetActiveView("archives");
+    }
+
+    public void OpenArchiveDetail(int day)
+    {
+        SelectedArchiveDay = Math.Max(day, 1);
+        SetActiveView("archive_detail");
+    }
+
+    public bool IsDayFavorited(int day) => FavoriteArchiveDays.Contains(day);
+
+    public void ToggleFavoriteDay(int day)
+    {
+        if (FavoriteArchiveDays.Contains(day))
+        {
+            FavoriteArchiveDays.Remove(day);
+        }
+        else
+        {
+            FavoriteArchiveDays.Add(day);
+        }
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
     public void Login(string username, bool isReturning = false)
     {
         _ = LoginAsync(username, isReturning);
@@ -142,6 +172,7 @@ public class AppState : IDisposable
         DailyMoodLogs = account.DailyMoodLogs != null ? new List<DailyMoodEntry>(account.DailyMoodLogs) : new List<DailyMoodEntry>();
         RelapseLogs = account.RelapseLogs != null ? new List<RelapseEntry>(account.RelapseLogs) : new List<RelapseEntry>();
         UrgesSurfedCount = account.UrgesSurfedCount;
+        FavoriteArchiveDays = account.FavoriteArchiveDays != null ? new List<int>(account.FavoriteArchiveDays) : new List<int>();
         IsDarkMode = account.IsDarkMode;
         SoundVolume = account.SoundVolume;
         SleepNotificationsEnabled = account.SleepNotificationsEnabled;
@@ -173,6 +204,7 @@ public class AppState : IDisposable
         DailyMoodLogs = new List<DailyMoodEntry>();
         RelapseLogs = new List<RelapseEntry>();
         UrgesSurfedCount = 0;
+        FavoriteArchiveDays = new List<int>();
 
         if (_localStorage != null)
         {
@@ -216,7 +248,7 @@ public class AppState : IDisposable
 
     private static readonly string[] ProtectedViews = new[]
     {
-        "list", "recommended", "profile", "about"
+        "list", "recommended", "profile", "about", "archives", "archive_detail"
     };
 
     public void SetActiveView(string view, bool fromBrowser = false)
@@ -447,6 +479,7 @@ public class AppState : IDisposable
             _accountService.ActiveAccount.DailyMoodLogs = DailyMoodLogs;
             _accountService.ActiveAccount.RelapseLogs = RelapseLogs;
             _accountService.ActiveAccount.UrgesSurfedCount = UrgesSurfedCount;
+            _accountService.ActiveAccount.FavoriteArchiveDays = FavoriteArchiveDays;
             _accountService.ActiveAccount.IsDarkMode = IsDarkMode;
             _accountService.ActiveAccount.SoundVolume = SoundVolume;
             _accountService.ActiveAccount.SleepNotificationsEnabled = SleepNotificationsEnabled;
@@ -489,6 +522,7 @@ public class AppState : IDisposable
                 await _localStorage.SetItemAsync("nobs_daily_mood_logs", DailyMoodLogs);
                 await _localStorage.SetItemAsync("nobs_relapse_logs", RelapseLogs);
                 await _localStorage.SetItemAsync("nobs_urges_surfed_count", UrgesSurfedCount);
+                await _localStorage.SetItemAsync("nobs_favorite_archive_days", FavoriteArchiveDays);
                 await _localStorage.SetItemAsync("nobs_website_time_seconds", WebsiteTimeSeconds);
                 await _localStorage.SetItemAsync("nobs_profile_section", ActiveProfileSection);
                 await _localStorage.SetItemAsync("nobs_user_role", UserRole);
@@ -555,6 +589,7 @@ public class AppState : IDisposable
                         DailyMoodLogs = account.DailyMoodLogs != null ? new List<DailyMoodEntry>(account.DailyMoodLogs) : new List<DailyMoodEntry>();
                         RelapseLogs = account.RelapseLogs != null ? new List<RelapseEntry>(account.RelapseLogs) : new List<RelapseEntry>();
                         UrgesSurfedCount = account.UrgesSurfedCount;
+                        FavoriteArchiveDays = account.FavoriteArchiveDays != null ? new List<int>(account.FavoriteArchiveDays) : new List<int>();
                         IsDarkMode = account.IsDarkMode;
                         SoundVolume = account.SoundVolume;
                         SleepNotificationsEnabled = account.SleepNotificationsEnabled;
@@ -572,10 +607,12 @@ public class AppState : IDisposable
                     var savedMoodLogs = await _localStorage.GetItemAsync<List<DailyMoodEntry>>("nobs_daily_mood_logs");
                     var savedRelapseLogs = await _localStorage.GetItemAsync<List<RelapseEntry>>("nobs_relapse_logs");
                     var savedUrges = await _localStorage.GetItemAsync<int?>("nobs_urges_surfed_count");
+                    var savedFavs = await _localStorage.GetItemAsync<List<int>>("nobs_favorite_archive_days");
                     if (!string.IsNullOrEmpty(savedMotivation)) InitialHabitMotivation = savedMotivation;
                     if (savedMoodLogs != null) DailyMoodLogs = savedMoodLogs;
                     if (savedRelapseLogs != null) RelapseLogs = savedRelapseLogs;
                     if (savedUrges.HasValue) UrgesSurfedCount = savedUrges.Value;
+                    if (savedFavs != null) FavoriteArchiveDays = savedFavs;
                 }
 
                 // Restore active view from local storage if saved, otherwise default to landing page

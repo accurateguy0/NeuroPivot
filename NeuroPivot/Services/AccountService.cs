@@ -30,6 +30,7 @@ public class UserAccount
     public List<DailyMoodEntry> DailyMoodLogs { get; set; } = new();
     public List<RelapseEntry> RelapseLogs { get; set; } = new();
     public int UrgesSurfedCount { get; set; } = 0;
+    public List<int> FavoriteArchiveDays { get; set; } = new();
 
     // Goals & Diagnostics
     public string CurrentGoal { get; set; } = "habits";
@@ -64,8 +65,9 @@ public class UserAccount
 public class DailyMoodEntry
 {
     public DateTime Date { get; set; } = DateTime.Today;
-    public string MoodTag { get; set; } = "focused"; // sharp, focused, low_energy, high_friction
+    public string MoodTag { get; set; } = "good"; // sharp (high energy), good, low_energy, poor
     public string Note { get; set; } = "";
+    public string GratitudeNote { get; set; } = "";
     public int HabitsCompletedOnDay { get; set; } = 0;
     public int TotalHabitsCount { get; set; } = 6;
 }
