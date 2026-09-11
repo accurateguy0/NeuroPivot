@@ -31,6 +31,12 @@ public class AppState : IDisposable
     public string AddictionLevel { get; private set; } = "average"; // average, concerning, addicted
     public int AddictionScore { get; private set; } = 0;
 
+    // Habits Goal Specific: Motivation, Logs, Relapses & Urges
+    public string InitialHabitMotivation { get; private set; } = "";
+    public List<DailyMoodEntry> DailyMoodLogs { get; private set; } = new();
+    public List<RelapseEntry> RelapseLogs { get; private set; } = new();
+    public int UrgesSurfedCount { get; private set; } = 0;
+
     // User Profile
     public string UserRole { get; private set; } = "Science Optimizer";
     public string? AvatarUrl { get; private set; } = null;
@@ -132,6 +138,10 @@ public class AppState : IDisposable
         if (!string.IsNullOrWhiteSpace(account.CurrentGoal)) CurrentGoal = account.CurrentGoal;
         if (!string.IsNullOrWhiteSpace(account.AddictionLevel)) AddictionLevel = account.AddictionLevel;
         AddictionScore = account.AddictionScore;
+        InitialHabitMotivation = account.InitialHabitMotivation ?? "";
+        DailyMoodLogs = account.DailyMoodLogs != null ? new List<DailyMoodEntry>(account.DailyMoodLogs) : new List<DailyMoodEntry>();
+        RelapseLogs = account.RelapseLogs != null ? new List<RelapseEntry>(account.RelapseLogs) : new List<RelapseEntry>();
+        UrgesSurfedCount = account.UrgesSurfedCount;
         IsDarkMode = account.IsDarkMode;
         SoundVolume = account.SoundVolume;
         SleepNotificationsEnabled = account.SleepNotificationsEnabled;
@@ -159,6 +169,10 @@ public class AppState : IDisposable
         Username = "Guest User";
         ActiveView = "landing";
         ActiveProfileSection = "dashboard";
+        InitialHabitMotivation = "";
+        DailyMoodLogs = new List<DailyMoodEntry>();
+        RelapseLogs = new List<RelapseEntry>();
+        UrgesSurfedCount = 0;
 
         if (_localStorage != null)
         {
@@ -363,6 +377,65 @@ public class AppState : IDisposable
         _ = SaveFullSessionAsync();
     }
 
+    public void SetInitialHabitMotivation(string motivation)
+    {
+        InitialHabitMotivation = motivation ?? "";
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public void SetDailyMoodLogs(List<DailyMoodEntry> logs)
+    {
+        DailyMoodLogs = logs != null ? new List<DailyMoodEntry>(logs) : new();
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public void AddDailyMoodLog(DailyMoodEntry entry)
+    {
+        if (entry == null) return;
+        DailyMoodLogs.RemoveAll(l => l.Date.Date == entry.Date.Date);
+        DailyMoodLogs.Add(entry);
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public void SetRelapseLogs(List<RelapseEntry> logs)
+    {
+        RelapseLogs = logs != null ? new List<RelapseEntry>(logs) : new();
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public void AddRelapseLog(RelapseEntry entry)
+    {
+        if (entry == null) return;
+        RelapseLogs.Insert(0, entry);
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public void SetUrgesSurfedCount(int count)
+    {
+        UrgesSurfedCount = Math.Max(0, count);
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public void IncrementUrgesSurfed()
+    {
+        UrgesSurfedCount++;
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
     private void SyncActiveAccount()
     {
         if (_accountService?.ActiveAccount != null)
@@ -370,6 +443,10 @@ public class AppState : IDisposable
             _accountService.ActiveAccount.CurrentGoal = CurrentGoal;
             _accountService.ActiveAccount.AddictionLevel = AddictionLevel;
             _accountService.ActiveAccount.AddictionScore = AddictionScore;
+            _accountService.ActiveAccount.InitialHabitMotivation = InitialHabitMotivation;
+            _accountService.ActiveAccount.DailyMoodLogs = DailyMoodLogs;
+            _accountService.ActiveAccount.RelapseLogs = RelapseLogs;
+            _accountService.ActiveAccount.UrgesSurfedCount = UrgesSurfedCount;
             _accountService.ActiveAccount.IsDarkMode = IsDarkMode;
             _accountService.ActiveAccount.SoundVolume = SoundVolume;
             _accountService.ActiveAccount.SleepNotificationsEnabled = SleepNotificationsEnabled;
@@ -408,6 +485,10 @@ public class AppState : IDisposable
                 await _localStorage.SetItemAsync("nobs_is_dark_mode", IsDarkMode);
                 await _localStorage.SetItemAsync("nobs_addiction_level", AddictionLevel);
                 await _localStorage.SetItemAsync("nobs_addiction_score", AddictionScore);
+                await _localStorage.SetItemAsync("nobs_initial_habit_motivation", InitialHabitMotivation);
+                await _localStorage.SetItemAsync("nobs_daily_mood_logs", DailyMoodLogs);
+                await _localStorage.SetItemAsync("nobs_relapse_logs", RelapseLogs);
+                await _localStorage.SetItemAsync("nobs_urges_surfed_count", UrgesSurfedCount);
                 await _localStorage.SetItemAsync("nobs_website_time_seconds", WebsiteTimeSeconds);
                 await _localStorage.SetItemAsync("nobs_profile_section", ActiveProfileSection);
                 await _localStorage.SetItemAsync("nobs_user_role", UserRole);
@@ -470,6 +551,10 @@ public class AppState : IDisposable
                         if (!string.IsNullOrWhiteSpace(account.CurrentGoal)) CurrentGoal = account.CurrentGoal;
                         if (!string.IsNullOrWhiteSpace(account.AddictionLevel)) AddictionLevel = account.AddictionLevel;
                         AddictionScore = account.AddictionScore;
+                        InitialHabitMotivation = account.InitialHabitMotivation ?? "";
+                        DailyMoodLogs = account.DailyMoodLogs != null ? new List<DailyMoodEntry>(account.DailyMoodLogs) : new List<DailyMoodEntry>();
+                        RelapseLogs = account.RelapseLogs != null ? new List<RelapseEntry>(account.RelapseLogs) : new List<RelapseEntry>();
+                        UrgesSurfedCount = account.UrgesSurfedCount;
                         IsDarkMode = account.IsDarkMode;
                         SoundVolume = account.SoundVolume;
                         SleepNotificationsEnabled = account.SleepNotificationsEnabled;
@@ -483,6 +568,14 @@ public class AppState : IDisposable
                     {
                         WebsiteTimeSeconds = guestTime.Value;
                     }
+                    var savedMotivation = await _localStorage.GetItemAsync<string>("nobs_initial_habit_motivation");
+                    var savedMoodLogs = await _localStorage.GetItemAsync<List<DailyMoodEntry>>("nobs_daily_mood_logs");
+                    var savedRelapseLogs = await _localStorage.GetItemAsync<List<RelapseEntry>>("nobs_relapse_logs");
+                    var savedUrges = await _localStorage.GetItemAsync<int?>("nobs_urges_surfed_count");
+                    if (!string.IsNullOrEmpty(savedMotivation)) InitialHabitMotivation = savedMotivation;
+                    if (savedMoodLogs != null) DailyMoodLogs = savedMoodLogs;
+                    if (savedRelapseLogs != null) RelapseLogs = savedRelapseLogs;
+                    if (savedUrges.HasValue) UrgesSurfedCount = savedUrges.Value;
                 }
 
                 // Restore active view from local storage if saved, otherwise default to landing page

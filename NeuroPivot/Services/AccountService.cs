@@ -25,6 +25,12 @@ public class UserAccount
     public DateTime? LastStreakQualifyDate { get; set; } = null;
     public int AcknowledgedStreakMilestone { get; set; } = 0;
 
+    // Habits Goal Specific: Motivation, Logs, Relapses & Urges
+    public string InitialHabitMotivation { get; set; } = "";
+    public List<DailyMoodEntry> DailyMoodLogs { get; set; } = new();
+    public List<RelapseEntry> RelapseLogs { get; set; } = new();
+    public int UrgesSurfedCount { get; set; } = 0;
+
     // Goals & Diagnostics
     public string CurrentGoal { get; set; } = "habits";
     public string AddictionLevel { get; set; } = "average";
@@ -53,6 +59,26 @@ public class UserAccount
     public string? CustomCutoffAlertFileName { get; set; }
     public string? LastCutoffAlertDate { get; set; }
     public string? LastWakeAlarmDate { get; set; }
+}
+
+public class DailyMoodEntry
+{
+    public DateTime Date { get; set; } = DateTime.Today;
+    public string MoodTag { get; set; } = "focused"; // sharp, focused, low_energy, high_friction
+    public string Note { get; set; } = "";
+    public int HabitsCompletedOnDay { get; set; } = 0;
+    public int TotalHabitsCount { get; set; } = 6;
+}
+
+public class RelapseEntry
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public DateTime Timestamp { get; set; } = DateTime.Now;
+    public int ChallengeDay { get; set; } = 1;
+    public string TriggerCategory { get; set; } = ""; // Social Cue, Boredom / Emptiness, Late Night Fatigue, Acute Stress Spike, Digital Stimulus / Device
+    public string HaltState { get; set; } = ""; // Hungry, Angry, Lonely, Tired, None
+    public string FrictionFailure { get; set; } = ""; // Environmental barrier that failed
+    public string CalibrationAction { get; set; } = ""; // Solution / rule adjustment
 }
 
 public class AuthResult

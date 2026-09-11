@@ -1,0 +1,732 @@
+@inject HabitService HabitService
+@inject AppState AppState
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay" id="urgeModalBackdrop" @onclick="HandleCancel">
+        <!-- Centered Pinned Modal Card with PRODUX Scrollytelling -->
+        <div class="nobs-modal-card urge-modal-square animated-fade-in" 
+             id="urgePinnedCard"
+             @onclick:stopPropagation="true">
+            
+            <!-- Background Ambient Music: The City of Lost Hope -->
+            <audio id="urgeBgMusic" src="sounds/the_city_of_lost_hope.mp3" preload="auto" loop></audio>
+
+            <!-- Modal Header: Persistent '✕' Close Button -->
+            <div class="urge-modal-header">
+                <div class="urge-header-actions">
+                    <button type="button" class="modal-close-btn" @onclick="HandleCancel" aria-label="Close">✕</button>
+                </div>
+            </div>
+
+            <!-- Master Scrollytelling Scenes Stage -->
+            <div class="urge-scenes-stage">
+                
+                <!-- SCENE 0: PERSISTENCE WRAPPED (Continuous Vertical Scroll Stream) -->
+                <div id="urge-scene-0" class="urge-scene-layer spotify-scene">
+                    <!-- Spotify Wrapped Concentric Radar Arc Background Element -->
+                    <div class="spotify-arc-pattern-bg">
+                        <svg viewBox="0 0 240 240" fill="none" class="spotify-radar-arcs" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="240" cy="240" r="220" stroke="rgba(255,255,255,0.04)" stroke-width="10" stroke-dasharray="16 16"/>
+                            <circle cx="240" cy="240" r="175" stroke="var(--accent-blue, #7FB7BE)" stroke-width="12" opacity="0.22"/>
+                            <circle cx="240" cy="240" r="130" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
+                            <circle cx="240" cy="240" r="85" stroke="var(--accent-pink, #FF6B6B)" stroke-width="12" opacity="0.20"/>
+                            <circle cx="240" cy="240" r="45" stroke="var(--accent-blue, #7FB7BE)" stroke-width="10" opacity="0.45"/>
+                        </svg>
+                    </div>
+
+                    <!-- Vertical Scroll Stream Container -->
+                    <div class="spotify-data-scroll-container" id="spotifyDataScrollContainer">
+                        <div class="spotify-data-stream" id="spotifyDataStream">
+                            
+                            <!-- SECTION 1: TOP STREAK -->
+                            <div class="spotify-data-section">
+                                <div class="spotify-big-title-wrap">
+                                    <span class="spotify-kicker-label">CURRENT MOMENTUM</span>
+                                    <h2 class="spotify-giant-heading">TOP STREAK</h2>
+                                </div>
+
+                                <div class="spotify-hero-metric-card folder-card-streak">
+                                    <div class="folder-tab">
+                                        <span class="folder-tab-text">UNBROKEN CHAIN</span>
+                                    </div>
+                                    <div class="folder-content">
+                                        <div class="hero-metric-body">
+                                            <span class="hero-stat-huge">@HabitService.GetConsecutiveStreak()</span>
+                                            <div class="hero-stat-details">
+                                                <span class="hero-stat-unit">DAYS</span>
+                                                <span class="hero-stat-subtext">Unbroken chain of discipline</span>
+                                            </div>
+                                        </div>
+                                        <div class="folder-bottom-banner banner-streak">
+                                            <span class="folder-banner-label">BEFORE A 10-MIN URGE ERASES YOUR MOMENTUM</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 2: DAYS COMPLETED -->
+                            <div class="spotify-data-section">
+                                <div class="spotify-big-title-wrap">
+                                    <span class="spotify-kicker-label">HIGH-OUTPUT EXECUTION</span>
+                                    <h2 class="spotify-giant-heading">DAYS COMPLETED</h2>
+                                </div>
+
+                                <div class="spotify-hero-metric-card folder-card-output">
+                                    <div class="folder-tab">
+                                        <span class="folder-tab-text">4+ DAILY BENCHMARK</span>
+                                    </div>
+                                    <div class="folder-content">
+                                        <div class="hero-metric-body">
+                                            <span class="hero-stat-huge">@HabitService.GetQualifiedDaysCount()</span>
+                                            <div class="hero-stat-details">
+                                                <span class="hero-stat-unit">DAYS</span>
+                                                <span class="hero-stat-subtext">Completed with 4 or more habits</span>
+                                            </div>
+                                        </div>
+                                        <div class="folder-bottom-banner banner-output">
+                                            <span class="folder-banner-label">SOLID NEUROPLASTIC REINFORCEMENT</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 3: CONSISTENCY -->
+                            <div class="spotify-data-section">
+                                <div class="spotify-big-title-wrap">
+                                    <span class="spotify-kicker-label">EXECUTION RATE</span>
+                                    <h2 class="spotify-giant-heading">CONSISTENCY</h2>
+                                </div>
+
+                                <div class="spotify-hero-metric-card folder-card-consistency">
+                                    <div class="folder-tab">
+                                        <span class="folder-tab-text">HABIT COMPLIANCE</span>
+                                    </div>
+                                    <div class="folder-content">
+                                        <div class="hero-metric-body">
+                                            <span class="hero-stat-huge">@HabitService.GetHabitsConsistencyPercentage()<span class="hero-pct-sign">%</span></span>
+                                            <div class="hero-stat-details">
+                                                <span class="hero-stat-unit">OVERALL</span>
+                                                <span class="hero-stat-subtext">Active challenge execution ratio</span>
+                                            </div>
+                                        </div>
+                                        <div class="folder-bottom-banner banner-consistency">
+                                            <span class="folder-banner-label">SYNAPTIC PRUNING IN PROGRESS</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="spotify-lyric-card">
+                                    <div class="spotify-lyric-header">
+                                        <span class="spotify-lyric-tag">PERSISTENCE ANCHOR</span>
+                                    </div>
+                                    <p class="spotify-lyric-text">"You didn't build this by accident. You fought for every single day."</p>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 4: DAY DIARY / ORIGIN & HORIZON ARCHIVES -->
+                            <div class="spotify-data-section day-diary-data-section">
+                                <div class="produx-header-bar">
+                                    <div>
+                                        <h2 class="slide-headline">Why you entered this arena.</h2>
+                                        <p class="slide-subtext">Scroll momentum glides through your origin commitment and timeline archives</p>
+                                    </div>
+                                </div>
+
+                                <div class="produx-diagonal-viewport">
+                                    <div class="produx-diagonal-track" id="produxDiagonalTrack">
+                                        @{
+                                            int maxCardDay = Math.Max(HabitService.CurrentActiveDay, 3);
+                                        }
+                                        @for (int d = 1; d <= maxCardDay; d++)
+                                        {
+                                            int dayNum = d;
+                                            var log = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == HabitService.ChallengeStartDate.AddDays(dayNum - 1).Date);
+                                            int idx = dayNum - 1;
+                                            double leftPx = idx * 360.0;
+                                            double topPx = idx * 75.0;
+                                            
+                                            <div class="produx-diagonal-card @(dayNum == 1 ? "day-1-origin" : "")"
+                                                 style="left: @(leftPx)px; top: @(topPx)px;"
+                                                 data-index="@idx">
+                                                
+                                                <div class="produx-card-header">
+                                                    <div class="produx-header-info">
+                                                        <h4 class="produx-card-title">
+                                                            day @dayNum
+                                                        </h4>
+                                                        <p class="produx-card-sub">
+                                                            @(dayNum == 1 ? "Origin Motivation" : (log != null ? FormatMoodTag(log.MoodTag) : (dayNum <= HabitService.CurrentActiveDay ? "Routine Execution" : "Discipline Target")))
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="produx-card-body">
+                                                    @if (dayNum == 1)
+                                                    {
+                                                        <p class="produx-quote-text">
+                                                            "@(!string.IsNullOrWhiteSpace(AppState.InitialHabitMotivation) ? AppState.InitialHabitMotivation : "I committed to breaking this loop to reclaim my mental clarity, energy, and self-respect.")"
+                                                        </p>
+                                                    }
+                                                    else if (dayNum <= HabitService.CurrentActiveDay)
+                                                    {
+                                                        @if (log != null && !string.IsNullOrWhiteSpace(log.Note))
+                                                        {
+                                                            <p class="produx-quote-text">"@log.Note"</p>
+                                                        }
+                                                        else if (dayNum == HabitService.CurrentActiveDay)
+                                                        {
+                                                            <p class="produx-quote-text">"You are facing peak friction right now. Don't compromise your past work."</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="produx-quote-text muted">"Showed up and executed protocol with unbroken consistency."</p>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="produx-quote-text muted">"Every urge you surf today guarantees victory on this future milestone."</p>
+                                                    }
+                                                </div>
+
+                                                <div class="produx-card-footer">
+                                                    <span class="produx-done-stat">
+                                                        ✓ @(HabitService.Habits.Count(h => h.IsCompletedOnDay(dayNum))) / @(HabitService.Habits.Count > 0 ? HabitService.Habits.Count : 6) habits done
+                                                    </span>
+                                                    @if (dayNum == HabitService.CurrentActiveDay)
+                                                    {
+                                                        <span class="produx-active-label">TODAY</span>
+                                                    }
+                                                    else if (dayNum > HabitService.CurrentActiveDay)
+                                                    {
+                                                        <span class="produx-future-label">UPCOMING</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCENE 2: THE RAW SPARK (Cinematic Motivation Video) -->
+                <div id="urge-scene-2" class="urge-scene-layer spark-scene" style="display: none; opacity: 0;">
+                    <div id="shuzoExpandingBox" class="hero-expanding-video-box">
+                        <video id="shuzoVideoPlayer" 
+                                class="hero-cinematic-video" 
+                                muted="@isShuzoMuted" 
+                                playsinline 
+                                preload="auto"
+                                @onclick="HandleVideoClick" 
+                                @onended="HandleShuzoEnded">
+                            <source src="videos/Never_give_up_!!!.mp4" type="video/mp4" />
+                        </video>
+
+                        <!-- Center Replay Overlay Button (ONLY rendered when video has finished) -->
+                        @if (isShuzoEnded)
+                        {
+                            <button type="button" 
+                                    id="shuzoPlayCenterBtn" 
+                                    class="video-center-play-btn visible" 
+                                    @onclick="ReplayShuzo" 
+                                    aria-label="Replay Motivation Video">
+                                <span class="play-icon-triangle">▶</span>
+                            </button>
+                        }
+
+                        <!-- Sound Toggle Pill Button (Reveals when video expands on scroll) -->
+                        <button type="button" 
+                                id="shuzoSoundBtn" 
+                                class="video-sound-btn" 
+                                @onclick="ToggleShuzoSound" 
+                                aria-label="Toggle sound">
+                            @if (!isShuzoMuted)
+                            {
+                                <span>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                    </svg>
+                                    <span class="sound-text">SOUND ON</span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="sound-text">SOUND OFF</span>
+                                </span>
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SCENE 3: BIOPHILIC PHYSIOLOGICAL SIGH -->
+                <div id="urge-scene-3" class="urge-scene-layer nature-breathing-scene" style="display: none; opacity: 0;">
+                    <h2 class="slide-headline">The Physiological Sigh</h2>
+
+                    <div class="hero-expanding-video-box nature-video-frame" id="natureExpandingBox">
+                        <video id="natureVideoPlayer" 
+                                src="videos/nature_wildlife.mp4"
+                                class="hero-cinematic-video" 
+                                autoplay 
+                                muted 
+                                playsinline 
+                                loop 
+                                preload="auto"
+                                @onclick="HandleNatureVideoClick">
+                            <source src="videos/nature_wildlife.mp4" type="video/mp4" />
+                            <source src="videos/water_beach_video.mp4" type="video/mp4" />
+                        </video>
+
+                        <!-- Sound Toggle Pill Button for Nature Video -->
+                        <button type="button" 
+                                id="natureSoundBtn" 
+                                class="video-sound-btn" 
+                                @onclick="ToggleNatureSound" 
+                                aria-label="Toggle nature sound">
+                            @if (!isNatureMuted)
+                            {
+                                <span>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                    </svg>
+                                    <span class="sound-text">SOUND ON</span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="sound-text">SOUND OFF</span>
+                                </span>
+                            }
+                        </button>
+                    </div>
+
+                    <div class="breath-deck-container">
+                        <div class="breath-live-status-pill @breathPhaseClass">
+                            <span class="phase-live-label">@breathPhaseText</span>
+                            <span class="phase-live-timer">@breathSecondsRemaining s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCENE 4: VICTORY LOCK & ACTION DIVERGENCE -->
+                <div id="urge-scene-4" class="urge-scene-layer victory-scene" style="display: none; opacity: 0;">
+                    <div class="victory-hero-box">
+                        <h2 class="victory-title">Your @HabitService.GetConsecutiveStreak()-Day Streak Remains Untouched.</h2>
+                        <p class="victory-body">
+                            You looked the chemical dopamine urge dead in the eyes and refused to fold. Your synaptic pathways (LTD) are physically adapting right now.
+                        </p>
+                    </div>
+
+                    <h3 class="exit-action-title">What next actionable step will you take?</h3>
+
+                    <div class="exit-actions-grid">
+                        <button type="button" class="exit-action-btn" @onclick='() => HandleFinishAction("Drink cold water")'>
+                            <span class="ea-icon">💧</span>
+                            <div class="ea-text">
+                                <div class="ea-name">Drink 500ml Cold Water</div>
+                                <div class="ea-desc">Mammalian dive reflex & metabolic grounding</div>
+                            </div>
+                            <span class="ea-arrow">→</span>
+                        </button>
+
+                        <button type="button" class="exit-action-btn" @onclick='() => HandleFinishAction("2-min walk outside")'>
+                            <span class="ea-icon">🚶</span>
+                            <div class="ea-text">
+                                <div class="ea-name">2-Min Walk Outside / Open Window</div>
+                                <div class="ea-desc">Panoramic visual flow to down-regulate focus</div>
+                            </div>
+                            <span class="ea-arrow">→</span>
+                        </button>
+
+                        <button type="button" class="exit-action-btn primary" @onclick='() => HandleFinishAction("Return to 21-Day List")'>
+                            <span class="ea-icon">⚔️</span>
+                            <div class="ea-text">
+                                <div class="ea-name">Return to 21-Day Habit Challenge</div>
+                                <div class="ea-desc">Resume daily protocol execution with clean slate</div>
+                            </div>
+                            <span class="ea-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    // Video Player State - Default sound is strictly OFF (muted = true)
+    private bool isShuzoMuted = true;
+    private bool isNatureMuted = true;
+    private bool isShuzoEnded = false;
+
+    private async Task HandleShuzoEnded()
+    {
+        isShuzoEnded = true;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("eval", @"
+                if (window.nobsProduxScrollytelling) {
+                    window.nobsProduxScrollytelling._shuzoEnded = true;
+                }
+            ");
+        }
+        catch { }
+        StateHasChanged();
+    }
+
+    private async Task HandleVideoClick()
+    {
+        if (isShuzoEnded)
+        {
+            await ReplayShuzo();
+        }
+    }
+
+    private async Task ReplayShuzo()
+    {
+        isShuzoEnded = false;
+        StateHasChanged();
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("eval", @"
+                if (window.nobsProduxScrollytelling) {
+                    window.nobsProduxScrollytelling._shuzoEnded = false;
+                }
+                const v = document.getElementById('shuzoVideoPlayer');
+                if (v) {
+                    v.currentTime = 0;
+                    v.play().catch(() => {});
+                }
+            ");
+        }
+        catch { }
+    }
+
+    private async Task ToggleShuzoSound()
+    {
+        isShuzoMuted = !isShuzoMuted;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("eval", $@"
+                const v = document.getElementById('shuzoVideoPlayer');
+                if (v) {{
+                    v.muted = {isShuzoMuted.ToString().ToLower()};
+                }}
+            ");
+        }
+        catch { }
+    }
+
+    private async Task ToggleNatureSound()
+    {
+        isNatureMuted = !isNatureMuted;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("eval", $@"
+                const v = document.getElementById('natureVideoPlayer');
+                if (v) {{
+                    v.muted = {isNatureMuted.ToString().ToLower()};
+                    if (v.paused) {{
+                        v.play().catch(() => {{}});
+                    }}
+                }}
+            ");
+        }
+        catch { }
+    }
+
+    private async Task HandleNatureVideoClick()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("eval", @"
+                const v = document.getElementById('natureVideoPlayer');
+                if (v) {
+                    if (v.paused) {
+                        v.play().catch(() => {});
+                    } else {
+                        v.pause();
+                    }
+                }
+            ");
+        }
+        catch { }
+    }
+
+    private bool isBgMusicMuted = false;
+
+    private async Task ToggleBgMusic()
+    {
+        isBgMusicMuted = !isBgMusicMuted;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("eval", $@"
+                const bg = document.getElementById('urgeBgMusic');
+                if (bg) {{
+                    bg.muted = {isBgMusicMuted.ToString().ToLower()};
+                    if (!bg.muted && bg.paused) {{
+                        bg.volume = 0.45;
+                        bg.play().catch(() => {{}});
+                    }}
+                }}
+            ");
+        }
+        catch { }
+    }
+
+    // Breathing Timer State
+    private System.Threading.CancellationTokenSource? _breathCts;
+    private string breathPhaseClass = "inhale-deep";
+    private string breathPhaseText = "DEEP INHALE NOSE";
+    private int breathSecondsRemaining = 4;
+    private bool _wasOpen = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && !_wasOpen)
+        {
+            _wasOpen = true;
+            isBgMusicMuted = false;
+            isShuzoMuted = true;
+            isNatureMuted = true;
+            isShuzoEnded = false;
+            StartBreathingSequence();
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("eval", @"
+                    const bg = document.getElementById('urgeBgMusic');
+                    if (bg) {
+                        bg.muted = false;
+                        bg.volume = 0.45;
+                        bg.currentTime = 0;
+                        bg.play().catch(() => {});
+                    }
+                    const sv = document.getElementById('shuzoVideoPlayer');
+                    if (sv) { sv.muted = true; }
+                    const nv = document.getElementById('natureVideoPlayer');
+                    if (nv) { nv.muted = true; }
+                    if (window.nobsProduxScrollytelling) {
+                        window.nobsProduxScrollytelling.init(true);
+                    }
+                    setTimeout(() => {
+                        const bg2 = document.getElementById('urgeBgMusic');
+                        if (bg2 && bg2.paused && !bg2.muted) {
+                            bg2.volume = 0.45;
+                            bg2.play().catch(() => {});
+                        }
+                        const sv2 = document.getElementById('shuzoVideoPlayer');
+                        if (sv2) { sv2.muted = true; }
+                        const nv2 = document.getElementById('natureVideoPlayer');
+                        if (nv2) { nv2.muted = true; }
+                        if (window.nobsProduxScrollytelling) {
+                            window.nobsProduxScrollytelling.init(true);
+                        }
+                    }, 80);
+                ");
+            }
+            catch { }
+        }
+        else if (!IsOpen && _wasOpen)
+        {
+            _wasOpen = false;
+        }
+    }
+
+    private async Task JumpToPhase(int phase)
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.jumpTo", phase - 1);
+        }
+        catch { }
+    }
+
+    private async Task JumpToBreathing()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.jumpTo", "breathing");
+        }
+        catch { }
+    }
+
+    private string FormatMoodTag(string tag)
+    {
+        return tag switch
+        {
+            "sharp" => "🔥 High Energy",
+            "focused" => "⚡ Focused",
+            "low_energy" => "🌧 Low Energy",
+            "high_friction" => "⚔️ High Friction",
+            _ => "⚡ Disciplined"
+        };
+    }
+
+    private void StartBreathingSequence()
+    {
+        _breathCts?.Cancel();
+        _breathCts?.Dispose();
+        _breathCts = new System.Threading.CancellationTokenSource();
+        var token = _breathCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            while (!token.IsCancellationRequested)
+            {
+                // Phase 1: Deep Inhale Nose (4s)
+                await InvokeAsync(() =>
+                {
+                    breathPhaseClass = "inhale-deep";
+                    breathPhaseText = "DEEP INHALE THROUGH NOSE";
+                    breathSecondsRemaining = 4;
+                    StateHasChanged();
+                });
+                for (int s = 4; s >= 1; s--)
+                {
+                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
+                    await Task.Delay(1000, token);
+                    if (token.IsCancellationRequested) return;
+                }
+
+                // Phase 2: Brief Hold / Pause (1.5s)
+                await InvokeAsync(() =>
+                {
+                    breathPhaseClass = "pause-hold";
+                    breathPhaseText = "BRIEF PAUSE";
+                    breathSecondsRemaining = 1;
+                    StateHasChanged();
+                });
+                await Task.Delay(1500, token);
+                if (token.IsCancellationRequested) return;
+
+                // Phase 3: Sharp Top-Up Inhale (2s)
+                await InvokeAsync(() =>
+                {
+                    breathPhaseClass = "inhale-topup";
+                    breathPhaseText = "SHARP TOP-UP INHALE";
+                    breathSecondsRemaining = 2;
+                    StateHasChanged();
+                });
+                for (int s = 2; s >= 1; s--)
+                {
+                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
+                    await Task.Delay(1000, token);
+                    if (token.IsCancellationRequested) return;
+                }
+
+                // Phase 4: Full Lung Hold (2s)
+                await InvokeAsync(() =>
+                {
+                    breathPhaseClass = "pause-hold";
+                    breathPhaseText = "HOLD";
+                    breathSecondsRemaining = 2;
+                    StateHasChanged();
+                });
+                for (int s = 2; s >= 1; s--)
+                {
+                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
+                    await Task.Delay(1000, token);
+                    if (token.IsCancellationRequested) return;
+                }
+
+                // Phase 5: Slow Extended Exhale Mouth (8s)
+                await InvokeAsync(() =>
+                {
+                    breathPhaseClass = "exhale-long";
+                    breathPhaseText = "SLOW EXTENDED SIGH (MOUTH)";
+                    breathSecondsRemaining = 8;
+                    StateHasChanged();
+                });
+                for (int s = 8; s >= 1; s--)
+                {
+                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
+                    await Task.Delay(1000, token);
+                    if (token.IsCancellationRequested) return;
+                }
+
+                // Phase 6: Grounding Pause (2s)
+                await InvokeAsync(() =>
+                {
+                    breathPhaseClass = "pause-hold";
+                    breathPhaseText = "PAUSE & GROUND";
+                    breathSecondsRemaining = 2;
+                    StateHasChanged();
+                });
+                for (int s = 2; s >= 1; s--)
+                {
+                    await InvokeAsync(() => { breathSecondsRemaining = s; StateHasChanged(); });
+                    await Task.Delay(1000, token);
+                    if (token.IsCancellationRequested) return;
+                }
+            }
+        }, token);
+    }
+
+    private async Task HandleFinishAction(string actionName)
+    {
+        _wasOpen = false;
+        await HabitService.LogUrgeSurfedAsync();
+        StopAllAudio();
+        _breathCts?.Cancel();
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task HandleCancel()
+    {
+        _wasOpen = false;
+        StopAllAudio();
+        _breathCts?.Cancel();
+        await OnClose.InvokeAsync();
+    }
+
+    private void StopAllAudio()
+    {
+        try
+        {
+            _ = JSRuntime.InvokeVoidAsync("eval", @"
+                if (window.nobsProduxScrollytelling) {
+                    window.nobsProduxScrollytelling.destroy();
+                }
+                const bg = document.getElementById('urgeBgMusic');
+                if (bg) { bg.pause(); bg.currentTime = 0; }
+                const v1 = document.getElementById('shuzoVideoPlayer');
+                if (v1) { v1.pause(); }
+                const v2 = document.getElementById('natureVideoPlayer');
+                if (v2) { v2.pause(); }
+            ");
+        }
+        catch { }
+    }
+
+    public void Dispose()
+    {
+        StopAllAudio();
+        _breathCts?.Cancel();
+        _breathCts?.Dispose();
+    }
+}

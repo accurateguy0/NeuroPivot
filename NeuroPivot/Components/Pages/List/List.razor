@@ -31,8 +31,22 @@
         <!-- Habit Table -->
         <HabitTable OnToggleHabit="HandleToggleHabit" OnPromptDelete="PromptDelete" />
 
-        <!-- Add Button -->
-        <HabitAddButton OnClick="OpenManualAddModal" />
+        <!-- Add Button & Habits Tactical Actions -->
+        <div class="table-actions-container">
+            <HabitAddButton OnClick="OpenManualAddModal" />
+
+            @if (AppState.CurrentGoal == "habits")
+            {
+                <div class="habit-tactical-action-bar">
+                    <button type="button" class="btn-tactical-urge" @onclick="() => showUrgeModal = true">
+                         urge
+                    </button>
+                    <button type="button" class="btn-tactical-relapse" @onclick="() => showRelapseModal = true">
+                        relapse
+                    </button>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
@@ -45,6 +59,10 @@
               OnConfirm="ConfirmDelete"
               OnCancel="() => showDeleteModal = false" />
 
+<DailyCheckInModal IsOpen="showDailyCheckInModal" OnClose="HandleCloseCheckIn" />
+<RelapseDiagnosticModal IsOpen="showRelapseModal" OnClose="() => showRelapseModal = false" />
+<UrgeProtocolModal IsOpen="showUrgeModal" OnClose="() => showUrgeModal = false" />
+
 @code {
     private bool showDeleteModal = false;
     private HabitItem? selectedHabitToDelete;
@@ -55,14 +73,44 @@
     private string celebrationModalMessage = "";
     private bool showLtpModal = false;
 
+    // Habits Goal Exclusives: Relapse, Urge & Daily Check-In
+    private bool showRelapseModal = false;
+    private bool showUrgeModal = false;
+    private bool showDailyCheckInModal = false;
+    private bool _hasCheckedDailyPopup = false;
+
+    private DailyMoodEntry? todayMoodLog =>
+        AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == DateTime.Today);
+
     protected override void OnInitialized()
     {
         HabitService.CheckRealWorldDateShift();
         HabitService.OnChange += OnStateChanged;
         AppState.OnChange += OnStateChanged;
+
+        CheckAndShowDailyPopup();
     }
 
-    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+    private void CheckAndShowDailyPopup()
+    {
+        if (!_hasCheckedDailyPopup && AppState.CurrentGoal == "habits" && todayMoodLog == null)
+        {
+            _hasCheckedDailyPopup = true;
+            showDailyCheckInModal = true;
+        }
+    }
+
+    private void HandleCloseCheckIn()
+    {
+        showDailyCheckInModal = false;
+        _hasCheckedDailyPopup = true;
+    }
+
+    private void OnStateChanged()
+    {
+        CheckAndShowDailyPopup();
+        InvokeAsync(StateHasChanged);
+    }
 
     private async Task HandleToggleHabit((string id, int day) item)
     {

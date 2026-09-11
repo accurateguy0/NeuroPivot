@@ -534,6 +534,94 @@ public class HabitService
         return Habits.Count(h => h.IsCompletedOnDay(CurrentActiveDay)) >= 4;
     }
 
+    public int GetTotalCompletedHabitsCount()
+    {
+        if (Habits.Count == 0) return 0;
+        int count = 0;
+        foreach (var h in Habits)
+        {
+            count += h.DaysCompleted.Values.Count(v => v);
+        }
+        return count;
+    }
+
+    public int GetQualifiedDaysCount()
+    {
+        if (CurrentActiveDay <= 0 || Habits.Count == 0) return 0;
+        int qualifiedDays = 0;
+        for (int d = 1; d <= CurrentActiveDay; d++)
+        {
+            if (Habits.Count(h => h.IsCompletedOnDay(d)) >= 4)
+            {
+                qualifiedDays++;
+            }
+        }
+        return qualifiedDays;
+    }
+
+    public int GetHabitsConsistencyPercentage()
+    {
+        if (CurrentActiveDay <= 0 || Habits.Count == 0) return 0;
+        int qualifiedDays = GetQualifiedDaysCount();
+        return (int)Math.Round((double)qualifiedDays / (double)CurrentActiveDay * 100.0);
+    }
+
+    public void LogDailyMood(string moodTag, string note)
+    {
+        var entry = new DailyMoodEntry
+        {
+            Date = DateTime.Today,
+            MoodTag = moodTag,
+            Note = note?.Trim() ?? "",
+            HabitsCompletedOnDay = GetCompletedTodayCount(),
+            TotalHabitsCount = Habits.Count > 0 ? Habits.Count : 6
+        };
+        _appState.AddDailyMoodLog(entry);
+        _ = SaveHabitsToActiveAccountAsync();
+        NotifyStateChanged();
+    }
+
+    public async Task LogRelapseAsync(string triggerCategory, string haltState, string frictionFailure, string calibrationAction)
+    {
+        var entry = new RelapseEntry
+        {
+            Timestamp = DateTime.Now,
+            ChallengeDay = CurrentActiveDay,
+            TriggerCategory = triggerCategory ?? "Unspecified",
+            HaltState = haltState ?? "None",
+            FrictionFailure = frictionFailure ?? "",
+            CalibrationAction = calibrationAction ?? ""
+        };
+
+        _appState.AddRelapseLog(entry);
+
+        // Reset the streak in stats to 0, mark today as last qualifying attempt, but keep the 21-day table day
+        ConsecutiveStreak = 0;
+        LastStreakQualifyDate = DateTime.Today;
+
+        if (_accountService.ActiveAccount != null)
+        {
+            _accountService.ActiveAccount.ConsecutiveStreak = 0;
+            _accountService.ActiveAccount.LastStreakQualifyDate = DateTime.Today;
+            await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
+        }
+
+        await SaveHabitsToActiveAccountAsync();
+        NotifyStateChanged();
+    }
+
+    public async Task LogUrgeSurfedAsync()
+    {
+        _appState.IncrementUrgesSurfed();
+        if (_accountService.ActiveAccount != null)
+        {
+            _accountService.ActiveAccount.UrgesSurfedCount = _appState.UrgesSurfedCount;
+            await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
+        }
+        await SaveHabitsToActiveAccountAsync();
+        NotifyStateChanged();
+    }
+
     public (int MaxDays, string[] Labels) GetStreakScaleInfo()
     {
         int s = GetConsecutiveStreak();

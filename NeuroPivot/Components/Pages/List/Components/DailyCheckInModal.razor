@@ -1,0 +1,90 @@
+@inject HabitService HabitService
+@inject AppState AppState
+
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay">
+        <div class="nobs-modal-card checkin-modal-square animated-fade-in" @onclick:stopPropagation="true">
+            
+            <div class="checkin-modal-header">
+                <div class="checkin-badge">⚡ Day @HabitService.CurrentActiveDay Check-in</div>
+                <button type="button" class="modal-close-btn" @onclick="HandleClose">✕</button>
+            </div>
+
+            <div class="checkin-body">
+                <h3 class="checkin-title">How is your energy and friction today?</h3>
+                <p class="checkin-subtext">A 3-second daily log to build self-awareness and track your cognitive baseline.</p>
+
+                <div class="mood-tags-grid">
+                    @foreach (var tag in MoodTags)
+                    {
+                        <button type="button" 
+                                class="btn-checkin-mood @(selectedMoodTag == tag.Key ? "active" : "")" 
+                                @onclick="() => selectedMoodTag = tag.Key">
+                            <span class="mood-emoji">@tag.Emoji</span>
+                            <span class="mood-text">@tag.Label</span>
+                        </button>
+                    }
+                </div>
+
+                <div class="checkin-note-box">
+                    <label class="note-label">Optional Thought / Reflection (1 sentence):</label>
+                    <input type="text" 
+                           class="nobs-input checkin-text-input" 
+                           placeholder="e.g. Sharp morning focus, feeling strong against cravings..." 
+                           @bind="noteText" />
+                </div>
+
+                <div class="modal-footer-nav">
+                    <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="HandleClose">Skip</button>
+                    <button type="button" class="nobs-btn nobs-btn-blue" @onclick="HandleSave">
+                        💾 Save Check-in →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private string selectedMoodTag = "focused";
+    private string noteText = "";
+
+    private static readonly (string Key, string Emoji, string Label)[] MoodTags = new[]
+    {
+        ("sharp", "🔥", "High Energy"),
+        ("focused", "⚡", "Focused"),
+        ("low_energy", "🌧", "Low Energy"),
+        ("high_friction", "⚔️", "High Friction")
+    };
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen)
+        {
+            var todayLog = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == DateTime.Today);
+            if (todayLog != null)
+            {
+                selectedMoodTag = todayLog.MoodTag;
+                noteText = todayLog.Note;
+            }
+        }
+    }
+
+    private async Task HandleSave()
+    {
+        HabitService.LogDailyMood(selectedMoodTag, noteText);
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task HandleClose()
+    {
+        await OnClose.InvokeAsync();
+    }
+}

@@ -74,3 +74,59 @@
         transform: translateY(0);
     }
 }
+
+/* Action Container & Tactical Buttons */
+.table-actions-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.habit-tactical-action-bar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-tactical-urge {
+    background: rgba(127, 183, 190, 0.1);
+    border: 1px solid var(--accent-blue, #7FB7BE);
+    color: var(--accent-blue, #7FB7BE);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: lowercase;
+}
+
+.btn-tactical-urge:hover {
+    background: var(--accent-blue, #7FB7BE);
+    color: #121214;
+    box-shadow: 0 0 15px rgba(127, 183, 190, 0.35);
+}
+
+.btn-tactical-relapse {
+    background: rgba(230, 170, 206, 0.1);
+    border: 1px solid var(--accent-pink, #E6AACE);
+    color: var(--accent-pink, #E6AACE);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: lowercase;
+}
+
+.btn-tactical-relapse:hover {
+    background: var(--accent-pink, #E6AACE);
+    color: #121214;
+    box-shadow: 0 0 15px rgba(230, 170, 206, 0.35);
+}
+

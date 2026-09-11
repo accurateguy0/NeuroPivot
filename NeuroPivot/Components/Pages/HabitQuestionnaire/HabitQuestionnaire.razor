@@ -11,10 +11,10 @@
             Habit Diagnostic Protocol
         </h1>
         <div class="habit-q-step-text">
-            Step @activeStep of 5
+            Step @activeStep of 6
         </div>
         <div class="habit-q-step-track">
-            @for (int i = 1; i <= 5; i++)
+            @for (int i = 1; i <= 6; i++)
             {
                 int stepNum = i;
                 <div class="step-indicator-bar @(stepNum <= activeStep ? "active" : "")"></div>
@@ -42,7 +42,7 @@
     protected override void OnInitialized() => AppState.OnChange += OnStateChanged;
     private void OnStateChanged() => InvokeAsync(StateHasChanged);
 
-    private void HandleComplete((string category, string q1, string q2, string q3, string q4) answers)
+    private void HandleComplete((string category, string q1, string q2, string q3, string q4, string motivation) answers)
     {
         int score = 0;
         if (answers.q1 == "yes") score += 2;
@@ -50,18 +50,23 @@
         if (answers.q3 == "yes") score += 2;
         if (answers.q4 == "yes") score += 3;
 
+        if (!string.IsNullOrWhiteSpace(answers.motivation))
+        {
+            AppState.SetInitialHabitMotivation(answers.motivation);
+        }
+
         if (score >= 7) {
             AssessedLevel = "addicted";
-            ResultQuoteTitle = "experimental: psychedelics";
-            ResultQuoteBody = "Psychedelics can have anti-depression effects, but never end well without specialist supervision.";
+            ResultQuoteTitle = "consult a specialist";
+            ResultQuoteBody = "If you are struggling with addiction, it is important to seek professional help. A specialist can provide guidance and support to help you overcome your addiction. We certainly don't have the ability to offer the same level of support as a trained professional, not because something is wrong with you, but because addiction is a complex condition that requires specialized treatment.";
         } else if (score >= 4) {
             AssessedLevel = "concerning";
             ResultQuoteTitle = "long-term depression for breaking bad habits";
             ResultQuoteBody = "30-240 days of abstinence is required to break a bad habit via long-term depression.";
         } else {
             AssessedLevel = "average";
-            ResultQuoteTitle = "it all starts with boredom";
-            ResultQuoteBody = "People with addiction need friction. Finding passion starts with boredom and action steps.";
+            ResultQuoteTitle = "you're doing well";
+            ResultQuoteBody = "Keep up the good work and continue to make positive choices for your health and well-being.";
         }
 
         AppState.SetAddictionLevel(AssessedLevel, score);

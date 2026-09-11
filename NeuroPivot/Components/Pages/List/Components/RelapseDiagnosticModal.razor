@@ -1,0 +1,171 @@
+@inject HabitService HabitService
+@inject AppState AppState
+@inject IJSRuntime JSRuntime
+
+@if (IsOpen)
+{
+    <div class="modal-backdrop-overlay">
+        <div class="nobs-modal-card relapse-modal-square animated-fade-in" @onclick:stopPropagation="true">
+            
+            <div class="relapse-modal-header">
+                <div class="relapse-badge">⚠️ Relapse Diagnostic Protocol</div>
+                <button type="button" class="modal-close-btn" @onclick="HandleCancel">✕</button>
+            </div>
+
+            <div class="relapse-step-progress">
+                <span class="step-indicator @(currentStep >= 1 ? "active" : "")">1. Trigger</span>
+                <span class="step-sep">→</span>
+                <span class="step-indicator @(currentStep >= 2 ? "active" : "")">2. HALT State</span>
+                <span class="step-sep">→</span>
+                <span class="step-indicator @(currentStep >= 3 ? "active" : "")">3. Friction Failure</span>
+                <span class="step-sep">→</span>
+                <span class="step-indicator @(currentStep >= 4 ? "active" : "")">4. Calibration</span>
+            </div>
+
+            @if (currentStep == 1)
+            {
+                <div class="diagnostic-step-body">
+                    <h3 class="step-title">1. Identify the Primary Trigger</h3>
+                    <p class="step-desc">A lapse is not a moral failure; it is a neurological breakdown of top-down inhibition. What was the catalyst?</p>
+                    
+                    <div class="trigger-options-grid">
+                        @foreach (var trigger in TriggerCategories)
+                        {
+                            <button type="button" 
+                                    class="trigger-opt-btn @(selectedTrigger == trigger ? "selected" : "")" 
+                                    @onclick="() => selectedTrigger = trigger">
+                                <span class="opt-bullet">@(selectedTrigger == trigger ? "●" : "○")</span>
+                                <span class="opt-label">@trigger</span>
+                            </button>
+                        }
+                    </div>
+
+                    <div class="modal-footer-nav">
+                        <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="HandleCancel">Cancel</button>
+                        <button type="button" class="nobs-btn nobs-btn-blue" @onclick="() => currentStep = 2">Next: HALT State →</button>
+                    </div>
+                </div>
+            }
+            else if (currentStep == 2)
+            {
+                <div class="diagnostic-step-body">
+                    <h3 class="step-title">2. Somatic State Check (HALT)</h3>
+                    <p class="step-desc">Prefrontal control collapses when basic physiological needs are depleted. Were you experiencing:</p>
+
+                    <div class="halt-options-grid">
+                        @foreach (var halt in HaltOptions)
+                        {
+                            <button type="button" 
+                                    class="trigger-opt-btn @(selectedHalt == halt ? "selected" : "")" 
+                                    @onclick="() => selectedHalt = halt">
+                                <span class="opt-bullet">@(selectedHalt == halt ? "●" : "○")</span>
+                                <span class="opt-label">@halt</span>
+                            </button>
+                        }
+                    </div>
+
+                    <div class="modal-footer-nav">
+                        <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="() => currentStep = 1">← Back</button>
+                        <button type="button" class="nobs-btn nobs-btn-blue" @onclick="() => currentStep = 3">Next: Friction →</button>
+                    </div>
+                </div>
+            }
+            else if (currentStep == 3)
+            {
+                <div class="diagnostic-step-body">
+                    <h3 class="step-title">3. Environmental Friction Failure</h3>
+                    <p class="step-desc">Habits occur in the absence of physical or digital friction. What specific barrier collapsed or was missing?</p>
+
+                    <textarea class="nobs-input-area friction-input" 
+                              placeholder="e.g. Phone was left on nightstand inside bedroom; no app blocker was active; trigger cue was directly in line of sight..." 
+                              @bind="frictionFailureNote"></textarea>
+
+                    <div class="modal-footer-nav">
+                        <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="() => currentStep = 2">← Back</button>
+                        <button type="button" class="nobs-btn nobs-btn-blue" @onclick="() => currentStep = 4">Next: Fix →</button>
+                    </div>
+                </div>
+            }
+            else if (currentStep == 4)
+            {
+                <div class="diagnostic-step-body">
+                    <h3 class="step-title">4. Immediate Operational Calibration</h3>
+                    <p class="step-desc">What concrete environmental rule will you enforce immediately to prevent this exact failure mode?</p>
+
+                    <textarea class="nobs-input-area friction-input" 
+                              placeholder="e.g. Charging station moved permanently to the hallway; deleted app; 10pm Wi-Fi cutoff scheduled..." 
+                              @bind="calibrationActionNote"></textarea>
+
+                    <div class="neuro-recovery-banner">
+                        <span class="banner-icon">🧠</span>
+                        <span class="banner-text">
+                            Logging this lapse resets your consecutive streak to 0 in Stats to maintain radical tracking honesty, but your Day @HabitService.CurrentActiveDay challenge progress remains. Synaptic pruning resumes now.
+                        </span>
+                    </div>
+
+                    <div class="modal-footer-nav">
+                        <button type="button" class="nobs-btn btn-secondary-ghost" @onclick="() => currentStep = 3">← Back</button>
+                        <button type="button" class="nobs-btn nobs-btn-pink btn-confirm-relapse" @onclick="HandleSubmitDiagnostic">
+                            💾 Save to Friction Log & Resume
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private int currentStep = 1;
+    private string selectedTrigger = "Boredom / Dopamine Baseline Dip";
+    private string selectedHalt = "Tired (Sleep deficit / prefrontal hypofrontality)";
+    private string frictionFailureNote = "";
+    private string calibrationActionNote = "";
+
+    private static readonly string[] TriggerCategories = new[]
+    {
+        "Boredom / Dopamine Baseline Dip",
+        "Late-Night Fatigue / Sleep Deficit",
+        "Acute Stress Spike / Overwhelm",
+        "Social Cue / Environmental Influence",
+        "Digital Device / Screen Stimulus",
+        "Loneliness / Emotional Isolation",
+        "Unspecified / Habit Slip"
+    };
+
+    private static readonly string[] HaltOptions = new[]
+    {
+        "Tired (Sleep deficit / prefrontal hypofrontality)",
+        "Hungry (Hypoglycemia / metabolic energy dip)",
+        "Angry / Frustrated (High sympathetic autonomic agitation)",
+        "Lonely (Attachment / oxytocin deficit)",
+        "None of the above (Pure automated routine)"
+    };
+
+    private async Task HandleCancel()
+    {
+        currentStep = 1;
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task HandleSubmitDiagnostic()
+    {
+        await HabitService.LogRelapseAsync(
+            selectedTrigger,
+            selectedHalt,
+            string.IsNullOrWhiteSpace(frictionFailureNote) ? "Friction barrier collapsed" : frictionFailureNote,
+            string.IsNullOrWhiteSpace(calibrationActionNote) ? "Recalibrate environmental boundaries" : calibrationActionNote
+        );
+
+        currentStep = 1;
+        frictionFailureNote = "";
+        calibrationActionNote = "";
+        await OnClose.InvokeAsync();
+    }
+}

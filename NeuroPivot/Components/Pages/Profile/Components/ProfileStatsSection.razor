@@ -84,6 +84,100 @@
             </div>
         }
     </div>
+
+    @if (AppState.CurrentGoal == "habits")
+    {
+        <!-- Relapse Notes / Friction Log (Habits Goal Only) -->
+        <div class="friction-log-section">
+            <div class="friction-log-header">
+                <div class="fl-title-wrap">
+                    <span class="fl-icon">📝</span>
+                    <span class="fl-title">Friction Log & Relapse Notes</span>
+                </div>
+                <span class="fl-count">@(AppState.RelapseLogs.Count) @(AppState.RelapseLogs.Count == 1 ? "entry" : "entries")</span>
+            </div>
+
+            @if (AppState.RelapseLogs.Count == 0)
+            {
+                <div class="fl-empty-state">
+                    <span class="empty-bullet">●</span>
+                    <span>Zero slips recorded. Your environmental friction and behavioral boundaries are holding strong.</span>
+                </div>
+            }
+            else
+            {
+                <div class="fl-entries-list">
+                    @foreach (var log in AppState.RelapseLogs)
+                    {
+                        <div class="fl-card">
+                            <div class="fl-card-top">
+                                <span class="fl-tag trigger">Trigger: @log.TriggerCategory</span>
+                                <span class="fl-time">@log.Timestamp.ToString("MMM d, yyyy HH:mm") (Day @log.ChallengeDay)</span>
+                            </div>
+                            <div class="fl-card-halt">
+                                <span class="fl-label">Somatic State:</span>
+                                <span class="fl-val">@log.HaltState</span>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(log.FrictionFailure))
+                            {
+                                <div class="fl-card-body">
+                                    <span class="fl-label">Friction Failure:</span>
+                                    <span class="fl-val">@log.FrictionFailure</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(log.CalibrationAction))
+                            {
+                                <div class="fl-card-fix">
+                                    <span class="fl-label">Rule Calibration:</span>
+                                    <span class="fl-val-fix">@log.CalibrationAction</span>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Daily Mood & Energy History (Habits Goal Only) -->
+        <div class="mood-history-section">
+            <div class="friction-log-header">
+                <div class="fl-title-wrap">
+                    <span class="fl-icon">⚡</span>
+                    <span class="fl-title">Daily Energy & Check-In History</span>
+                </div>
+                <span class="fl-count">@(AppState.DailyMoodLogs.Count) @(AppState.DailyMoodLogs.Count == 1 ? "day logged" : "days logged")</span>
+            </div>
+
+            @if (AppState.DailyMoodLogs.Count == 0)
+            {
+                <div class="fl-empty-state">
+                    <span class="empty-bullet">●</span>
+                    <span>No daily energy logs recorded yet. Use the 1-tap check-in on the habit list page.</span>
+                </div>
+            }
+            else
+            {
+                <div class="mood-history-list">
+                    @foreach (var mood in AppState.DailyMoodLogs.OrderByDescending(m => m.Date))
+                    {
+                        <div class="mood-log-item">
+                            <div class="ml-date-wrap">
+                                <span class="ml-date">@mood.Date.ToString("MMM d, ddd")</span>
+                                <span class="ml-habits">@mood.HabitsCompletedOnDay / @mood.TotalHabitsCount habits</span>
+                            </div>
+                            <div class="ml-tag-wrap">
+                                <span class="ml-tag @mood.MoodTag">@FormatMoodTag(mood.MoodTag)</span>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(mood.Note))
+                            {
+                                <div class="ml-note">"@mood.Note"</div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
 </div>
 
 @if (showMilestoneModal)
@@ -123,6 +217,18 @@
     private bool isTodayQualified => HabitService.IsTodayStreakQualified();
     private int streakPercentage => _overridePercentage ?? HabitService.GetStreakMeterPercentage();
     private (int MaxDays, string[] Labels) scaleInfo => _overrideScaleInfo ?? HabitService.GetStreakScaleInfo();
+
+    private string FormatMoodTag(string tag)
+    {
+        return tag switch
+        {
+            "sharp" => "🔥 High Energy",
+            "focused" => "⚡ Focused",
+            "low_energy" => "🌧 Low Energy",
+            "high_friction" => "⚔️ High Friction",
+            _ => "⚡ Disciplined"
+        };
+    }
 
     protected override void OnInitialized()
     {

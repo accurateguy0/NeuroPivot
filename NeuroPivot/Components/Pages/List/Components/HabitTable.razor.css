@@ -53,15 +53,22 @@
 }
 
 .th-name, .td-name {
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    background: #EFF6EE;
     padding: 0.75rem 0.65rem;
     font-weight: 800;
     min-width: 135px;
     color: inherit;
+    border-right: 2px solid rgba(46, 40, 42, 0.18);
     border-bottom: 1px solid rgba(46, 40, 42, 0.15);
 }
 
 [data-theme="dark"] .th-name, [data-theme="dark"] .td-name {
-    border-bottom-color: rgba(255, 255, 255, 0.18);
+    background: #241e20 !important;
+    border-right-color: rgba(255, 255, 255, 0.2) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.18) !important;
 }
 
 .th-day, .td-day {

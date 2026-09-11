@@ -14,7 +14,7 @@
                 }
             </div>
             <div class="step-nav-right">
-                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 2">Next →</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(2)">Next →</button>
             </div>
         </div>
     }
@@ -27,8 +27,8 @@
                 <label class="radio-item-label"><input type="radio" name="q1" value="no" checked='@(q1Answer == "no")' @onchange='() => q1Answer = "no"' /><span>No</span></label>
             </div>
             <div class="step-nav-between">
-                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 1">← Back</button>
-                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 3">Next →</button>
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(1)">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(3)">Next →</button>
             </div>
         </div>
     }
@@ -41,8 +41,8 @@
                 <label class="radio-item-label"><input type="radio" name="q2" value="no" checked='@(q2Answer == "no")' @onchange='() => q2Answer = "no"' /><span>No</span></label>
             </div>
             <div class="step-nav-between">
-                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 2">← Back</button>
-                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 4">Next →</button>
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(2)">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(4)">Next →</button>
             </div>
         </div>
     }
@@ -55,8 +55,8 @@
                 <label class="radio-item-label"><input type="radio" name="q3" value="no" checked='@(q3Answer == "no")' @onchange='() => q3Answer = "no"' /><span>No</span></label>
             </div>
             <div class="step-nav-between">
-                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 3">← Back</button>
-                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => currentStep = 5">Next →</button>
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(3)">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(5)">Next →</button>
             </div>
         </div>
     }
@@ -69,7 +69,24 @@
                 <label class="radio-item-label"><input type="radio" name="q4" value="no" checked='@(q4Answer == "no")' @onchange='() => q4Answer = "no"' /><span>No</span></label>
             </div>
             <div class="step-nav-between">
-                <button class="nobs-btn btn-back-light" @onclick="() => currentStep = 4">← Back</button>
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(4)">← Back</button>
+                <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="() => SetStep(6)">Next →</button>
+            </div>
+        </div>
+    }
+    else if (currentStep == 6)
+    {
+        <div>
+            <label class="step-question-label">6. Why are you breaking this habit? (Your Day 1 Anchor):</label>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; font-family: var(--font-mono);">
+                What is at stake? What will you regain? This will anchor your resolve when cravings peak.
+            </p>
+            <textarea class="nobs-input-area"
+                      style="width: 100%; min-height: 90px; padding: 0.75rem; font-family: var(--font-sans); font-size: 0.95rem; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); margin-bottom: 1.25rem; outline: none;"
+                      placeholder="e.g. I want my mental clarity back, zero brain fog, and to prove to myself I can master my own neurobiology."
+                      @bind="motivationAnswer"></textarea>
+            <div class="step-nav-between">
+                <button class="nobs-btn btn-back-light" @onclick="() => SetStep(5)">← Back</button>
                 <button class="nobs-btn nobs-btn-blue btn-step-next" @onclick="SubmitAnswers">Generate Protocol →</button>
             </div>
         </div>
@@ -83,15 +100,22 @@
     private string q2Answer = "no";
     private string q3Answer = "no";
     private string q4Answer = "no";
+    private string motivationAnswer = "";
 
     [Parameter]
     public EventCallback<int> OnStepChanged { get; set; }
 
     [Parameter]
-    public EventCallback<(string category, string q1, string q2, string q3, string q4)> OnComplete { get; set; }
+    public EventCallback<(string category, string q1, string q2, string q3, string q4, string motivation)> OnComplete { get; set; }
+
+    private void SetStep(int step)
+    {
+        currentStep = step;
+        OnStepChanged.InvokeAsync(currentStep);
+    }
 
     private void SubmitAnswers()
     {
-        OnComplete.InvokeAsync((targetHabitCategory, q1Answer, q2Answer, q3Answer, q4Answer));
+        OnComplete.InvokeAsync((targetHabitCategory, q1Answer, q2Answer, q3Answer, q4Answer, motivationAnswer));
     }
 }
