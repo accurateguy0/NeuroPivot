@@ -14,7 +14,7 @@
         <div class="streak-meter-header">
             <div class="streak-meter-title-wrap">
                 <span class="streak-fire-icon">🔥</span>
-                <span class="streak-meter-text">Consecutive streaks: <strong class="streak-days-highlight">@FormatStreakDisplay(streakDays)</strong></span>
+                <span class="streak-meter-text">Consecutive streaks: <strong class="streak-days-highlight @(isStreakBarScalingDown ? "scaling-down" : "")">@FormatStreakDisplay(streakDays)</strong></span>
             </div>
             <div class="streak-badge @(isTodayQualified ? "qualified" : "pending")">
                 @(isTodayQualified ? "✓ Streak active today (4-6 habits done)" : $"{todayCount}/4 habits done today")
@@ -22,13 +22,33 @@
         </div>
 
         <div class="streak-track-container">
-            <div class="streak-track-bar @(isStreakBarScaling ? "scaling-up" : "")">
-                <div class="streak-fill-bar @(isStreakBarScaling ? "shimmering" : "")" style="width: @(streakPercentage)%"></div>
+            <div class="streak-track-bar @(isStreakBarScaling ? "scaling-up" : "") @(isStreakBarScalingDown ? "scaling-down" : "")">
+                <div class="streak-fill-bar @(isStreakBarScaling ? "shimmering" : "") @(isStreakBarScalingDown ? "scaling-down" : "") @(isExpandingRight ? "expanding-right" : "draining-left")" style="width: @(streakPercentage)%"></div>
             </div>
-            <div class="streak-scale-labels @(isStreakBarScaling ? "scaling-up" : "")">
-                @foreach (var label in scaleInfo.Labels)
+            <div class="streak-scale-labels-wrapper" @key="_cascadeStage">
+                @if (isStreakBarScalingDown && _outgoingScaleInfo.HasValue)
                 {
-                    <span>@label</span>
+                    <div class="streak-scale-labels labels-sliding-out">
+                        @foreach (var label in _outgoingScaleInfo.Value.Labels)
+                        {
+                            <span>@label</span>
+                        }
+                    </div>
+                    <div class="streak-scale-labels labels-fading-in">
+                        @foreach (var label in scaleInfo.Labels)
+                        {
+                            <span>@label</span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="streak-scale-labels @(isStreakBarScaling ? "scaling-up" : "")">
+                        @foreach (var label in scaleInfo.Labels)
+                        {
+                            <span>@label</span>
+                        }
+                    </div>
                 }
             </div>
         </div>
@@ -36,6 +56,15 @@
         <p class="streak-info-footnote">
             Streak increases when you complete <strong>4 to 6 habits</strong> on a given day.
         </p>
+
+        <div class="streak-test-row">
+            <button type="button" class="btn-test-streak" @onclick="() => TriggerTestScaleDown(7)" title="Test with 7-day milestone">
+                ⚡ Test (7d)
+            </button>
+            <button type="button" class="btn-test-streak" @onclick="() => TriggerTestScaleDown(30)" title="Test with 30-day milestone">
+                ⚡ Test (30d)
+            </button>
+        </div>
     </div>
 
     <!-- 7-Day Consistency Calendar with Navigation Arrows -->
@@ -131,10 +160,19 @@
     private bool isStreakBarScaling = false;
     private System.Threading.CancellationTokenSource? _scaleCts;
 
+    private bool isStreakBarScalingDown = false;
+    private bool isStreakLabelsResetting = false;
+    private int? _overrideStreakDays;
+    private System.Threading.CancellationTokenSource? _scaleDownCts;
+    private bool _hasStartedScaleDown = false;
+
     private int? _overridePercentage;
     private (int MaxDays, string[] Labels)? _overrideScaleInfo;
+    private (int MaxDays, string[] Labels)? _outgoingScaleInfo;
+    private int _cascadeStage = 0;
+    private bool isExpandingRight = false;
 
-    private int streakDays => HabitService.GetConsecutiveStreak();
+    private int streakDays => _overrideStreakDays ?? HabitService.GetConsecutiveStreak();
     private int todayCount => HabitService.GetCompletedTodayCount();
     private bool isTodayQualified => HabitService.IsTodayStreakQualified();
     private int streakPercentage => _overridePercentage ?? HabitService.GetStreakMeterPercentage();
@@ -146,7 +184,27 @@
     {
         HabitService.OnChange += HandleStateChange;
         AppState.OnChange += HandleStateChange;
+
+        if (HabitService.PendingLostStreak > 0)
+        {
+            int lostStreak = HabitService.PendingLostStreak;
+            _overrideStreakDays = lostStreak;
+            _overridePercentage = HabitService.GetStreakMeterPercentageForStreak(lostStreak);
+            var startScale = HabitService.GetStreakScaleInfoForStreak(lostStreak, Math.Max(0, lostStreak - 1));
+            _overrideScaleInfo = startScale;
+            _outgoingScaleInfo = startScale;
+        }
+
         CheckMilestonePopUp();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && HabitService.PendingLostStreak > 0 && !_hasStartedScaleDown)
+        {
+            _hasStartedScaleDown = true;
+            TriggerCinematicStreakScaleDown(HabitService.PendingLostStreak);
+        }
     }
 
     private void OpenArchivesPage()
@@ -157,6 +215,11 @@
     private void HandleStateChange()
     {
         CheckMilestonePopUp();
+        if (HabitService.PendingLostStreak > 0 && !_hasStartedScaleDown)
+        {
+            _hasStartedScaleDown = true;
+            TriggerCinematicStreakScaleDown(HabitService.PendingLostStreak);
+        }
         InvokeAsync(StateHasChanged);
     }
 
@@ -238,6 +301,137 @@
                 StateHasChanged();
             });
         }, token);
+    }
+
+    private void TriggerCinematicStreakScaleDown(int lostStreak)
+    {
+        _scaleDownCts?.Cancel();
+        _scaleDownCts?.Dispose();
+        _scaleDownCts = new System.Threading.CancellationTokenSource();
+        var token = _scaleDownCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            // Milestone tiers in descending order (e.g. for 30: [30, 21, 14, 7, 3])
+            var tiers = new List<int>();
+            if (lostStreak >= 30) tiers.Add(30);
+            if (lostStreak >= 21 && !tiers.Contains(21)) tiers.Add(21);
+            if (lostStreak >= 14 && !tiers.Contains(14)) tiers.Add(14);
+            if (lostStreak >= 7 && !tiers.Contains(7)) tiers.Add(7);
+            if (!tiers.Contains(3)) tiers.Add(3);
+            if (tiers[0] != lostStreak) tiers.Insert(0, lostStreak);
+
+            // Phase 1: Hold initial streak level for 800ms so user clearly registers where they started
+            await InvokeAsync(() =>
+            {
+                _cascadeStage = 0;
+                _overrideStreakDays = lostStreak;
+                _overridePercentage = 100;
+                _overrideScaleInfo = HabitService.GetStreakScaleInfoForStreak(lostStreak, Math.Max(0, lostStreak - 1));
+                _outgoingScaleInfo = null;
+                isStreakBarScalingDown = true;
+                isExpandingRight = false;
+                StateHasChanged();
+            });
+
+            await Task.Delay(800, token);
+            if (token.IsCancellationRequested) return;
+
+            // Phase 2: Cascade down through each milestone tier
+            for (int k = 0; k < tiers.Count; k++)
+            {
+                int currentTier = tiers[k];
+                int nextTier = (k + 1 < tiers.Count) ? tiers[k + 1] : 0;
+
+                // Drain leftward from currentTier down to nextTier
+                await InvokeAsync(() =>
+                {
+                    isExpandingRight = false;
+                    StateHasChanged();
+                });
+
+                // Smooth micro-frame interpolation (28 micro-frames over ~800ms) for continuous liquid movement
+                int frames = 28;
+                int frameDelay = 28;
+                double endPct = GetTargetLabelPercentage(currentTier, nextTier);
+
+                for (int f = 1; f <= frames; f++)
+                {
+                    await Task.Delay(frameDelay, token);
+                    if (token.IsCancellationRequested) return;
+
+                    double t = (double)f / (double)frames;
+                    double currentVal = (double)currentTier - t * (double)(currentTier - nextTier);
+                    int displayVal = (int)Math.Round(currentVal);
+                    int pct = (int)Math.Round(100.0 - t * (100.0 - endPct));
+
+                    await InvokeAsync(() =>
+                    {
+                        _overrideStreakDays = displayVal;
+                        _overridePercentage = pct;
+                        StateHasChanged();
+                    });
+                }
+
+                // If nextTier > 0, we entered the previous milestone!
+                // Morph labels AND smoothly expand the fill bar to the right (100%)
+                if (nextTier > 0)
+                {
+                    var outgoing = HabitService.GetStreakScaleInfoForStreak(currentTier, Math.Max(0, currentTier - 1));
+                    var incoming = HabitService.GetStreakScaleInfoForStreak(nextTier, Math.Max(0, nextTier - 1));
+
+                    await InvokeAsync(() =>
+                    {
+                        _cascadeStage++;
+                        _outgoingScaleInfo = outgoing;
+                        _overrideScaleInfo = incoming;
+                        isExpandingRight = true;
+                        _overridePercentage = 100; // Smooth expansion to the right!
+                        StateHasChanged();
+                    });
+
+                    // 650ms smooth ease-out expansion to the right
+                    await Task.Delay(650, token);
+                    if (token.IsCancellationRequested) return;
+                }
+            }
+
+            // Phase 3: Wait settling buffer on base 0-streak so user clearly sees [0 days, 1 day, 2 days, 3 days]
+            await Task.Delay(1200, token);
+            if (token.IsCancellationRequested) return;
+
+            // Phase 4: Acknowledge and clear pending lost streak & reset milestone
+            await HabitService.ResetMilestoneOnStreakLossAsync();
+            await HabitService.ClearPendingLostStreakAsync();
+
+            // Phase 5: Finalize and return to standard live state
+            await InvokeAsync(() =>
+            {
+                _overridePercentage = null;
+                _overrideScaleInfo = null;
+                _outgoingScaleInfo = null;
+                _overrideStreakDays = null;
+                isStreakBarScalingDown = false;
+                isExpandingRight = false;
+                _cascadeStage = 0;
+                StateHasChanged();
+            });
+        }, token);
+    }
+
+    private void TriggerTestScaleDown(int days = 30)
+    {
+        TriggerCinematicStreakScaleDown(days);
+    }
+
+    private double GetTargetLabelPercentage(int currentTier, int nextTier)
+    {
+        if (nextTier <= 0) return 0.0;
+        if (currentTier == 30 && nextTier == 21) return 66.7;
+        if (currentTier == 21 && nextTier == 14) return 66.7;
+        if (currentTier == 14 && nextTier == 7) return 33.3; // Exactly on top of "7 days" label at index 1
+        if (currentTier == 7 && nextTier == 3) return 33.3;  // Exactly on top of "3 days" label at index 1
+        return ((double)nextTier / (double)currentTier * 100.0);
     }
 
     private string FormatStreakDisplay(int days)
@@ -334,5 +528,7 @@
         _glowCts?.Dispose();
         _scaleCts?.Cancel();
         _scaleCts?.Dispose();
+        _scaleDownCts?.Cancel();
+        _scaleDownCts?.Dispose();
     }
 }

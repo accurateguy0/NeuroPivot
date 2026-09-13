@@ -441,6 +441,47 @@ window.nobsAudio = {
         }
     },
 
+    playScaleDown: function (volume) {
+        try {
+            const ctx = this.getAudioContext();
+            if (!ctx) return;
+
+            const now = ctx.currentTime;
+            const masterVol = (typeof volume === 'number') ? Math.max(0, Math.min(1, volume / 100)) : 0.6;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1200, now);
+            filter.frequency.exponentialRampToValueAtTime(320, now + 1.6);
+
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(masterVol * 0.35, now + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            // Descending warm dual sines (C5 -> E4, G4 -> A3)
+            const chords = [
+                { startFreq: 523.25, endFreq: 329.63 },
+                { startFreq: 392.00, endFreq: 220.00 }
+            ];
+
+            chords.forEach(c => {
+                const osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(c.startFreq, now);
+                osc.frequency.exponentialRampToValueAtTime(c.endFreq, now + 1.5);
+                osc.connect(filter);
+                osc.start(now);
+                osc.stop(now + 1.85);
+            });
+        } catch (e) {
+            console.error("Audio scale down error", e);
+        }
+    },
+
     playChime: function (volume) {
         this.playThud(volume);
     },

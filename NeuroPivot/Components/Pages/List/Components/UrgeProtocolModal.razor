@@ -41,20 +41,20 @@
                             <!-- SECTION 1: TOP STREAK -->
                             <div class="spotify-data-section">
                                 <div class="spotify-big-title-wrap">
-                                    <span class="spotify-kicker-label">CURRENT MOMENTUM</span>
-                                    <h2 class="spotify-giant-heading">TOP STREAK</h2>
+                                    <span class="spotify-kicker-label">@RenderAnimatedLetters("UNWAVERING MOMENTUM", 0)</span>
+                                    <h2 class="spotify-giant-heading">@RenderAnimatedLetters("TOP STREAK", 19)</h2>
                                 </div>
 
                                 <div class="spotify-hero-metric-card folder-card-streak">
                                     <div class="folder-tab">
-                                        <span class="folder-tab-text">UNBROKEN CHAIN</span>
+                                        <span class="folder-tab-text">@RenderAnimatedLetters("UNBROKEN CHAIN", 28)</span>
                                     </div>
                                     <div class="folder-content">
                                         <div class="hero-metric-body">
-                                            <span class="hero-stat-huge">@HabitService.GetConsecutiveStreak()</span>
+                                            <span class="hero-stat-huge">@RenderAnimatedLetters(HabitService.GetHighestStreak().ToString(), 41)</span>
                                             <div class="hero-stat-details">
-                                                <span class="hero-stat-unit">DAYS</span>
-                                                <span class="hero-stat-subtext">Unbroken chain of discipline</span>
+                                                <span class="hero-stat-unit">@RenderAnimatedLetters("DAYS", 44)</span>
+                                                <span class="hero-stat-subtext">@RenderAnimatedLetters("Unbroken chain of discipline", 48)</span>
                                             </div>
                                         </div>
                                         <div class="folder-bottom-banner banner-streak">
@@ -67,24 +67,24 @@
                             <!-- SECTION 2: DAYS COMPLETED -->
                             <div class="spotify-data-section">
                                 <div class="spotify-big-title-wrap">
-                                    <span class="spotify-kicker-label">HIGH-OUTPUT EXECUTION</span>
-                                    <h2 class="spotify-giant-heading">DAYS COMPLETED</h2>
+                                    <span class="spotify-kicker-label">@RenderAnimatedLetters("HIGH-OUTPUT EXECUTION", 0)</span>
+                                    <h2 class="spotify-giant-heading">@RenderAnimatedLetters("DAYS COMPLETED", 20)</h2>
                                 </div>
 
                                 <div class="spotify-hero-metric-card folder-card-output">
                                     <div class="folder-tab">
-                                        <span class="folder-tab-text">4+ DAILY BENCHMARK</span>
+                                        <span class="folder-tab-text">@RenderAnimatedLetters("4+ DAILY BENCHMARK", 34)</span>
                                     </div>
                                     <div class="folder-content">
                                         <div class="hero-metric-body">
-                                            <span class="hero-stat-huge">@HabitService.GetQualifiedDaysCount()</span>
+                                            <span class="hero-stat-huge">@RenderAnimatedLetters(HabitService.GetQualifiedDaysCount().ToString(), 52)</span>
                                             <div class="hero-stat-details">
-                                                <span class="hero-stat-unit">DAYS</span>
-                                                <span class="hero-stat-subtext">Completed with 4 or more habits</span>
+                                                <span class="hero-stat-unit">@RenderAnimatedLetters("DAYS", 55)</span>
+                                                <span class="hero-stat-subtext">@RenderAnimatedLetters("Completed with 4 or more habits", 60)</span>
                                             </div>
                                         </div>
                                         <div class="folder-bottom-banner banner-output">
-                                            <span class="folder-banner-label">SOLID NEUROPLASTIC REINFORCEMENT</span>
+                                            <span class="folder-banner-label">@RenderAnimatedLetters("SOLID NEUROPLASTIC REINFORCEMENT", 90)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -93,24 +93,26 @@
                             <!-- SECTION 3: CONSISTENCY -->
                             <div class="spotify-data-section">
                                 <div class="spotify-big-title-wrap">
-                                    <span class="spotify-kicker-label">EXECUTION RATE</span>
-                                    <h2 class="spotify-giant-heading">CONSISTENCY</h2>
+                                    <span class="spotify-kicker-label">@RenderAnimatedLetters("EXECUTION RATE", 0)</span>
+                                    <h2 class="spotify-giant-heading">@RenderAnimatedLetters("CONSISTENCY", 15)</h2>
                                 </div>
 
                                 <div class="spotify-hero-metric-card folder-card-consistency">
                                     <div class="folder-tab">
-                                        <span class="folder-tab-text">HABIT COMPLIANCE</span>
+                                        <span class="folder-tab-text">@RenderAnimatedLetters("HABIT COMPLIANCE", 27)</span>
                                     </div>
                                     <div class="folder-content">
                                         <div class="hero-metric-body">
-                                            <span class="hero-stat-huge">@HabitService.GetHabitsConsistencyPercentage()<span class="hero-pct-sign">%</span></span>
+                                            <span class="hero-stat-huge">
+                                                @RenderAnimatedLetters(HabitService.GetHabitsConsistencyPercentage().ToString(), 43)<span class="hero-pct-sign"><span class="char-mask relative inline-block overflow-hidden"><span class="fade-up-char block" style="--char-idx: 46;">%</span></span></span>
+                                            </span>
                                             <div class="hero-stat-details">
-                                                <span class="hero-stat-unit">OVERALL</span>
-                                                <span class="hero-stat-subtext">Active challenge execution ratio</span>
+                                                <span class="hero-stat-unit">@RenderAnimatedLetters("OVERALL", 48)</span>
+                                                <span class="hero-stat-subtext">@RenderAnimatedLetters("Active challenge execution ratio", 55)</span>
                                             </div>
                                         </div>
                                         <div class="folder-bottom-banner banner-consistency">
-                                            <span class="folder-banner-label">SYNAPTIC PRUNING IN PROGRESS</span>
+                                            <span class="folder-banner-label">@RenderAnimatedLetters("SYNAPTIC PRUNING IN PROGRESS", 88)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -119,7 +121,11 @@
                                     <div class="spotify-lyric-header">
                                         <span class="spotify-lyric-tag">PERSISTENCE ANCHOR</span>
                                     </div>
-                                    <p class="spotify-lyric-text">"You didn't build this by accident. You fought for every single day."</p>
+                                    <p class="spotify-lyric-text">
+                                        <span class="char-mask block overflow-hidden">
+                                            <span class="split-line-reveal block">"You didn't build this by accident. You fought for every single day."</span>
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
 
@@ -127,8 +133,8 @@
                             <div class="spotify-data-section day-diary-data-section">
                                 <div class="produx-header-bar">
                                     <div>
-                                        <h2 class="slide-headline">Why you entered this arena.</h2>
-                                        <p class="slide-subtext">Scroll momentum glides through your origin commitment and timeline archives</p>
+                                        <h2 class="slide-headline arena-headline shine-scroll-text">Why you entered this arena.</h2>
+                                        <p class="slide-subtext arena-subtext shine-scroll-text">Scroll momentum glides through your origin commitment and timeline archives</p>
                                     </div>
                                 </div>
 
@@ -150,23 +156,23 @@
                                             <div class="produx-diagonal-card @(dayNum == 1 ? "day-1-origin" : "") @(isFav ? "is-favorite-card" : "")"
                                                  style="left: @(leftPx)px; top: @(topPx)px;"
                                                  data-index="@idx">
-                                                
-                                                <div class="produx-card-header">
-                                                    <div class="produx-header-info">
-                                                        <div class="produx-title-star-row">
-                                                            <h4 class="produx-card-title">
-                                                                @cardDate.ToString("dddd, d MMMM yyyy", CultureInfo.InvariantCulture)
-                                                            </h4>
-                                                            @if (isFav)
-                                                            {
-                                                                <span class="produx-fav-star" title="Memorable / Starred Day">⭐</span>
-                                                            }
-                                                        </div>
-                                                        <p class="produx-card-sub">
-                                                            @(isFav ? "⭐ Memorable Reflection" : (dayNum == 1 ? "Origin Motivation" : (log != null ? FormatMoodTag(log.MoodTag) : (dayNum <= HabitService.CurrentActiveDay ? "Routine Execution" : "Discipline Target"))))
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                                 
+                                                 <div class="produx-card-header">
+                                                     <div class="produx-header-info">
+                                                         <div class="produx-title-star-row">
+                                                             <h4 class="produx-card-title">
+                                                                 @cardDate.ToString("dddd, d MMMM yyyy", CultureInfo.InvariantCulture)
+                                                             </h4>
+                                                             @if (isFav)
+                                                             {
+                                                                 <span class="produx-fav-star" title="Memorable / Starred Day">⭐</span>
+                                                             }
+                                                         </div>
+                                                         <p class="produx-card-sub">
+                                                             @(isFav ? "⭐ Memorable Reflection" : (dayNum == 1 ? "Origin Motivation" : (log != null ? FormatMoodTag(log.MoodTag) : (dayNum <= HabitService.CurrentActiveDay ? "Routine Execution" : "Discipline Target"))))
+                                                         </p>
+                                                     </div>
+                                                 </div>
 
                                                 <div class="produx-card-body">
                                                     @if (dayNum <= HabitService.CurrentActiveDay)
@@ -246,7 +252,6 @@
                             <button type="button" 
                                     id="shuzoPlayCenterBtn" 
                                     class="video-center-play-btn visible" 
-                                    onclick="if (window.nobsProduxScrollytelling) { window.nobsProduxScrollytelling.replayShuzo(); } event.stopPropagation();"
                                     @onclick="ReplayShuzo" 
                                     @onclick:stopPropagation="true"
                                     aria-label="Replay Motivation Video">
@@ -402,7 +407,6 @@
 
     // Video Player State - Default sound is strictly OFF (muted = true)
     private bool isShuzoMuted = true;
-    private bool isBreathingMuted = false;
     private bool isShuzoEnded = false;
 
     private async Task HandleShuzoEnded()
@@ -455,7 +459,7 @@
         catch { }
     }
 
-    private bool isNatureMuted = false;
+    private bool isNatureMuted = true;
 
     private async Task ToggleNatureSound()
     {
@@ -526,7 +530,7 @@
             _wasOpen = true;
             isBgMusicMuted = false;
             isShuzoMuted = true;
-            isNatureMuted = false;
+            isNatureMuted = true;
             isShuzoEnded = false;
             try
             {
@@ -578,6 +582,28 @@
             await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.jumpTo", phase - 1);
         }
         catch { }
+    }
+
+    private MarkupString RenderAnimatedLetters(string text, int startDelayIdx = 0)
+    {
+        if (string.IsNullOrEmpty(text)) return new MarkupString("");
+        var sb = new System.Text.StringBuilder();
+        int idx = startDelayIdx;
+        foreach (char c in text)
+        {
+            if (c == ' ')
+            {
+                sb.Append("<span class=\"char-mask space relative inline-block\"><span class=\"fade-up-char block space\" style=\"--char-idx:").Append(idx).Append(";\">&nbsp;</span></span>");
+            }
+            else
+            {
+                sb.Append("<span class=\"char-mask relative inline-block overflow-hidden\"><span class=\"fade-up-char block\" style=\"--char-idx:").Append(idx).Append(";\">")
+                  .Append(System.Net.WebUtility.HtmlEncode(c.ToString()))
+                  .Append("</span></span>");
+            }
+            idx++;
+        }
+        return new MarkupString(sb.ToString());
     }
 
     private async Task JumpToBreathing()

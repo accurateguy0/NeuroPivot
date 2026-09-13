@@ -96,14 +96,13 @@
     position: relative;
     flex: 1;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     min-height: 520px;
+    height: 100%;
+    overflow: hidden;
 }
 
 .urge-scene-layer {
-    position: absolute;
+    position: absolute !important;
     top: 0;
     left: 0;
     width: 100%;
@@ -111,7 +110,17 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    will-change: transform, opacity, filter;
+    background: #1c1819;
+    box-sizing: border-box;
+    will-change: transform, opacity;
+}
+
+[data-theme="light"] .urge-scene-layer {
+    background: #ffffff;
+}
+
+[data-theme="dark"] .urge-scene-layer {
+    background: #1c1819;
 }
 
 .layer-hidden {
@@ -143,7 +152,9 @@
 /* SLIDE 1 SPOTIFY WRAPPED STORIES (MUTED BRAND)     */
 /* ================================================= */
 .spotify-scene {
-    position: relative;
+    position: absolute !important;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -155,28 +166,17 @@
     position: relative;
     width: 100%;
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
     z-index: 2;
-    padding-right: 6px;
+    padding-right: 0 !important;
 }
 
 .spotify-data-scroll-container::-webkit-scrollbar {
-    width: 5px;
-}
-
-.spotify-data-scroll-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.spotify-data-scroll-container::-webkit-scrollbar-thumb {
-    background: rgba(127, 183, 190, 0.25);
-    border-radius: 9999px;
-}
-
-.spotify-data-scroll-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(127, 183, 190, 0.5);
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .spotify-data-stream {
@@ -258,7 +258,95 @@
     background: #f8f9fa;
 }
 
-/* Specific card accents */
+/* Produx-style overflow masked character container */
+.char-mask {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: baseline;
+    line-height: inherit;
+}
+
+.char-mask.space {
+    width: 0.28em;
+    overflow: visible;
+}
+
+/* Single letters fade-in from below up */
+.fade-up-char {
+    display: block;
+    opacity: 0;
+    transform: translateY(105%);
+    filter: blur(2px);
+    will-change: transform, opacity, filter;
+    line-height: inherit;
+}
+
+.fade-up-char.space {
+    display: inline-block;
+    width: 0.28em;
+}
+
+/* Split line reveal (Produx heroSection-splitLine) */
+.split-line-reveal {
+    transform: translateY(105%);
+    opacity: 0;
+    filter: blur(2px);
+    will-change: transform, opacity, filter;
+}
+
+.spotify-data-section.in-view .split-line-reveal,
+.spotify-data-section:first-child .split-line-reveal {
+    animation: letterFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards;
+}
+
+/* Sections trigger animation when in-view or on first section */
+.spotify-data-section.in-view .fade-up-char,
+.spotify-data-section:first-child .fade-up-char {
+    animation: letterFadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--char-idx, 0) * 18ms);
+}
+
+@keyframes letterFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(100%);
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0px);
+    }
+}
+
+/* Folder cards fade-up animation */
+.folder-card-streak,
+.folder-card-output,
+.folder-card-consistency {
+    opacity: 0;
+    transform: translateY(28px);
+    will-change: transform, opacity;
+}
+
+.spotify-data-section.in-view .folder-card-streak,
+.spotify-data-section.in-view .folder-card-output,
+.spotify-data-section.in-view .folder-card-consistency,
+.spotify-data-section:first-child .folder-card-streak {
+    animation: folderCardFadeUp 0.70s cubic-bezier(0.16, 1, 0.3, 1) 0.10s forwards;
+}
+
+@keyframes folderCardFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .folder-card-streak .folder-tab {
     border-top-color: var(--accent-blue, #7FB7BE);
     color: var(--accent-blue, #7FB7BE);
@@ -454,9 +542,51 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    width: 100%;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
+}
+
+.arena-headline {
+    white-space: nowrap;
+}
+
+.arena-subtext {
+    max-width: 100%;
+}
+
+/* Produx-Style Really Diagonal Typography Brand Gradient Shine */
+.shine-scroll-text {
+    --shine-pos: -20%;
+    background-image: linear-gradient(
+        115deg,
+        var(--accent-blue, #7FB7BE) 0%,
+        var(--color-blush-pink, #E6AACE) calc(var(--shine-pos, -20%) - 18%),
+        #ffffff calc(var(--shine-pos, -20%) - 4%),
+        var(--accent-blue, #7FB7BE) var(--shine-pos, -20%),
+        var(--color-blush-pink, #E6AACE) calc(var(--shine-pos, -20%) + 3%),
+        rgba(255, 255, 255, 0.20) calc(var(--shine-pos, -20%) + 9%),
+        rgba(255, 255, 255, 0.20) 100%
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    will-change: background-image;
+}
+
+[data-theme="light"] .shine-scroll-text {
+    background-image: linear-gradient(
+        115deg,
+        #4e9ca8 0%,
+        #c25f9b calc(var(--shine-pos, -20%) - 18%),
+        #111827 calc(var(--shine-pos, -20%) - 4%),
+        #4e9ca8 var(--shine-pos, -20%),
+        #c25f9b calc(var(--shine-pos, -20%) + 3%),
+        rgba(0, 0, 0, 0.22) calc(var(--shine-pos, -20%) + 9%),
+        rgba(0, 0, 0, 0.22) 100%
+    );
 }
 
 .produx-diagonal-viewport {
@@ -650,13 +780,16 @@
 /* SCENE 2: SPARK SCENE (TOP CENTER HEADLINE)        */
 /* ================================================= */
 .spark-scene {
-    position: relative;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 100%;
 }
 
 .spark-scene .slide-headline {
@@ -798,13 +931,16 @@
 /* SLIDE 4 BIOPHILIC NATURE BREATHING (UNBOXED)      */
 /* ================================================= */
 .nature-breathing-scene {
-    position: relative;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 100%;
 }
 
 .nature-breathing-scene .slide-headline {
@@ -857,29 +993,8 @@
     font-size: 0.92rem;
     font-weight: 700;
     letter-spacing: 0.1em;
-    color: var(--accent-blue, #7FB7BE);
+    color: var(--text-primary);
     text-transform: uppercase;
-    transition: color 0.3s ease;
-}
-
-.breath-live-status-pill.intro-listen .phase-live-label {
-    color: #F4A261;
-}
-
-.breath-live-status-pill.prepare-phase .phase-live-label {
-    color: #E76F51;
-}
-
-.breath-live-status-pill.inhale-deep .phase-live-label {
-    color: var(--accent-blue, #7FB7BE);
-}
-
-.breath-live-status-pill.exhale-long .phase-live-label {
-    color: var(--accent-pink, #FF6B6B);
-}
-
-.breath-live-status-pill.phase-complete .phase-live-label {
-    color: #2A9D8F;
 }
 
 .phase-live-timer {
@@ -901,16 +1016,21 @@
     text-align: center;
     gap: 0.35rem;
     padding: 0.5rem 1.25rem;
-    background: rgba(127, 183, 190, 0.06);
-    border: 1px solid rgba(127, 183, 190, 0.18);
+    background: rgba(255, 255, 255, 0.05);
+    border: none !important;
     border-radius: 8px;
     backdrop-filter: blur(8px);
     transition: all 0.3s ease;
 }
 
 [data-theme="light"] .breath-live-caption-box {
-    background: rgba(127, 183, 190, 0.12);
-    border-color: rgba(127, 183, 190, 0.32);
+    background: rgba(0, 0, 0, 0.04);
+    border: none !important;
+}
+
+[data-theme="dark"] .breath-live-caption-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: none !important;
 }
 
 .breath-caption-text {
@@ -949,14 +1069,32 @@
 /* ================================================= */
 /* SLIDE 5 VICTORY & ACTION LOCK                     */
 /* ================================================= */
+.victory-scene {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .victory-hero-box {
     padding: 1.35rem 1.5rem;
-    background: rgba(127, 183, 190, 0.08);
-    border: 1px solid rgba(127, 183, 190, 0.3);
+    background: rgba(0, 0, 0, 0.04);
+    border: none !important;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     border-radius: 10px;
+}
+
+[data-theme="light"] .victory-hero-box {
+    background: rgba(0, 0, 0, 0.04);
+    border: none !important;
+}
+
+[data-theme="dark"] .victory-hero-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: none !important;
 }
 
 .victory-title {
@@ -1008,8 +1146,13 @@
 }
 
 .exit-action-btn.primary {
-    border-color: var(--accent-pink, #FF6B6B);
+    border-color: var(--border-color);
     background: rgba(255, 107, 107, 0.06);
+}
+
+.exit-action-btn.primary:hover {
+    border-color: var(--accent-blue, #7FB7BE);
+    background: rgba(127, 183, 190, 0.08);
 }
 
 .ea-icon {

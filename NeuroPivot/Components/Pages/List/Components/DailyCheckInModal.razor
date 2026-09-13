@@ -3,8 +3,8 @@
 
 @if (IsOpen)
 {
-    <div class="modal-backdrop-overlay" @onclick="HandleClose">
-        <div class="nobs-modal-card checkin-modal-square animated-fade-in" @onclick:stopPropagation="true">
+    <div class="modal-backdrop-overlay">
+        <div class="nobs-modal-card checkin-modal-square animated-fade-in">
             
             @* step 1: how you feel today? *@
             @if (currentStep == 1)

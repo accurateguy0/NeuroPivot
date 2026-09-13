@@ -189,6 +189,135 @@
     }
 }
 
+/* Streak scale labels wrapper for smooth overlay cross-fade */
+.streak-scale-labels-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 1.25rem;
+    overflow: hidden;
+}
+
+.streak-scale-labels span {
+    white-space: nowrap;
+}
+
+/* Outgoing larger milestone labels moving to right and disappearing */
+.labels-sliding-out {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.labels-sliding-out span:first-child {
+    opacity: 0;
+}
+
+.labels-sliding-out span:not(:first-child) {
+    animation: labelShiftRightAndDisappear 0.7s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+    color: #f87171;
+}
+
+@keyframes labelShiftRightAndDisappear {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+        filter: blur(0);
+    }
+    30% {
+        opacity: 0.85;
+        color: #ef4444;
+    }
+    70% {
+        opacity: 0.3;
+        filter: blur(0.6px);
+    }
+    100% {
+        transform: translateX(60px);
+        opacity: 0;
+        filter: blur(1.2px);
+    }
+}
+
+/* Incoming smaller base milestone labels fading in */
+.labels-fading-in {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+}
+
+.labels-fading-in span:not(:first-child) {
+    animation: labelFadeInSmaller 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes labelFadeInSmaller {
+    0% {
+        transform: translateX(-35px);
+        opacity: 0;
+        filter: blur(1.2px);
+    }
+    40% {
+        opacity: 0.35;
+        filter: blur(0.6px);
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* Streak bar scale down visual effects (cooling embers) */
+.streak-track-bar.scaling-down {
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.4);
+}
+
+.streak-fill-bar.scaling-down {
+    background: linear-gradient(90deg, #ef4444 0%, #f97316 60%, rgba(255, 100, 100, 0.6) 100%) !important;
+}
+
+.streak-fill-bar.scaling-down.draining-left {
+    transition: width 0.05s linear, background 1.5s ease !important;
+}
+
+.streak-fill-bar.scaling-down.expanding-right {
+    transition: width 0.65s cubic-bezier(0.25, 1, 0.5, 1), background 1.5s ease !important;
+    filter: brightness(1.15);
+}
+
+.streak-days-highlight.scaling-down {
+    color: #ef4444 !important;
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    transition: color 0.4s ease;
+}
+
+.streak-test-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.btn-test-streak {
+    background: rgba(255, 107, 107, 0.12);
+    border: 1px dashed rgba(255, 107, 107, 0.5);
+    color: #ff6b6b;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-test-streak:hover {
+    background: rgba(255, 107, 107, 0.25);
+    border-color: #ff6b6b;
+    transform: translateY(-1px);
+}
+
 .streak-info-footnote {
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.82rem;
@@ -536,6 +665,140 @@
     100% {
         background-position: 0% 50%;
     }
+}
+
+/* ================================================= */
+/* STREAK BAR SCALE DOWN ANIMATION                  */
+/* ================================================= */
+.streak-track-bar.scaling-down {
+    animation: streakBarCooldownPulse 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    z-index: 10;
+}
+
+@keyframes streakBarCooldownPulse {
+    0% {
+        box-shadow: 0 0 0 rgba(255, 107, 107, 0);
+    }
+    20% {
+        box-shadow: 0 0 18px rgba(255, 107, 107, 0.6), 0 0 30px rgba(255, 107, 107, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(255, 107, 107, 0);
+    }
+}
+
+.streak-fill-bar.scaling-down {
+    transition: width 1.8s cubic-bezier(0.4, 0, 0.2, 1), background 1.2s ease, filter 1.4s ease !important;
+    background: linear-gradient(90deg, #FF6B6B 0%, #fa5252 40%, rgba(255, 107, 107, 0.8) 70%, #d9534f 100%) !important;
+    animation: streakFillCoolDown 1.8s ease-out forwards !important;
+}
+
+@keyframes streakFillCoolDown {
+    0% {
+        filter: brightness(1.2) drop-shadow(0 0 6px rgba(255, 107, 107, 0.7));
+    }
+    50% {
+        filter: brightness(1) drop-shadow(0 0 4px rgba(255, 107, 107, 0.4));
+    }
+    100% {
+        filter: brightness(0.85) drop-shadow(none);
+    }
+}
+
+.streak-days-highlight.scaling-down {
+    animation: streakDaysCooldown 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes streakDaysCooldown {
+    0% {
+        color: var(--accent-pink, #FF6B6B);
+        text-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
+        transform: scale(1.08);
+    }
+    50% {
+        color: #fa5252;
+        text-shadow: 0 0 6px rgba(255, 107, 107, 0.4);
+        transform: scale(1.03);
+    }
+    100% {
+        color: inherit;
+        text-shadow: none;
+        transform: scale(1);
+    }
+}
+
+.streak-scale-labels.scaling-down {
+    transition: all 0.4s ease;
+}
+
+/* All streak labels to the right of 0 days move to the right and disappear */
+.streak-scale-labels.scaling-down span:not(:first-child) {
+    animation: labelShiftRightAndDisappear 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes labelShiftRightAndDisappear {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    35% {
+        opacity: 0.65;
+    }
+    100% {
+        transform: translateX(45px);
+        opacity: 0;
+    }
+}
+
+/* Beginning scale labels (1 day, 2 days, 3 days) emerge cleanly */
+.streak-scale-labels.labels-resetting span:not(:first-child) {
+    animation: labelEnterFromLeft 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes labelEnterFromLeft {
+    0% {
+        transform: translateX(-16px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.streak-test-row {
+    margin-top: 0.85rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-test-streak {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px dashed rgba(255, 107, 107, 0.4);
+    color: var(--accent-pink, #FF6B6B);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-test-streak:hover {
+    background: rgba(255, 107, 107, 0.22);
+    border-color: var(--accent-pink, #FF6B6B);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
+}
+
+.btn-test-streak:active {
+    transform: translateY(0);
 }
 
 /* ================================================= */

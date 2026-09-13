@@ -1218,3 +1218,172 @@ html {
         background-position: 0% 50%;
     }
 }
+
+/* ================================================= */
+/* URGE PROTOCOL MODAL PRODUX MASKED TYPOGRAPHY      */
+/* ================================================= */
+.char-mask {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: baseline;
+    line-height: inherit;
+}
+
+.char-mask.space {
+    width: 0.28em;
+    overflow: visible;
+}
+
+.fade-up-char {
+    display: inline-block;
+    transform: translateY(105%);
+    opacity: 0;
+    filter: blur(2px);
+    will-change: transform, opacity, filter;
+    line-height: inherit;
+    vertical-align: baseline;
+}
+
+.fade-up-char.space {
+    width: 0.28em;
+    opacity: 0;
+}
+
+/* Section 1 triggers immediately, other sections trigger on in-view */
+.spotify-data-section.in-view .fade-up-char,
+.spotify-data-section:first-child .fade-up-char,
+.folder-card-streak .fade-up-char {
+    animation: letterMaskReveal 0.52s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--char-idx, 0) * 16ms);
+}
+
+@keyframes letterMaskReveal {
+    0% {
+        transform: translateY(105%);
+        opacity: 0;
+        filter: blur(2px);
+    }
+    100% {
+        transform: translateY(0%);
+        opacity: 1;
+        filter: blur(0px);
+    }
+}
+
+/* Folder cards upward fade-in */
+.folder-card-streak,
+.folder-card-output,
+.folder-card-consistency {
+    opacity: 0;
+    transform: translateY(28px);
+    will-change: transform, opacity;
+}
+
+.spotify-data-section.in-view .folder-card-streak,
+.spotify-data-section.in-view .folder-card-output,
+.spotify-data-section.in-view .folder-card-consistency,
+.spotify-data-section:first-child .folder-card-streak,
+.folder-card-streak {
+    animation: folderCardFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+}
+
+@keyframes folderCardFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fix hero-stat-huge layout so percentage NEVER wraps below */
+.hero-stat-huge {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    white-space: nowrap !important;
+}
+
+.hero-pct-sign {
+    font-size: 2.4rem !important;
+    font-weight: 800 !important;
+    color: var(--color-blush-pink, #E6AACE) !important;
+    margin-left: 4px !important;
+    display: inline-flex !important;
+    align-items: baseline !important;
+    vertical-align: baseline !important;
+}
+
+/* Split line reveal in normal flow (no horizontal shift) */
+.spotify-lyric-text {
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.split-line-reveal {
+    display: block;
+    transform: translateY(105%);
+    opacity: 0;
+    filter: blur(2px);
+    will-change: transform, opacity, filter;
+}
+
+.spotify-data-section.in-view .split-line-reveal,
+.spotify-data-section:first-child .split-line-reveal {
+    animation: letterMaskReveal 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+}
+
+/* Produx-Style Really Diagonal Typography Brand Gradient Shine */
+.shine-scroll-text {
+    --shine-pos: -20%;
+    background-image: linear-gradient(
+        115deg,
+        var(--accent-blue, #7FB7BE) 0%,
+        var(--color-blush-pink, #E6AACE) calc(var(--shine-pos, -20%) - 18%),
+        #ffffff calc(var(--shine-pos, -20%) - 4%),
+        var(--accent-blue, #7FB7BE) var(--shine-pos, -20%),
+        var(--color-blush-pink, #E6AACE) calc(var(--shine-pos, -20%) + 3%),
+        rgba(255, 255, 255, 0.20) calc(var(--shine-pos, -20%) + 9%),
+        rgba(255, 255, 255, 0.20) 100%
+    ) !important;
+    background-repeat: no-repeat !important;
+    background-size: 100% 100% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    will-change: background-image;
+}
+
+[data-theme="light"] .shine-scroll-text {
+    background-image: linear-gradient(
+        115deg,
+        #4e9ca8 0%,
+        #c25f9b calc(var(--shine-pos, -20%) - 18%),
+        #111827 calc(var(--shine-pos, -20%) - 4%),
+        #4e9ca8 var(--shine-pos, -20%),
+        #c25f9b calc(var(--shine-pos, -20%) + 3%),
+        rgba(0, 0, 0, 0.22) calc(var(--shine-pos, -20%) + 9%),
+        rgba(0, 0, 0, 0.22) 100%
+    ) !important;
+}
+
+/* Ensure modal stage and scroll containers completely hide scrollbars */
+.urge-scenes-stage,
+.spotify-data-scroll-container,
+.urge-scene-layer,
+.victory-scene {
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.urge-scenes-stage::-webkit-scrollbar,
+.spotify-data-scroll-container::-webkit-scrollbar,
+.urge-scene-layer::-webkit-scrollbar,
+.victory-scene::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}

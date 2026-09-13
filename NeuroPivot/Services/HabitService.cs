@@ -56,6 +56,8 @@ public class HabitService
     public int ConsecutiveStreak { get; private set; } = 0;
     public DateTime? LastStreakQualifyDate { get; private set; } = null;
     public int AcknowledgedStreakMilestone { get; private set; } = 0;
+    public int PendingLostStreak { get; private set; } = 0;
+    public int HighestStreak { get; private set; } = 0;
 
     public HabitService(LocalStorageService localStorage, IJSRuntime jsRuntime, AppState appState, AccountService accountService)
     {
@@ -89,6 +91,9 @@ public class HabitService
         ConsecutiveStreak = account.ConsecutiveStreak;
         LastStreakQualifyDate = account.LastStreakQualifyDate;
         AcknowledgedStreakMilestone = account.AcknowledgedStreakMilestone;
+        PendingLostStreak = account.PendingLostStreak;
+        int tableHighest = CalculateHistoricalHighestTableStreak();
+        HighestStreak = Math.Max(tableHighest, Math.Max(account.HighestStreak, Math.Max(account.ConsecutiveStreak, account.PendingLostStreak)));
 
         if (account.Username != null && account.Username.Equals("admin", StringComparison.OrdinalIgnoreCase) && account.ConsecutiveStreak == 21)
         {
@@ -96,6 +101,7 @@ public class HabitService
             account.AcknowledgedStreakMilestone = 7;
             ConsecutiveStreak = 7;
             AcknowledgedStreakMilestone = 7;
+            HighestStreak = Math.Max(HighestStreak, 7);
             _ = SaveHabitsToActiveAccountAsync();
         }
 
@@ -118,6 +124,8 @@ public class HabitService
         ConsecutiveStreak = 0;
         LastStreakQualifyDate = null;
         AcknowledgedStreakMilestone = 0;
+        PendingLostStreak = 0;
+        HighestStreak = 0;
         NotifyStateChanged();
     }
 
@@ -132,8 +140,10 @@ public class HabitService
             _accountService.ActiveAccount.ChallengeStartDate = ChallengeStartDate;
             _accountService.ActiveAccount.LastActiveDate = LastActiveDate;
             _accountService.ActiveAccount.ConsecutiveStreak = ConsecutiveStreak;
+            _accountService.ActiveAccount.HighestStreak = Math.Max(HighestStreak, Math.Max(ConsecutiveStreak, PendingLostStreak));
             _accountService.ActiveAccount.LastStreakQualifyDate = LastStreakQualifyDate;
             _accountService.ActiveAccount.AcknowledgedStreakMilestone = AcknowledgedStreakMilestone;
+            _accountService.ActiveAccount.PendingLostStreak = PendingLostStreak;
             await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
         }
     }
@@ -148,7 +158,19 @@ public class HabitService
 
             if (LastStreakQualifyDate.HasValue && (today - LastStreakQualifyDate.Value.Date).TotalDays > 1)
             {
+                int curStreak = GetConsecutiveStreak();
+                if (curStreak > 0)
+                {
+                    PendingLostStreak = curStreak;
+                }
+                HighestStreak = Math.Max(HighestStreak, Math.Max(curStreak, CalculateHistoricalHighestTableStreak()));
                 ConsecutiveStreak = 0;
+                AcknowledgedStreakMilestone = 0;
+                if (_accountService.ActiveAccount != null)
+                {
+                    _accountService.ActiveAccount.AcknowledgedStreakMilestone = 0;
+                    _accountService.ActiveAccount.HighestStreak = HighestStreak;
+                }
             }
 
             for (int i = 0; i < daysPassed; i++)
@@ -374,6 +396,7 @@ public class HabitService
             ConsecutiveStreak = Math.Max(1, tableStreak);
             LastStreakQualifyDate = today;
         }
+        HighestStreak = Math.Max(HighestStreak, Math.Max(ConsecutiveStreak, CalculateHistoricalHighestTableStreak()));
     }
 
     private int CalculateTableStreak()
@@ -524,8 +547,44 @@ public class HabitService
 
     public int GetConsecutiveStreak()
     {
+        if (ConsecutiveStreak == 0 && (PendingLostStreak > 0 || (LastStreakQualifyDate.HasValue && LastStreakQualifyDate.Value.Date == DateTime.Today)))
+        {
+            return 0;
+        }
         int tableStreak = CalculateTableStreak();
         return Math.Max(ConsecutiveStreak, tableStreak);
+    }
+
+    public int CalculateHistoricalHighestTableStreak()
+    {
+        if (Habits == null || Habits.Count == 0 || CurrentActiveDay < 1) return 0;
+        int maxStreak = 0;
+        int currentRun = 0;
+
+        for (int d = 1; d <= CurrentActiveDay; d++)
+        {
+            int c = Habits.Count(h => h.IsCompletedOnDay(d));
+            if (c >= 4)
+            {
+                currentRun++;
+                if (currentRun > maxStreak)
+                {
+                    maxStreak = currentRun;
+                }
+            }
+            else
+            {
+                currentRun = 0;
+            }
+        }
+        return maxStreak;
+    }
+
+    public int GetHighestStreak()
+    {
+        int cur = GetConsecutiveStreak();
+        int tableHighest = CalculateHistoricalHighestTableStreak();
+        return Math.Max(tableHighest, Math.Max(HighestStreak, Math.Max(cur, PendingLostStreak)));
     }
 
     public bool IsTodayStreakQualified()
@@ -596,14 +655,23 @@ public class HabitService
 
         _appState.AddRelapseLog(entry);
 
-        // Reset the streak in stats to 0, mark today as last qualifying attempt, but keep the 21-day table day
+        int curStreak = GetConsecutiveStreak();
+        if (curStreak > 0)
+        {
+            PendingLostStreak = curStreak;
+        }
+
+        // Reset the streak in stats to 0, reset milestone scale, mark today as last qualifying attempt
         ConsecutiveStreak = 0;
+        AcknowledgedStreakMilestone = 0;
         LastStreakQualifyDate = DateTime.Today;
 
         if (_accountService.ActiveAccount != null)
         {
             _accountService.ActiveAccount.ConsecutiveStreak = 0;
+            _accountService.ActiveAccount.AcknowledgedStreakMilestone = 0;
             _accountService.ActiveAccount.LastStreakQualifyDate = DateTime.Today;
+            _accountService.ActiveAccount.PendingLostStreak = PendingLostStreak;
             await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
         }
 
@@ -623,14 +691,12 @@ public class HabitService
         NotifyStateChanged();
     }
 
-    public (int MaxDays, string[] Labels) GetStreakScaleInfo()
+    public (int MaxDays, string[] Labels) GetStreakScaleInfoForStreak(int s, int? ackMilestone = null)
     {
-        int s = GetConsecutiveStreak();
-        int ack = AcknowledgedStreakMilestone;
+        int ack = ackMilestone ?? AcknowledgedStreakMilestone;
 
         // If user reached a milestone but hasn't acknowledged the congratulations modal yet,
         // show the achieved milestone scale (at 100% fill) so they see the completed bar
-        if (s >= 1 && ack < 1 && s < 3) return (1, new[] { "0 days", "1 day" });
         if (s >= 3 && ack < 3 && s < 7) return (3, new[] { "0 days", "1 day", "2 days", "3 days" });
         if (s >= 7 && ack < 7 && s < 14) return (7, new[] { "0 days", "3 days", "5 days", "7 days" });
         if (s >= 14 && ack < 14 && s < 21) return (14, new[] { "0 days", "7 days", "10 days", "14 days" });
@@ -646,7 +712,6 @@ public class HabitService
         // Otherwise, the scale levels up to the next target milestone
         int effectiveStreak = Math.Max(s, ack);
 
-        if (effectiveStreak < 1) return (1, new[] { "0 days", "1 day" });
         if (effectiveStreak < 3) return (3, new[] { "0 days", "1 day", "2 days", "3 days" });
         if (effectiveStreak < 7) return (7, new[] { "0 days", "3 days", "5 days", "7 days" });
         if (effectiveStreak < 14) return (14, new[] { "0 days", "7 days", "10 days", "14 days" });
@@ -661,15 +726,20 @@ public class HabitService
         return (3650, new[] { "0", "2.5 yrs", "5 yrs", "10 years" });
     }
 
-    public int GetStreakMeterPercentage()
+    public (int MaxDays, string[] Labels) GetStreakScaleInfo() =>
+        GetStreakScaleInfoForStreak(GetConsecutiveStreak());
+
+    public int GetStreakMeterPercentageForStreak(int streak)
     {
-        int streak = GetConsecutiveStreak();
         if (streak <= 0) return 0;
-        var (maxDays, _) = GetStreakScaleInfo();
+        var (maxDays, _) = GetStreakScaleInfoForStreak(streak);
         return Math.Clamp((int)Math.Round((double)streak / (double)maxDays * 100.0), 3, 100);
     }
 
-    public static readonly int[] MilestoneTiers = new[] { 1, 3, 7, 14, 21, 30, 60, 90, 180, 365, 730, 1825, 3650 };
+    public int GetStreakMeterPercentage() =>
+        GetStreakMeterPercentageForStreak(GetConsecutiveStreak());
+
+    public static readonly int[] MilestoneTiers = new[] { 3, 7, 14, 21, 30, 60, 90, 180, 365, 730, 1825, 3650 };
 
     public (bool HasMilestone, int MilestoneTier, string Title, string Subtitle, string Message) CheckUnacknowledgedStreakMilestone()
     {
@@ -696,9 +766,51 @@ public class HabitService
         NotifyStateChanged();
     }
 
+    public async Task ResetMilestoneOnStreakLossAsync()
+    {
+        AcknowledgedStreakMilestone = 0;
+        if (_accountService.ActiveAccount != null)
+        {
+            _accountService.ActiveAccount.AcknowledgedStreakMilestone = 0;
+            await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
+        }
+        NotifyStateChanged();
+    }
+
+    public async Task ClearPendingLostStreakAsync()
+    {
+        PendingLostStreak = 0;
+        if (_accountService.ActiveAccount != null)
+        {
+            _accountService.ActiveAccount.PendingLostStreak = 0;
+            await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
+        }
+        NotifyStateChanged();
+    }
+
+    public async Task SetStreakLossForTestingAsync(int previousStreak)
+    {
+        PendingLostStreak = previousStreak;
+        HighestStreak = Math.Max(HighestStreak, previousStreak);
+        ConsecutiveStreak = 0;
+        AcknowledgedStreakMilestone = 0;
+        LastStreakQualifyDate = DateTime.Today;
+        if (_accountService.ActiveAccount != null)
+        {
+            _accountService.ActiveAccount.PendingLostStreak = previousStreak;
+            _accountService.ActiveAccount.HighestStreak = HighestStreak;
+            _accountService.ActiveAccount.ConsecutiveStreak = 0;
+            _accountService.ActiveAccount.AcknowledgedStreakMilestone = 0;
+            _accountService.ActiveAccount.LastStreakQualifyDate = DateTime.Today;
+            await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
+        }
+        NotifyStateChanged();
+    }
+
     public async Task SetStreakForTestingAsync(int days, int? ackTier = null)
     {
         ConsecutiveStreak = days;
+        HighestStreak = Math.Max(HighestStreak, days);
         LastStreakQualifyDate = DateTime.Today;
         if (ackTier.HasValue)
         {
@@ -707,6 +819,7 @@ public class HabitService
         if (_accountService.ActiveAccount != null)
         {
             _accountService.ActiveAccount.ConsecutiveStreak = days;
+            _accountService.ActiveAccount.HighestStreak = HighestStreak;
             _accountService.ActiveAccount.LastStreakQualifyDate = DateTime.Today;
             if (ackTier.HasValue)
             {

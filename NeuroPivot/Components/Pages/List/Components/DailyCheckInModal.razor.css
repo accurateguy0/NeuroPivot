@@ -64,23 +64,10 @@
 }
 
 .mood-tags-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 0.65rem;
     margin: 0.5rem 0;
-}
-
-.btn-checkin-mood:last-child:nth-child(odd) {
-    grid-column: span 2;
-}
-
-@media (max-width: 480px) {
-    .mood-tags-grid {
-        grid-template-columns: 1fr;
-    }
-    .btn-checkin-mood:last-child:nth-child(odd) {
-        grid-column: span 1;
-    }
 }
 
 .btn-checkin-mood {

@@ -672,7 +672,7 @@ window.nobsProduxScrollytelling = {
     _breathingAudio: null,
     _breathingPlaying: false,
     _breathingEnded: false,
-    _natureMuted: false,
+    _natureMuted: true,
     _natureVideos: ['videos/nature_wildlife.mp4', 'videos/water_beach_video.mp4'],
     _natureIndex: 0,
     _lastNatureSwitchTime: 0,
@@ -905,15 +905,13 @@ window.nobsProduxScrollytelling = {
             this._shuzoEnded = false;
             this._breathingPlaying = false;
             this._breathingEnded = false;
-        this._natureIndex = 0;
-        this._lastNatureSwitchTime = 0;
-            this._natureMuted = false;
             this._natureIndex = 0;
             this._lastNatureSwitchTime = 0;
+            this._natureMuted = true;
             const sv = document.getElementById('shuzoVideoPlayer');
             if (sv) { sv.muted = true; }
             const nv = document.getElementById('natureVideoPlayer');
-            if (nv) { nv.muted = false; nv.volume = 0.35; }
+            if (nv) { nv.muted = true; nv.volume = 0; }
             const ba = document.getElementById('breathingAudioPlayer');
             if (ba) {
                 ba.muted = false;
@@ -922,6 +920,11 @@ window.nobsProduxScrollytelling = {
                 ba.currentTime = 0;
             }
             this.syncBreathingText(0);
+            const sections = document.querySelectorAll('.spotify-data-section');
+            sections.forEach((s, idx) => {
+                if (idx === 0) s.classList.add('in-view');
+                else s.classList.remove('in-view');
+            });
         }
         this.active = true;
 
@@ -932,13 +935,17 @@ window.nobsProduxScrollytelling = {
         if (!this.animFrame) {
             const loop = () => {
                 if (this.active) {
-                    const diff = this.targetProgress - this.currentProgress;
-                    if (Math.abs(diff) > 0.0005) {
-                        this.currentProgress += diff * 0.15; // Smooth exponential lerp
-                    } else if (this.currentProgress !== this.targetProgress) {
-                        this.currentProgress = this.targetProgress;
+                    try {
+                        const diff = this.targetProgress - this.currentProgress;
+                        if (Math.abs(diff) > 0.0005) {
+                            this.currentProgress += diff * 0.15; // Smooth exponential lerp
+                        } else if (this.currentProgress !== this.targetProgress) {
+                            this.currentProgress = this.targetProgress;
+                        }
+                        this.render(this.currentProgress);
+                    } catch (err) {
+                        console.error('Produx render error:', err);
                     }
-                    this.render(this.currentProgress);
                 }
                 this.animFrame = requestAnimationFrame(loop);
             };
@@ -964,7 +971,7 @@ window.nobsProduxScrollytelling = {
                 this.playBreathingAudio();
             }
         } else if (typeof target === 'number') {
-            const map = [0.0, 1.2, 2.9, 4.1, 5.0];
+            const map = [0.0, 1.0, 2.9, 4.1, 5.0];
             const idx = Math.floor(target);
             if (idx >= 0 && idx < map.length) {
                 this.targetProgress = map[idx];
@@ -982,10 +989,10 @@ window.nobsProduxScrollytelling = {
         // Slower, more granular scroll in Data Section (p < 1.2) and Day Diary (1.2 <= p < 2.45)
         const p = this.targetProgress;
         let multiplier = 0.0014;
-        if (p < 1.2) {
+        if (p < 1.0) {
             multiplier = 0.00065; // ~2.5x slower for data metrics and quotes
-        } else if (p < 2.45) {
-            multiplier = 0.00045; // ~3.5x slower for day diary cards inspection
+        } else if (p < 2.35) {
+            multiplier = 0.00048; // comfortable pace for shine and day diary cards inspection
         }
 
         const delta = e.deltaY * multiplier;
@@ -1005,9 +1012,9 @@ window.nobsProduxScrollytelling = {
             const currentY = e.touches[0].clientY;
             const p = this.targetProgress;
             let multiplier = 0.0030;
-            if (p < 1.2) {
+            if (p < 1.0) {
                 multiplier = 0.0014; // ~2.5x slower
-            } else if (p < 2.45) {
+            } else if (p < 2.35) {
                 multiplier = 0.0010; // ~3.5x slower
             }
             const deltaY = (this._touchStartY - currentY) * multiplier;
@@ -1097,27 +1104,84 @@ window.nobsProduxScrollytelling = {
                 s0.style.filter = 'blur(0px)';
                 s0.style.pointerEvents = 'auto';
 
-                // Phase 1 (p: 0.0 -> 1.2): Vertical scroll until Day Diary is in view
-                // Phase 2 (p: 1.2 -> 2.4): Pin scroller; only cards glide diagonally
+                // Phase 1 (p: 0.0 -> 1.0): Vertical scroll until Day Diary is in view
+                // Phase 1.5 (p: 0.85 -> 1.45): Day diary text shine animation (starts when visible, ends completely before cards glide)
+                // Phase 2 (p: 1.45 -> 2.30): Cards glide diagonally AFTER shining animation has completed!
                 if (dataStream && dataContainer) {
                     const maxScroll = Math.max(0, dataStream.scrollHeight - dataContainer.clientHeight + 30);
                     const diaryOffset = diarySection ? Math.min(maxScroll, Math.max(0, diarySection.offsetTop - 15)) : maxScroll;
 
                     let currentScrollY = 0;
-                    if (p < 1.2) {
-                        const vertRatio = p / 1.2;
+                    if (p < 1.0) {
+                        const vertRatio = p / 1.0;
                         currentScrollY = vertRatio * diaryOffset;
                     } else {
                         // Locked / pinned on Day Diary
                         currentScrollY = diaryOffset;
                     }
                     dataStream.style.transform = `translate3d(0, ${(-currentScrollY).toFixed(1)}px, 0)`;
+
+                    // Trigger letter animations for data sections as each enters the viewport
+                    const sections = s0.querySelectorAll('.spotify-data-section');
+                    if (sections && sections.length > 0) {
+                        const containerHeight = dataContainer.clientHeight || 450;
+                        sections.forEach((sec, idx) => {
+                            if (idx === 0) {
+                                sec.classList.add('in-view');
+                            } else {
+                                const secTop = sec.offsetTop;
+                                if (currentScrollY + containerHeight * 0.70 >= secTop) {
+                                    sec.classList.add('in-view');
+                                }
+                            }
+                        });
+                    }
+
+                    // Produx-style "top 90%" shine trigger:
+                    // Text shines up while positioned at the near bottom of the visible page
+                    const containerHeight = dataContainer.clientHeight || 450;
+                    const sectionTopInView = diarySection ? (diarySection.offsetTop - currentScrollY) : containerHeight;
+                    const viewRatio = sectionTopInView / containerHeight;
+
+                    const headlineEl = s0.querySelector('.slide-headline.shine-scroll-text');
+                    const subtextEl = s0.querySelector('.slide-subtext.shine-scroll-text');
+
+                    // Headline starts shining right as it enters near the bottom (viewRatio <= 0.92)
+                    // and sweeps across diagonally, completing by viewRatio <= 0.50
+                    let headRatio = 0;
+                    if (viewRatio <= 0.50 || p >= 1.0) {
+                        headRatio = 1.0;
+                    } else if (viewRatio < 0.92) {
+                        headRatio = (0.92 - viewRatio) / 0.42;
+                    }
+                    const headPos = (-20 + headRatio * 145).toFixed(1);
+
+                    // Subtext starts shining as headline progresses (viewRatio <= 0.65)
+                    // and completes by viewRatio <= 0.15 (when pinned at p >= 1.0)
+                    let subRatio = 0;
+                    if (viewRatio <= 0.15 || p >= 1.0) {
+                        subRatio = 1.0;
+                    } else if (viewRatio < 0.65) {
+                        subRatio = (0.65 - viewRatio) / 0.50;
+                    }
+                    const subPos = (-20 + subRatio * 145).toFixed(1);
+
+                    if (headlineEl) {
+                        headlineEl.style.setProperty('--shine-pos', `${headPos}%`);
+                        headlineEl.style.setProperty('--fill-pct', `${headPos}%`);
+                    }
+
+                    if (subtextEl) {
+                        subtextEl.style.setProperty('--shine-pos', `${subPos}%`);
+                        subtextEl.style.setProperty('--fill-pct', `${subPos}%`);
+                    }
                 }
 
                 if (track && cards.length > 0) {
+                    // Day diary cards animation: starts ONLY AFTER the shining animation has completed and pinned (p >= 1.05)
                     let diaryRatio = 0;
-                    if (p >= 1.2) {
-                        diaryRatio = Math.min(1.0, (p - 1.2) / 1.15);
+                    if (p >= 1.05) {
+                        diaryRatio = Math.min(1.0, (p - 1.05) / 1.25);
                     }
                     const maxShiftX = (cards.length - 1) * 360;
                     const maxShiftY = (cards.length - 1) * 75;
@@ -1133,28 +1197,38 @@ window.nobsProduxScrollytelling = {
 
                     this.updateCardHover();
                 }
-            } else if (p >= 2.30 && p <= 2.75) {
-                // Apple-style horizontal slide-out to the left
-                const norm0 = (p - 2.30) / 0.45;
-                const easeOut = 1 - Math.pow(1 - norm0, 2.5);
-                const tx = -easeOut * 120;
-                const sc = 1 - (easeOut * 0.06);
-                const op = Math.max(0, 1 - Math.pow(norm0, 1.8));
+            } else if (p >= 2.30 && p <= 2.80) {
+                // Scene 0 glides from right to left out of view
+                const norm0 = Math.min(1, Math.max(0, (p - 2.30) / 0.50));
+                const ease0 = norm0 * norm0 * (3 - 2 * norm0);
+                const txPct0 = -ease0 * 100; // 0% -> -100% (moving to the left)
+                const op0 = norm0 > 0.90 ? Math.max(0, 1 - (norm0 - 0.90) / 0.10) : 1.0;
+
+                const track = document.getElementById('produxDiagonalTrack');
+                const cards = s0.querySelectorAll('.produx-diagonal-card');
+                if (track && cards.length > 0) {
+                    const maxShiftX = (cards.length - 1) * 360;
+                    const maxShiftY = (cards.length - 1) * 75;
+                    track.style.transform = `translate3d(${(-maxShiftX).toFixed(1)}px, ${(-maxShiftY).toFixed(1)}px, 0)`;
+                }
 
                 s0.style.display = 'flex';
-                s0.style.opacity = op.toFixed(3);
-                s0.style.transform = `scale(${sc.toFixed(3)}) translate3d(${tx.toFixed(1)}px, 0, 0)`;
+                s0.style.zIndex = '15';
+                s0.style.opacity = op0.toFixed(3);
+                s0.style.transform = `translate3d(${txPct0.toFixed(2)}%, 0, 0)`;
+                s0.style.boxShadow = 'none';
                 s0.style.filter = 'none';
-                s0.style.pointerEvents = op > 0.5 ? 'auto' : 'none';
+                s0.style.pointerEvents = norm0 > 0.4 ? 'none' : 'auto';
             } else {
                 s0.style.display = 'none';
+                s0.style.zIndex = '1';
                 s0.style.opacity = '0';
                 s0.style.pointerEvents = 'none';
             }
         }
 
         // -------------------------------------------------------------
-        // SCENE 2: THE RAW SPARK (Motivation Video) (2.40 -> 3.85)
+        // SCENE 2: THE RAW SPARK (Motivation Video) (2.30 -> 3.90)
         // -------------------------------------------------------------
         if (s2) {
             const sv = document.getElementById('shuzoVideoPlayer');
@@ -1168,42 +1242,53 @@ window.nobsProduxScrollytelling = {
                 });
             }
 
-            if (p >= 2.40 && p <= 3.85) {
-                let sceneOp = 1.0;
-                let sceneTx = 0;
-                let sceneScale = 1.0;
-
-                if (p < 2.85) {
-                    // Apple-style horizontal swipe in from right to center
-                    const norm2 = Math.min(1, Math.max(0, (p - 2.40) / 0.45));
-                    const easeIn = 1 - Math.pow(1 - norm2, 3);
-                    sceneOp = Math.min(1, norm2 * 1.35);
-                    sceneTx = (1 - easeIn) * 200;
-                    sceneScale = 0.94 + (0.06 * easeIn);
-                } else if (p > 3.50) {
-                    // Apple-style horizontal swipe out to left when scrolling further
-                    const normOut = Math.min(1, Math.max(0, (p - 3.50) / 0.35));
-                    const easeOut = 1 - Math.pow(1 - normOut, 2.5);
-                    sceneOp = Math.max(0, 1 - Math.pow(normOut, 1.8));
-                    sceneTx = -easeOut * 180;
-                    sceneScale = 1.0 - (0.05 * easeOut);
+            if (p >= 2.30 && p <= 3.90) {
+                if (p < 2.80) {
+                    // Glides IN from the RIGHT to the LEFT into center
+                    const norm2In = Math.min(1, Math.max(0, (p - 2.30) / 0.50));
+                    const easeIn2 = norm2In * norm2In * (3 - 2 * norm2In);
+                    const txPct2In = (1 - easeIn2) * 100; // +100% -> 0%
+                    s2.style.display = 'flex';
+                    s2.style.zIndex = '20';
+                    s2.style.opacity = '1';
+                    s2.style.transform = `translate3d(${txPct2In.toFixed(2)}%, 0, 0)`;
+                    s2.style.boxShadow = (norm2In > 0.02 && norm2In < 0.98) ? '-12px 0 35px rgba(0, 0, 0, 0.4)' : 'none';
+                    s2.style.filter = 'none';
+                    s2.style.pointerEvents = norm2In > 0.7 ? 'auto' : 'none';
+                } else if (p > 3.45) {
+                    // Glides OUT to the LEFT towards Nature video
+                    const normOut2 = Math.min(1, Math.max(0, (p - 3.45) / 0.45));
+                    const easeOut2 = normOut2 * normOut2 * (3 - 2 * normOut2);
+                    const txPct2Out = -easeOut2 * 100; // 0% -> -100%
+                    const op2 = normOut2 > 0.90 ? Math.max(0, 1 - (normOut2 - 0.90) / 0.10) : 1.0;
+                    s2.style.display = 'flex';
+                    s2.style.zIndex = '15';
+                    s2.style.opacity = op2.toFixed(3);
+                    s2.style.transform = `translate3d(${txPct2Out.toFixed(2)}%, 0, 0)`;
+                    s2.style.boxShadow = 'none';
+                    s2.style.filter = 'none';
+                    s2.style.pointerEvents = normOut2 > 0.4 ? 'none' : 'auto';
+                } else {
+                    // Fully active centered
+                    s2.style.display = 'flex';
+                    s2.style.zIndex = '20';
+                    s2.style.opacity = '1';
+                    s2.style.transform = 'translate3d(0, 0, 0)';
+                    s2.style.boxShadow = 'none';
+                    s2.style.filter = 'none';
+                    s2.style.pointerEvents = 'auto';
                 }
 
-                s2.style.display = 'flex';
-                s2.style.opacity = sceneOp.toFixed(3);
-                s2.style.transform = `scale(${sceneScale.toFixed(3)}) translate3d(${sceneTx.toFixed(1)}px, 0, 0)`;
-                s2.style.filter = 'none';
-                s2.style.pointerEvents = sceneOp > 0.5 ? 'auto' : 'none';
-
                 // Video container expands smoothly
-                const expandNorm = Math.min(1, Math.max(0, (p - 2.65) / 0.45));
-                const videoScale = 0.85 + (0.15 * expandNorm);
+                const expandNorm = Math.min(1, Math.max(0, (p - 2.60) / 0.50));
+                const easeExpand = expandNorm * expandNorm * (3 - 2 * expandNorm);
+                const videoScale = 0.92 + (0.08 * easeExpand);
                 if (expandingBox) {
                     expandingBox.style.transform = `scale(${videoScale.toFixed(3)})`;
                 }
 
                 // Sound button reveals when full size
-                const controlsRevealed = expandNorm >= 0.90;
+                const controlsRevealed = expandNorm >= 0.85;
                 if (soundBtn) {
                     if (controlsRevealed) {
                         soundBtn.style.opacity = '1';
@@ -1217,13 +1302,14 @@ window.nobsProduxScrollytelling = {
                 }
 
                 // Auto-play video
-                if (p >= 2.80 && p <= 3.50) {
+                if (p >= 2.70 && p <= 3.50) {
                     if (sv && sv.paused && !sv.ended && !this._shuzoEnded) {
                         sv.play().catch(() => {});
                     }
                 }
             } else {
                 s2.style.display = 'none';
+                s2.style.zIndex = '1';
                 s2.style.opacity = '0';
                 s2.style.pointerEvents = 'none';
 
@@ -1234,49 +1320,61 @@ window.nobsProduxScrollytelling = {
         }
 
         // -------------------------------------------------------------
-        // SCENE 3: PHYSIOLOGICAL SIGH (Nature Video) (3.50 -> 4.85)
+        // SCENE 3: PHYSIOLOGICAL SIGH (Nature Video) (3.45 -> 4.95)
         // -------------------------------------------------------------
         if (s3) {
             const nv = document.getElementById('natureVideoPlayer');
             const natureExpandingBox = document.getElementById('natureExpandingBox');
             const natureSoundBtn = document.getElementById('natureSoundBtn');
 
-            if (p >= 3.50 && p <= 4.85) {
-                let sceneOp = 1.0;
-                let sceneTx = 0;
-                let sceneScale = 1.0;
-
+            if (p >= 3.45 && p <= 4.95) {
                 if (p < 3.90) {
-                    // Apple-style horizontal swipe in from right to center (transition from Japan video)
-                    const norm3 = Math.min(1, Math.max(0, (p - 3.50) / 0.40));
-                    const easeIn = 1 - Math.pow(1 - norm3, 3);
-                    sceneOp = Math.min(1, norm3 * 1.35);
-                    sceneTx = (1 - easeIn) * 200;
-                    sceneScale = 0.94 + (0.06 * easeIn);
-                } else if (p > 4.55) {
-                    // Apple-style horizontal swipe out to left towards Victory
-                    const normOut = Math.min(1, Math.max(0, (p - 4.55) / 0.30));
-                    const easeOut = 1 - Math.pow(1 - normOut, 2.5);
-                    sceneOp = Math.max(0, 1 - Math.pow(normOut, 1.8));
-                    sceneTx = -easeOut * 180;
-                    sceneScale = 1.0 - (0.05 * easeOut);
+                    // Glides IN from the RIGHT to the LEFT into center
+                    const norm3In = Math.min(1, Math.max(0, (p - 3.45) / 0.45));
+                    const easeIn3 = norm3In * norm3In * (3 - 2 * norm3In);
+                    const txPct3In = (1 - easeIn3) * 100; // +100% -> 0%
+                    s3.style.display = 'flex';
+                    s3.style.zIndex = '20';
+                    s3.style.opacity = '1';
+                    s3.style.transform = `translate3d(${txPct3In.toFixed(2)}%, 0, 0)`;
+                    s3.style.boxShadow = (norm3In > 0.02 && norm3In < 0.98) ? '-12px 0 35px rgba(0, 0, 0, 0.4)' : 'none';
+                    s3.style.filter = 'none';
+                    s3.style.pointerEvents = norm3In > 0.7 ? 'auto' : 'none';
+                } else if (p > 4.35) {
+                    // Pure normal vertical scroll upward out of view
+                    const scrollNorm = Math.min(1, Math.max(0, (p - 4.35) / 0.60));
+                    const sceneTy = -scrollNorm * 100;
+                    s3.style.display = 'flex';
+                    s3.style.zIndex = '10';
+                    s3.style.opacity = '1';
+                    s3.style.transform = `translate3d(0, ${sceneTy.toFixed(2)}%, 0)`;
+                    s3.style.boxShadow = 'none';
+                    s3.style.filter = 'none';
+                    s3.style.pointerEvents = (p <= 4.65) ? 'auto' : 'none';
+                } else {
+                    // Fully active centered
+                    s3.style.display = 'flex';
+                    s3.style.zIndex = '20';
+                    s3.style.opacity = '1';
+                    s3.style.transform = 'translate3d(0, 0, 0)';
+                    s3.style.boxShadow = 'none';
+                    s3.style.filter = 'none';
+                    s3.style.pointerEvents = 'auto';
                 }
-
-                s3.style.display = 'flex';
-                s3.style.opacity = sceneOp.toFixed(3);
-                s3.style.transform = `scale(${sceneScale.toFixed(3)}) translate3d(${sceneTx.toFixed(1)}px, 0, 0)`;
                 s3.style.filter = 'none';
-                s3.style.pointerEvents = sceneOp > 0.5 ? 'auto' : 'none';
+                s3.style.pointerEvents = (p <= 4.65) ? 'auto' : 'none';
 
                 // Video container expands smoothly
-                const expandNorm = Math.min(1, Math.max(0, (p - 3.65) / 0.35));
-                const videoScale = 0.88 + (0.12 * expandNorm);
+                const expandNorm = Math.min(1, Math.max(0, (p - 3.60) / 0.40));
+                const easeExpand = expandNorm * expandNorm * (3 - 2 * expandNorm);
+                const videoScale = 0.92 + (0.08 * easeExpand);
                 if (natureExpandingBox) {
                     natureExpandingBox.style.transform = `scale(${videoScale.toFixed(3)})`;
                 }
 
                 if (natureSoundBtn) {
-                    if (sceneOp > 0.6) {
+                    const controlsRevealed = expandNorm >= 0.85;
+                    if (controlsRevealed && p <= 4.35) {
                         natureSoundBtn.style.opacity = '1';
                         natureSoundBtn.style.pointerEvents = 'auto';
                         natureSoundBtn.style.transform = 'translateY(0)';
@@ -1307,8 +1405,31 @@ window.nobsProduxScrollytelling = {
                         });
                     }
 
-                    nv.muted = this._natureMuted;
-                    nv.volume = this._natureMuted ? 0 : 0.35;
+                    if (p > 4.35) {
+                        // Immediately turn off sound when scrolled down towards Scene 4
+                        nv.muted = true;
+                        nv.volume = 0;
+                        if (this._breathingPlaying) {
+                            this.pauseBreathingAudio();
+                        } else {
+                            const ba = document.getElementById('breathingAudioPlayer');
+                            if (ba && !ba.paused) {
+                                ba.pause();
+                            }
+                        }
+                    } else {
+                        nv.muted = this._natureMuted;
+                        nv.volume = this._natureMuted ? 0 : 0.35;
+
+                        // Play guided breathing audio when in Scene 3 (only once per urge click)
+                        if (!this._breathingEnded) {
+                            const ba = document.getElementById('breathingAudioPlayer');
+                            if (!this._breathingPlaying || (ba && ba.paused)) {
+                                this.playBreathingAudio();
+                            }
+                        }
+                    }
+
                     if (nv.paused && !nv._playPending) {
                         nv._playPending = true;
                         if (nv.readyState === 0) {
@@ -1324,14 +1445,6 @@ window.nobsProduxScrollytelling = {
                         } else {
                             nv._playPending = false;
                         }
-                    }
-                }
-
-                // Play guided breathing audio when in Scene 3 (only once per urge click)
-                if (!this._breathingEnded) {
-                    const ba = document.getElementById('breathingAudioPlayer');
-                    if (!this._breathingPlaying || (ba && ba.paused)) {
-                        this.playBreathingAudio();
                     }
                 }
 
@@ -1366,29 +1479,30 @@ window.nobsProduxScrollytelling = {
         }
 
         // -------------------------------------------------------------
-        // SCENE 4: VICTORY LOCK & ACTIONS (4.65 -> 5.10)
+        // SCENE 4: VICTORY LOCK & ACTIONS (4.35 -> 5.10)
         // -------------------------------------------------------------
         if (s4) {
-            if (p >= 4.65) {
-                const norm = Math.min(1, Math.max(0, (p - 4.65) / 0.35));
-                const ty = (1 - norm) * 45;
-                const sc = 0.92 + norm * 0.08;
-                const bl = (1 - norm) * 6;
+            if (p >= 4.35) {
+                // Pure normal vertical scroll in from bottom directly connected to Scene 3
+                const scrollNorm = Math.min(1, Math.max(0, (p - 4.35) / 0.60));
+                const tyPct = (1 - scrollNorm) * 100; // percentage: 100% -> 0%
                 s4.style.display = 'flex';
-                s4.style.opacity = norm.toFixed(3);
-                s4.style.transform = `scale(${sc.toFixed(3)}) translate3d(0, ${ty.toFixed(1)}px, 0)`;
-                s4.style.filter = `blur(${bl.toFixed(1)}px)`;
-                s4.style.pointerEvents = norm > 0.5 ? 'auto' : 'none';
+                s4.style.zIndex = '25';
+                s4.style.opacity = '1'; // Full opacity throughout normal scroll
+                s4.style.transform = `translate3d(0, ${tyPct.toFixed(2)}%, 0)`;
+                s4.style.filter = 'none';
+                s4.style.pointerEvents = scrollNorm >= 0.5 ? 'auto' : 'none';
 
-                if (p >= 5.0 && !this.confettiFired) {
+                if (p >= 4.95 && !this.confettiFired) {
                     this.confettiFired = true;
                     if (window.nobsConfetti) window.nobsConfetti.launch();
                 }
             } else {
                 s4.style.display = 'none';
+                s4.style.zIndex = '1';
                 s4.style.opacity = '0';
                 s4.style.pointerEvents = 'none';
-                if (p < 4.50) {
+                if (p < 4.30) {
                     this.confettiFired = false;
                 }
             }
@@ -1469,6 +1583,8 @@ window.nobsProduxScrollytelling = {
             domBa.currentTime = 0;
         }
         this.syncBreathingText(0);
+        const sections = document.querySelectorAll('.spotify-data-section');
+        sections.forEach(s => s.classList.remove('in-view'));
     }
 };
 

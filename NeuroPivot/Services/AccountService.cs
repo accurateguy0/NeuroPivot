@@ -22,8 +22,10 @@ public class UserAccount
     public DateTime ChallengeStartDate { get; set; } = DateTime.Today;
     public DateTime LastActiveDate { get; set; } = DateTime.Today;
     public int ConsecutiveStreak { get; set; } = 0;
+    public int HighestStreak { get; set; } = 0;
     public DateTime? LastStreakQualifyDate { get; set; } = null;
     public int AcknowledgedStreakMilestone { get; set; } = 0;
+    public int PendingLostStreak { get; set; } = 0;
 
     // Habits Goal Specific: Motivation, Logs, Relapses & Urges
     public string InitialHabitMotivation { get; set; } = "";
@@ -157,6 +159,7 @@ public class AccountService
             ChallengeStartDate = DateTime.Today.AddDays(-2),
             LastActiveDate = DateTime.Today,
             ConsecutiveStreak = 3,
+            HighestStreak = 3,
             LastStreakQualifyDate = DateTime.Today,
             AcknowledgedStreakMilestone = 0,
             Habits = new List<HabitItem> { h1, h2, h3, h4, h5, h6 },
