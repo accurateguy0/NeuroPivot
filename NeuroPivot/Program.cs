@@ -8,15 +8,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var dbFolder = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
-if (!Directory.Exists(dbFolder))
-{
-    Directory.CreateDirectory(dbFolder);
-}
-var dbPath = Path.Combine(dbFolder, "neuropivot.db");
+// Configure database provider (PostgreSQL for cloud / Supabase, SQLite for local fallback)
+var postgresConn = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? Environment.GetEnvironmentVariable("DATABASE_URL")
+    ?? Environment.GetEnvironmentVariable("POSTGRES_CONNECTION");
 
-builder.Services.AddDbContextFactory<NeuroPivot.Data.NeuroPivotDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
+if (!string.IsNullOrWhiteSpace(postgresConn))
+{
+    var formattedConn = FormatPostgresConnectionString(postgresConn);
+    builder.Services.AddDbContextFactory<NeuroPivot.Data.NeuroPivotDbContext>(options =>
+        options.UseNpgsql(formattedConn));
+}
+else
+{
+    var dbFolder = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+    if (!Directory.Exists(dbFolder))
+    {
+        Directory.CreateDirectory(dbFolder);
+    }
+    var dbPath = Path.Combine(dbFolder, "neuropivot.db");
+
+    builder.Services.AddDbContextFactory<NeuroPivot.Data.NeuroPivotDbContext>(options =>
+        options.UseSqlite($"Data Source={dbPath}"));
+}
 
 builder.Services.AddSingleton<NeuroPivot.Services.IPasswordHasherService, NeuroPivot.Services.PasswordHasherService>();
 builder.Services.AddScoped<NeuroPivot.Services.LocalStorageService>();
@@ -80,3 +94,36 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+static string FormatPostgresConnectionString(string connectionString)
+{
+    if (string.IsNullOrWhiteSpace(connectionString)) return connectionString;
+
+    var trimmed = connectionString.Trim();
+    if (trimmed.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) ||
+        trimmed.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
+    {
+        try
+        {
+            var uri = new Uri(trimmed);
+            var userInfo = uri.UserInfo.Split(':');
+            var username = userInfo.Length > 0 ? Uri.UnescapeDataString(userInfo[0]) : "";
+            var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+            var port = uri.Port > 0 ? uri.Port : 5432;
+            var database = uri.AbsolutePath.TrimStart('/');
+
+            return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true;";
+        }
+        catch
+        {
+            return connectionString;
+        }
+    }
+
+    if (!trimmed.Contains("SSL Mode", StringComparison.OrdinalIgnoreCase))
+    {
+        trimmed += ";SSL Mode=Require;Trust Server Certificate=true;";
+    }
+
+    return trimmed;
+}
