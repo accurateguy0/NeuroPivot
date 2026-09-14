@@ -19,14 +19,16 @@ export function initNeuroPivot() {
 
         const logoChars = document.querySelectorAll('.logo-char');
         if (logoChars && logoChars.length > 0) {
-            tl.from(logoChars, {
-                y: 120,
-                opacity: 0,
-                duration: 1.2,
-                stagger: 0.1,
-                ease: "expo.out",
-                delay: 0.2
-            });
+            tl.fromTo(logoChars, 
+                { y: 120, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    stagger: 0.1,
+                    ease: "expo.out"
+                }
+            );
         }
 
         tl.to(".hero-label-reveal", {
@@ -78,6 +80,8 @@ export function initNeuroPivot() {
             }
         });
     } else {
+        const logoChars = document.querySelectorAll('.logo-char');
+        logoChars.forEach(c => { c.style.opacity = '1'; });
         function raf(time) {
             if (lenis) { lenis.raf(time); requestAnimationFrame(raf); }
         }
