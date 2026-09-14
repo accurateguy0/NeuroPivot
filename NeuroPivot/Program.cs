@@ -16,6 +16,16 @@ var postgresConn = builder.Configuration.GetConnectionString("DefaultConnection"
 if (!string.IsNullOrWhiteSpace(postgresConn))
 {
     var formattedConn = FormatPostgresConnectionString(postgresConn);
+    try
+    {
+        var b = new Npgsql.NpgsqlConnectionStringBuilder(formattedConn);
+        Console.WriteLine($"[Database] Configured PostgreSQL: Host={b.Host}, Port={b.Port}, Database={b.Database}, Username={b.Username}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Database] Warning parsing connection string: {ex.Message}");
+    }
+
     builder.Services.AddDbContextFactory<NeuroPivot.Data.NeuroPivotDbContext>(options =>
         options.UseNpgsql(formattedConn));
 }
@@ -126,30 +136,76 @@ static string FormatPostgresConnectionString(string connectionString)
     {
         try
         {
-            var uri = new Uri(trimmed);
-            var builder = new Npgsql.NpgsqlConnectionStringBuilder
-            {
-                Host = uri.Host,
-                Port = uri.Port > 0 ? uri.Port : 5432,
-                Database = uri.AbsolutePath.TrimStart('/'),
-                SslMode = Npgsql.SslMode.Require
-            };
+            int schemeEnd = trimmed.IndexOf("://");
+            string afterScheme = trimmed.Substring(schemeEnd + 3);
 
-            if (!string.IsNullOrEmpty(uri.UserInfo))
+            int lastAt = afterScheme.LastIndexOf('@');
+            if (lastAt > 0)
             {
-                var parts = uri.UserInfo.Split(new[] { ':' }, 2);
-                builder.Username = Uri.UnescapeDataString(parts[0]);
-                if (parts.Length > 1)
+                string userInfo = afterScheme.Substring(0, lastAt);
+                string hostAndDb = afterScheme.Substring(lastAt + 1);
+
+                string username = "postgres";
+                string password = "";
+                int colon = userInfo.IndexOf(':');
+                if (colon >= 0)
                 {
-                    builder.Password = Uri.UnescapeDataString(parts[1]);
+                    username = userInfo.Substring(0, colon);
+                    password = userInfo.Substring(colon + 1);
                 }
-            }
+                else
+                {
+                    username = userInfo;
+                }
 
-            return builder.ConnectionString;
+                // Strip literal brackets around password if present
+                if (password.StartsWith("[") && password.EndsWith("]"))
+                {
+                    password = password.Substring(1, password.Length - 2);
+                }
+
+                string hostAndPort = hostAndDb;
+                string database = "postgres";
+                int slash = hostAndDb.IndexOf('/');
+                if (slash >= 0)
+                {
+                    hostAndPort = hostAndDb.Substring(0, slash);
+                    database = hostAndDb.Substring(slash + 1);
+                    int queryIdx = database.IndexOf('?');
+                    if (queryIdx >= 0)
+                    {
+                        database = database.Substring(0, queryIdx);
+                    }
+                }
+
+                string host = hostAndPort;
+                int port = 5432;
+                int portColon = hostAndPort.IndexOf(':');
+                if (portColon >= 0)
+                {
+                    host = hostAndPort.Substring(0, portColon);
+                    if (int.TryParse(hostAndPort.Substring(portColon + 1), out int p))
+                    {
+                        port = p;
+                    }
+                }
+
+                var builder = new Npgsql.NpgsqlConnectionStringBuilder
+                {
+                    Host = host,
+                    Port = port,
+                    Database = string.IsNullOrEmpty(database) ? "postgres" : database,
+                    Username = Uri.UnescapeDataString(username),
+                    Password = Uri.UnescapeDataString(password),
+                    SslMode = Npgsql.SslMode.Require
+                };
+
+                return builder.ConnectionString;
+            }
         }
         catch
         {
-            // Continue fallback
+            // Fall through
         }
     }
 
