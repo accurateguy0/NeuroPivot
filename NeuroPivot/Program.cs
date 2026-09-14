@@ -80,7 +80,8 @@ app.UseAntiforgery();
 
 app.MapGet("/sounds/{fileName}", (string fileName, IWebHostEnvironment env) =>
 {
-    var filePath = Path.Combine(env.WebRootPath, "sounds", fileName);
+    var safeName = Path.GetFileName(fileName);
+    var filePath = Path.Combine(env.WebRootPath, "sounds", safeName);
     if (!File.Exists(filePath)) return Results.NotFound();
 
     var ext = Path.GetExtension(fileName).ToLowerInvariant();
