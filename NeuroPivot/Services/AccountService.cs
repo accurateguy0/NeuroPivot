@@ -126,7 +126,17 @@ public class AccountService
             try
             {
                 using var db = _dbContextFactory.CreateDbContext();
-                db.Database.EnsureCreated();
+
+                try
+                {
+                    var creator = Microsoft.EntityFrameworkCore.Infrastructure.AccessorExtensions.GetService<Microsoft.EntityFrameworkCore.Storage.IDatabaseCreator>(db.Database)
+                        as Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator;
+                    creator?.CreateTables();
+                }
+                catch
+                {
+                    try { db.Database.EnsureCreated(); } catch { }
+                }
 
                 // Check for migration from legacy accounts.json if DB is empty
                 MigrateLegacyAccountsIfPresent(db);
