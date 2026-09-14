@@ -100,30 +100,71 @@ static string FormatPostgresConnectionString(string connectionString)
     if (string.IsNullOrWhiteSpace(connectionString)) return connectionString;
 
     var trimmed = connectionString.Trim();
+
+    // Strip leading "DATABASE_URL=" if user accidentally pasted it into the value field
+    if (trimmed.StartsWith("DATABASE_URL=", StringComparison.OrdinalIgnoreCase))
+    {
+        trimmed = trimmed.Substring("DATABASE_URL=".Length).Trim();
+    }
+
+    // Strip "psql " or "psql" prefix if copied from CLI tab
+    if (trimmed.StartsWith("psql ", StringComparison.OrdinalIgnoreCase))
+    {
+        trimmed = trimmed.Substring(5).Trim();
+    }
+
+    // Strip surrounding quotes
+    if ((trimmed.StartsWith("\"") && trimmed.EndsWith("\"")) ||
+        (trimmed.StartsWith("'") && trimmed.EndsWith("'")))
+    {
+        trimmed = trimmed.Substring(1, trimmed.Length - 2).Trim();
+    }
+
+    // Check if it's a postgres:// or postgresql:// URI
     if (trimmed.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) ||
         trimmed.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase))
     {
         try
         {
             var uri = new Uri(trimmed);
-            var userInfo = uri.UserInfo.Split(':');
-            var username = userInfo.Length > 0 ? Uri.UnescapeDataString(userInfo[0]) : "";
-            var password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
-            var port = uri.Port > 0 ? uri.Port : 5432;
-            var database = uri.AbsolutePath.TrimStart('/');
+            var builder = new Npgsql.NpgsqlConnectionStringBuilder
+            {
+                Host = uri.Host,
+                Port = uri.Port > 0 ? uri.Port : 5432,
+                Database = uri.AbsolutePath.TrimStart('/'),
+                SslMode = Npgsql.SslMode.Require
+            };
 
-            return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true;";
+            if (!string.IsNullOrEmpty(uri.UserInfo))
+            {
+                var parts = uri.UserInfo.Split(new[] { ':' }, 2);
+                builder.Username = Uri.UnescapeDataString(parts[0]);
+                if (parts.Length > 1)
+                {
+                    builder.Password = Uri.UnescapeDataString(parts[1]);
+                }
+            }
+
+            return builder.ConnectionString;
         }
         catch
         {
-            return connectionString;
+            // Continue fallback
         }
     }
 
-    if (!trimmed.Contains("SSL Mode", StringComparison.OrdinalIgnoreCase))
+    // Standard ADO.NET format: Host=...;Database=...
+    try
     {
-        trimmed += ";SSL Mode=Require;Trust Server Certificate=true;";
+        var builder = new Npgsql.NpgsqlConnectionStringBuilder(trimmed);
+        if (!trimmed.Contains("SSL Mode", StringComparison.OrdinalIgnoreCase))
+        {
+            builder.SslMode = Npgsql.SslMode.Require;
+        }
+        return builder.ConnectionString;
     }
-
-    return trimmed;
+    catch
+    {
+        return trimmed;
+    }
 }
