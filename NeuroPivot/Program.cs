@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using NeuroPivot.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+var dbFolder = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+if (!Directory.Exists(dbFolder))
+{
+    Directory.CreateDirectory(dbFolder);
+}
+var dbPath = Path.Combine(dbFolder, "neuropivot.db");
+
+builder.Services.AddDbContextFactory<NeuroPivot.Data.NeuroPivotDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}"));
+
+builder.Services.AddSingleton<NeuroPivot.Services.IPasswordHasherService, NeuroPivot.Services.PasswordHasherService>();
 builder.Services.AddScoped<NeuroPivot.Services.LocalStorageService>();
 builder.Services.AddScoped<NeuroPivot.Services.AccountService>();
 builder.Services.AddScoped<NeuroPivot.Services.AppState>();

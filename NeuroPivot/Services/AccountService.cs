@@ -1,17 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NeuroPivot.Data;
 
 namespace NeuroPivot.Services;
 
 public class UserAccount
 {
     public string Username { get; set; } = "";
+    
+    [NotMapped]
     public string Password { get; set; } = "";
+    public string PasswordHash { get; set; } = "";
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Habits & 21-Day Challenge Data
@@ -34,7 +40,7 @@ public class UserAccount
     public int UrgesSurfedCount { get; set; } = 0;
     public List<int> FavoriteArchiveDays { get; set; } = new();
 
-    // Goals & Diagnostics
+    // Goals & Diagnostics (Personalization Telemetry)
     public string CurrentGoal { get; set; } = "habits";
     public string AddictionLevel { get; set; } = "average";
     public int AddictionScore { get; set; } = 0;
@@ -94,25 +100,96 @@ public class AuthResult
 
 public class AccountService
 {
-    private const string AccountsStorageKey = "nobs_accounts";
-    private static readonly SemaphoreSlim _fileLock = new(1, 1);
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        WriteIndented = true,
-        IncludeFields = true
-    };
-
-    private static readonly string ServerDataFolder = Path.Combine(AppContext.BaseDirectory, "App_Data");
-    private static readonly string ServerAccountsFilePath = Path.Combine(ServerDataFolder, "accounts.json");
-
-    private readonly LocalStorageService _localStorage;
+    private readonly IDbContextFactory<NeuroPivotDbContext> _dbContextFactory;
+    private readonly IPasswordHasherService _passwordHasher;
+    private static bool _initialized = false;
+    private static readonly object _initLock = new();
 
     public UserAccount? ActiveAccount { get; private set; }
 
-    public AccountService(LocalStorageService localStorage)
+    public AccountService(
+        IDbContextFactory<NeuroPivotDbContext> dbContextFactory,
+        IPasswordHasherService passwordHasher)
     {
-        _localStorage = localStorage;
+        _dbContextFactory = dbContextFactory;
+        _passwordHasher = passwordHasher;
+
+        EnsureInitialized();
+    }
+
+    private void EnsureInitialized()
+    {
+        if (_initialized) return;
+        lock (_initLock)
+        {
+            if (_initialized) return;
+            try
+            {
+                using var db = _dbContextFactory.CreateDbContext();
+                db.Database.EnsureCreated();
+
+                // Check for migration from legacy accounts.json if DB is empty
+                MigrateLegacyAccountsIfPresent(db);
+
+                // Ensure default admin account exists if no admin is present
+                var admin = db.Users.FirstOrDefault(u => u.Username.ToLower() == "admin");
+                if (admin == null)
+                {
+                    var defaultAdmin = CreateDefaultAdminAccount();
+                    defaultAdmin.PasswordHash = _passwordHasher.HashPassword("admin");
+                    db.Users.Add(defaultAdmin);
+                    db.SaveChanges();
+                }
+                _initialized = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[AccountService Init] Error: {ex.Message}");
+            }
+        }
+    }
+
+    private void MigrateLegacyAccountsIfPresent(NeuroPivotDbContext db)
+    {
+        try
+        {
+            string serverDataFolder = Path.Combine(AppContext.BaseDirectory, "App_Data");
+            string legacyPath = Path.Combine(serverDataFolder, "accounts.json");
+            if (File.Exists(legacyPath))
+            {
+                var text = File.ReadAllText(legacyPath);
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    var list = JsonSerializer.Deserialize<List<UserAccount>>(text, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (list != null && list.Count > 0)
+                    {
+                        foreach (var acc in list)
+                        {
+                            if (string.IsNullOrWhiteSpace(acc.Username)) continue;
+                            if (!db.Users.Any(u => u.Username.ToLower() == acc.Username.ToLower()))
+                            {
+                                // Hash password if not already hashed
+                                string pwdToHash = !string.IsNullOrEmpty(acc.Password) ? acc.Password : "admin";
+                                acc.PasswordHash = _passwordHasher.HashPassword(pwdToHash);
+                                db.Users.Add(acc);
+                            }
+                        }
+                        db.SaveChanges();
+                    }
+                }
+                // Safely archive legacy file so plaintext credentials are not left on disk
+                string backupPath = Path.Combine(serverDataFolder, "accounts.json.migrated");
+                File.Move(legacyPath, backupPath, overwrite: true);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Migration Notice] {ex.Message}");
+        }
     }
 
     public static UserAccount CreateDefaultAdminAccount()
@@ -150,7 +227,6 @@ public class AccountService
         return new UserAccount
         {
             Username = "admin",
-            Password = "admin",
             CreatedAt = DateTime.UtcNow.AddDays(-2),
             CurrentGoal = "habits",
             CurrentActiveDay = 3,
@@ -178,150 +254,13 @@ public class AccountService
         };
     }
 
-    private async Task<List<UserAccount>> ReadServerAccountsAsync()
-    {
-        await _fileLock.WaitAsync();
-        try
-        {
-            if (!Directory.Exists(ServerDataFolder))
-            {
-                Directory.CreateDirectory(ServerDataFolder);
-            }
-
-            if (!File.Exists(ServerAccountsFilePath))
-            {
-                var initial = new List<UserAccount> { CreateDefaultAdminAccount() };
-                var json = JsonSerializer.Serialize(initial, JsonOptions);
-                await File.WriteAllTextAsync(ServerAccountsFilePath, json);
-                return initial;
-            }
-
-            var text = await File.ReadAllTextAsync(ServerAccountsFilePath);
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                var initial = new List<UserAccount> { CreateDefaultAdminAccount() };
-                var json = JsonSerializer.Serialize(initial, JsonOptions);
-                await File.WriteAllTextAsync(ServerAccountsFilePath, json);
-                return initial;
-            }
-
-            var list = JsonSerializer.Deserialize<List<UserAccount>>(text, JsonOptions);
-            if (list == null || list.Count == 0)
-            {
-                list = new List<UserAccount> { CreateDefaultAdminAccount() };
-            }
-            else if (!list.Any(a => a.Username.Equals("admin", StringComparison.OrdinalIgnoreCase)))
-            {
-                list.Add(CreateDefaultAdminAccount());
-            }
-
-            return list;
-        }
-        catch
-        {
-            return new List<UserAccount> { CreateDefaultAdminAccount() };
-        }
-        finally
-        {
-            _fileLock.Release();
-        }
-    }
-
-    private async Task WriteServerAccountsAsync(List<UserAccount> accounts)
-    {
-        await _fileLock.WaitAsync();
-        try
-        {
-            if (!Directory.Exists(ServerDataFolder))
-            {
-                Directory.CreateDirectory(ServerDataFolder);
-            }
-
-            var json = JsonSerializer.Serialize(accounts, JsonOptions);
-            await File.WriteAllTextAsync(ServerAccountsFilePath, json);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Server storage error: {ex.Message}");
-        }
-        finally
-        {
-            _fileLock.Release();
-        }
-    }
-
-    public async Task<List<UserAccount>> GetAllAccountsAsync()
-    {
-        // 1. Read Master Accounts from Server Disk
-        var serverAccounts = await ReadServerAccountsAsync();
-
-        // 2. Read from Browser LocalStorage (Cache)
-        List<UserAccount>? clientAccounts = null;
-        try
-        {
-            clientAccounts = await _localStorage.GetItemAsync<List<UserAccount>>(AccountsStorageKey);
-        }
-        catch { }
-
-        // 3. Hybrid Sync & Merge
-        var merged = new Dictionary<string, UserAccount>(StringComparer.OrdinalIgnoreCase);
-
-        // Put server accounts in dictionary first
-        foreach (var sa in serverAccounts)
-        {
-            if (!string.IsNullOrWhiteSpace(sa.Username))
-                merged[sa.Username] = sa;
-        }
-
-        // Merge any client accounts
-        if (clientAccounts != null && clientAccounts.Count > 0)
-        {
-            foreach (var ca in clientAccounts)
-            {
-                if (string.IsNullOrWhiteSpace(ca.Username)) continue;
-                if (!merged.TryGetValue(ca.Username, out var existing))
-                {
-                    merged[ca.Username] = ca;
-                }
-                else
-                {
-                    // If client account has higher active day or more recent activity, prefer client state
-                    if (ca.CurrentActiveDay > existing.CurrentActiveDay || ca.LastActiveDate > existing.LastActiveDate)
-                    {
-                        merged[ca.Username] = ca;
-                    }
-                }
-            }
-        }
-
-        if (!merged.ContainsKey("admin"))
-        {
-            merged["admin"] = CreateDefaultAdminAccount();
-        }
-        else if (merged.TryGetValue("admin", out var adminAcct) && adminAcct.ConsecutiveStreak == 21)
-        {
-            adminAcct.ConsecutiveStreak = 7;
-            adminAcct.AcknowledgedStreakMilestone = 7;
-        }
-
-        var result = merged.Values.ToList();
-
-        // 4. Save synced result to both Server Disk and Browser Cache
-        await WriteServerAccountsAsync(result);
-        try
-        {
-            await _localStorage.SetItemAsync(AccountsStorageKey, result);
-        }
-        catch { }
-
-        return result;
-    }
-
     public async Task<UserAccount?> GetAccountByUsernameAsync(string username)
     {
         if (string.IsNullOrWhiteSpace(username)) return null;
-        var accounts = await GetAllAccountsAsync();
-        return accounts.FirstOrDefault(a => a.Username.Equals(username.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        using var db = await _dbContextFactory.CreateDbContextAsync();
+        var normalized = username.Trim().ToLower();
+        return await db.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Username.ToLower() == normalized);
     }
 
     public async Task<AuthResult> SignUpAsync(string username, string password)
@@ -339,14 +278,20 @@ public class AccountService
             return new AuthResult { Success = false, ErrorMessage = "Please enter a password." };
         }
 
+        if (password.Length < 6)
+        {
+            return new AuthResult { Success = false, ErrorMessage = "Password must be at least 6 characters long." };
+        }
+
         if (username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) || username.Equals("Guest", StringComparison.OrdinalIgnoreCase))
         {
             return new AuthResult { Success = false, ErrorMessage = "This username is reserved. Please choose another username." };
         }
 
-        var accounts = await GetAllAccountsAsync();
-        var existing = accounts.FirstOrDefault(a => a.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-        if (existing != null)
+        using var db = await _dbContextFactory.CreateDbContextAsync();
+        var normalized = username.ToLower();
+        bool exists = await db.Users.AnyAsync(a => a.Username.ToLower() == normalized);
+        if (exists)
         {
             return new AuthResult { Success = false, ErrorMessage = "An account with this username already exists. Please sign in." };
         }
@@ -354,7 +299,7 @@ public class AccountService
         var newAccount = new UserAccount
         {
             Username = username,
-            Password = password,
+            PasswordHash = _passwordHasher.HashPassword(password),
             CreatedAt = DateTime.UtcNow,
             CurrentGoal = "habits",
             CurrentActiveDay = 1,
@@ -369,11 +314,10 @@ public class AccountService
             WebsiteTimeSeconds = 0
         };
 
-        accounts.Add(newAccount);
-        await WriteServerAccountsAsync(accounts);
-        await _localStorage.SetItemAsync(AccountsStorageKey, accounts);
-        ActiveAccount = newAccount;
+        db.Users.Add(newAccount);
+        await db.SaveChangesAsync();
 
+        ActiveAccount = newAccount;
         return new AuthResult { Success = true, Account = newAccount };
     }
 
@@ -392,15 +336,29 @@ public class AccountService
             return new AuthResult { Success = false, ErrorMessage = "Please enter your password." };
         }
 
-        var accounts = await GetAllAccountsAsync();
-        var account = accounts.FirstOrDefault(a => a.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+        using var db = await _dbContextFactory.CreateDbContextAsync();
+        var normalized = username.ToLower();
+        var account = await db.Users.FirstOrDefaultAsync(a => a.Username.ToLower() == normalized);
 
         if (account == null)
         {
             return new AuthResult { Success = false, ErrorMessage = "Account does not exist. Please check your username or sign up." };
         }
 
-        if (account.Password != password)
+        // Verify with cryptographic password hasher
+        bool isValid = _passwordHasher.VerifyPassword(account.PasswordHash, password);
+        if (!isValid)
+        {
+            // Legacy plaintext fallback check during migration
+            if (string.IsNullOrEmpty(account.PasswordHash) && account.Password == password)
+            {
+                account.PasswordHash = _passwordHasher.HashPassword(password);
+                await db.SaveChangesAsync();
+                isValid = true;
+            }
+        }
+
+        if (!isValid)
         {
             return new AuthResult { Success = false, ErrorMessage = "Incorrect password. Please try again." };
         }
@@ -418,19 +376,23 @@ public class AccountService
     {
         if (account == null || string.IsNullOrWhiteSpace(account.Username)) return;
 
-        var accounts = await GetAllAccountsAsync();
-        var index = accounts.FindIndex(a => a.Username.Equals(account.Username, StringComparison.OrdinalIgnoreCase));
-        if (index >= 0)
+        using var db = await _dbContextFactory.CreateDbContextAsync();
+        var existing = await db.Users.FirstOrDefaultAsync(a => a.Username.ToLower() == account.Username.ToLower());
+        if (existing != null)
         {
-            accounts[index] = account;
+            db.Entry(existing).CurrentValues.SetValues(account);
+            // Ensure complex navigation/collection properties update properly
+            existing.Habits = account.Habits ?? new();
+            existing.DailyMoodLogs = account.DailyMoodLogs ?? new();
+            existing.RelapseLogs = account.RelapseLogs ?? new();
+            existing.FavoriteArchiveDays = account.FavoriteArchiveDays ?? new();
+            await db.SaveChangesAsync();
         }
         else
         {
-            accounts.Add(account);
+            db.Users.Add(account);
+            await db.SaveChangesAsync();
         }
-
-        await WriteServerAccountsAsync(accounts);
-        await _localStorage.SetItemAsync(AccountsStorageKey, accounts);
 
         if (ActiveAccount != null && ActiveAccount.Username.Equals(account.Username, StringComparison.OrdinalIgnoreCase))
         {
@@ -441,17 +403,18 @@ public class AccountService
     public async Task<bool> UpdatePasswordAsync(string username, string newPassword)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(newPassword)) return false;
+        if (newPassword.Length < 6) return false;
 
-        var accounts = await GetAllAccountsAsync();
-        var account = accounts.FirstOrDefault(a => a.Username.Equals(username.Trim(), StringComparison.OrdinalIgnoreCase));
+        using var db = await _dbContextFactory.CreateDbContextAsync();
+        var account = await db.Users.FirstOrDefaultAsync(a => a.Username.ToLower() == username.Trim().ToLower());
         if (account == null) return false;
 
-        account.Password = newPassword;
-        await WriteServerAccountsAsync(accounts);
-        await _localStorage.SetItemAsync(AccountsStorageKey, accounts);
+        account.PasswordHash = _passwordHasher.HashPassword(newPassword);
+        await db.SaveChangesAsync();
+
         if (ActiveAccount != null && ActiveAccount.Username.Equals(username.Trim(), StringComparison.OrdinalIgnoreCase))
         {
-            ActiveAccount.Password = newPassword;
+            ActiveAccount.PasswordHash = account.PasswordHash;
         }
         return true;
     }
@@ -467,18 +430,21 @@ public class AccountService
             return false;
         }
 
-        var accounts = await GetAllAccountsAsync();
-        if (accounts.Any(a => a.Username.Equals(newUsername, StringComparison.OrdinalIgnoreCase)))
-        {
-            return false; // Taken
-        }
+        using var db = await _dbContextFactory.CreateDbContextAsync();
+        bool isTaken = await db.Users.AnyAsync(a => a.Username.ToLower() == newUsername.ToLower());
+        if (isTaken) return false;
 
-        var account = accounts.FirstOrDefault(a => a.Username.Equals(oldUsername.Trim(), StringComparison.OrdinalIgnoreCase));
+        var account = await db.Users.FirstOrDefaultAsync(a => a.Username.ToLower() == oldUsername.Trim().ToLower());
         if (account == null) return false;
 
+        // Since Username is primary key in SQLite, remove and re-insert or update
+        db.Users.Remove(account);
+        await db.SaveChangesAsync();
+
         account.Username = newUsername;
-        await WriteServerAccountsAsync(accounts);
-        await _localStorage.SetItemAsync(AccountsStorageKey, accounts);
+        db.Users.Add(account);
+        await db.SaveChangesAsync();
+
         if (ActiveAccount != null && ActiveAccount.Username.Equals(oldUsername.Trim(), StringComparison.OrdinalIgnoreCase))
         {
             ActiveAccount.Username = newUsername;
@@ -491,13 +457,12 @@ public class AccountService
         if (string.IsNullOrWhiteSpace(username)) return false;
         if (username.Equals("Guest User", StringComparison.OrdinalIgnoreCase) || username.Equals("Guest", StringComparison.OrdinalIgnoreCase)) return false;
 
-        var accounts = await GetAllAccountsAsync();
-        var toRemove = accounts.FirstOrDefault(a => a.Username.Equals(username.Trim(), StringComparison.OrdinalIgnoreCase));
-        if (toRemove == null) return false;
+        using var db = await _dbContextFactory.CreateDbContextAsync();
+        var account = await db.Users.FirstOrDefaultAsync(a => a.Username.ToLower() == username.Trim().ToLower());
+        if (account == null) return false;
 
-        accounts.Remove(toRemove);
-        await WriteServerAccountsAsync(accounts);
-        await _localStorage.SetItemAsync(AccountsStorageKey, accounts);
+        db.Users.Remove(account);
+        await db.SaveChangesAsync();
 
         if (ActiveAccount != null && ActiveAccount.Username.Equals(username.Trim(), StringComparison.OrdinalIgnoreCase))
         {
