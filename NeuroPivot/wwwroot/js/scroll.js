@@ -986,13 +986,15 @@ window.nobsProduxScrollytelling = {
         e.preventDefault();
 
         // High precision scrolling physics tailored per section:
-        // Slower, more granular scroll in Data Section (p < 1.2) and Day Diary (1.2 <= p < 2.45)
+        // Slower, more granular scroll in Data Section (p < 1.2), Day Diary (1.2 <= p < 2.45), and Breathing (3.55 <= p <= 4.45)
         const p = this.targetProgress;
         let multiplier = 0.0014;
         if (p < 1.0) {
             multiplier = 0.00065; // ~2.5x slower for data metrics and quotes
         } else if (p < 2.35) {
             multiplier = 0.00048; // comfortable pace for shine and day diary cards inspection
+        } else if (p >= 3.55 && p <= 4.45) {
+            multiplier = 0.00035; // ~4x slower anti-skimming scroll deceleration for guided HRV breathing
         }
 
         const delta = e.deltaY * multiplier;
@@ -1016,6 +1018,8 @@ window.nobsProduxScrollytelling = {
                 multiplier = 0.0014; // ~2.5x slower
             } else if (p < 2.35) {
                 multiplier = 0.0010; // ~3.5x slower
+            } else if (p >= 3.55 && p <= 4.45) {
+                multiplier = 0.00075; // ~4x slower touch deceleration for guided HRV breathing
             }
             const deltaY = (this._touchStartY - currentY) * multiplier;
             this._touchStartY = currentY;
@@ -1084,6 +1088,23 @@ window.nobsProduxScrollytelling = {
             } else {
                 bg.volume = 0;
                 if (!bg.paused) bg.pause();
+            }
+        }
+
+        // Procedural Ambience Soundscapes: Mountain Wind (Top Card) & Ocean Waves (Urges Surfed)
+        if (window.nobsAudio) {
+            if (p <= 0.20) {
+                // Top card with mountain peak artwork
+                window.nobsAudio.playMountainWindAmbience(0.35);
+                window.nobsAudio.stopOceanWaveAmbience();
+            } else if (p >= 0.45 && p <= 1.05) {
+                // Urges Surfed section with water wave visual
+                window.nobsAudio.playOceanWaveAmbience(0.35);
+                window.nobsAudio.stopMountainWindAmbience();
+            } else if (p > 1.25) {
+                // When moving into Day Diary cards and beyond
+                window.nobsAudio.stopMountainWindAmbience();
+                window.nobsAudio.stopOceanWaveAmbience();
             }
         }
 
@@ -1373,8 +1394,7 @@ window.nobsProduxScrollytelling = {
                 }
 
                 if (natureSoundBtn) {
-                    const controlsRevealed = expandNorm >= 0.85;
-                    if (controlsRevealed && p <= 4.35) {
+                    if (p >= 3.55 && p <= 4.60) {
                         natureSoundBtn.style.opacity = '1';
                         natureSoundBtn.style.pointerEvents = 'auto';
                         natureSoundBtn.style.transform = 'translateY(0)';
@@ -1496,6 +1516,7 @@ window.nobsProduxScrollytelling = {
                 if (p >= 4.95 && !this.confettiFired) {
                     this.confettiFired = true;
                     if (window.nobsConfetti) window.nobsConfetti.launch();
+                    if (window.nobsAudio) window.nobsAudio.playVictorySound();
                 }
             } else {
                 s4.style.display = 'none';
@@ -1585,6 +1606,10 @@ window.nobsProduxScrollytelling = {
         this.syncBreathingText(0);
         const sections = document.querySelectorAll('.spotify-data-section');
         sections.forEach(s => s.classList.remove('in-view'));
+        if (window.nobsAudio) {
+            window.nobsAudio.stopMountainWindAmbience();
+            window.nobsAudio.stopOceanWaveAmbience();
+        }
     }
 };
 

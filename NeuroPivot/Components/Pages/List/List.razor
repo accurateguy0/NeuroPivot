@@ -5,26 +5,16 @@
 @implements IDisposable
 
 <div class="nobs-container list-container" style="max-width: 1200px;">
-    <div class="list-page-header">
-        <h1 class="page-title-inter">list</h1>
-        @if (HabitService.IsDayLocked)
-        {
+    @if (HabitService.IsDayLocked)
+    {
+        <div class="list-page-header">
             <div class="day-locked-banner">
                 stand proud, you kept the promise to yourself
             </div>
-        }
-    </div>
+        </div>
+    }
 
     <div class="nobs-square-card">
-        <!-- Header Bar -->
-        <div class="card-header-bar">
-            <div>
-                <h3 class="challenge-title">
-                    21-Day Habit Challenge
-                </h3>
-            </div>
-        </div>
-
         <!-- Progress Bar -->
         <HabitProgressBar />
 
@@ -38,7 +28,7 @@
             @if (AppState.CurrentGoal == "habits")
             {
                 <div class="habit-tactical-action-bar">
-                    <button type="button" class="btn-tactical-urge" @onclick="() => showUrgeModal = true">
+                    <button type="button" class="btn-tactical-urge" @onclick="HandleUrgeClick">
                          urge
                     </button>
                     <button type="button" class="btn-tactical-relapse" @onclick="() => showRelapseModal = true">
@@ -49,6 +39,21 @@
         </div>
     </div>
 </div>
+
+@if (showFreezeModal)
+{
+    <div class="freeze-modal-backdrop" @onclick:stopPropagation="true">
+        <div class="freeze-modal-box">
+            <p class="freeze-instruction">stop any activity for 5s</p>
+            @if (isFreezeCompleted)
+            {
+                <button type="button" class="btn-freeze-continue animated-fade-in" @onclick="ProceedToUrgeModal">
+                    Continue to Urge Protocol →
+                </button>
+            }
+        </div>
+    </div>
+}
 
 <ManualHabitModal IsOpen="showManualAddModal" OnClose="() => showManualAddModal = false" OnSave="CreateManualHabit" />
 <ActionAlertModal IsOpen="showAlertPopUp" Message="@alertPopUpMessage" OnClose="() => showAlertPopUp = false" />
@@ -76,6 +81,9 @@
     // Habits Goal Exclusives: Relapse, Urge & Daily Check-In
     private bool showRelapseModal = false;
     private bool showUrgeModal = false;
+    private bool showFreezeModal = false;
+    private bool isFreezeCompleted = false;
+    private System.Threading.Timer? _freezeTimer;
     private bool showDailyCheckInModal = false;
     private bool _hasCheckedDailyPopup = false;
 
@@ -206,8 +214,31 @@
         selectedHabitToDelete = null;
     }
 
+    private void HandleUrgeClick()
+    {
+        showFreezeModal = true;
+        isFreezeCompleted = false;
+        _freezeTimer?.Dispose();
+        _freezeTimer = new System.Threading.Timer(_ =>
+        {
+            isFreezeCompleted = true;
+            InvokeAsync(StateHasChanged);
+        }, null, 5000, System.Threading.Timeout.Infinite);
+    }
+
+    private void ProceedToUrgeModal()
+    {
+        showFreezeModal = false;
+        isFreezeCompleted = false;
+        _freezeTimer?.Dispose();
+        _freezeTimer = null;
+        showUrgeModal = true;
+    }
+
     public void Dispose()
     {
+        _freezeTimer?.Dispose();
+        _freezeTimer = null;
         HabitService.OnChange -= OnStateChanged;
         AppState.OnChange -= OnStateChanged;
     }

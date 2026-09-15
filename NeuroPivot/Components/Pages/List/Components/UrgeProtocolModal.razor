@@ -50,14 +50,15 @@
                                         <span class="folder-tab-text">@RenderAnimatedLetters("UNBROKEN CHAIN", 28)</span>
                                     </div>
                                     <div class="folder-content">
-                                        <div class="hero-metric-body">
+                                        <div class="folder-mountain-bg"></div>
+                                        <div class="hero-metric-body relative-z">
                                             <span class="hero-stat-huge">@RenderAnimatedLetters(HabitService.GetHighestStreak().ToString(), 41)</span>
                                             <div class="hero-stat-details">
                                                 <span class="hero-stat-unit">@RenderAnimatedLetters("DAYS", 44)</span>
                                                 <span class="hero-stat-subtext">@RenderAnimatedLetters("Unbroken chain of discipline", 48)</span>
                                             </div>
                                         </div>
-                                        <div class="folder-bottom-banner banner-streak">
+                                        <div class="folder-bottom-banner banner-streak relative-z">
                                             <span class="folder-banner-label">BEFORE A 10-MIN URGE ERASES YOUR MOMENTUM</span>
                                         </div>
                                     </div>
@@ -126,6 +127,33 @@
                                             <span class="split-line-reveal block">"You didn't build this by accident. You fought for every single day."</span>
                                         </span>
                                     </p>
+                                </div>
+                            </div>
+
+                            <!-- SECTION 3.5: URGES SURFED -->
+                            <div class="spotify-data-section">
+                                <div class="spotify-big-title-wrap">
+                                    <span class="spotify-kicker-label">@RenderAnimatedLetters("DOPAMINE INTERVENTIONS", 0)</span>
+                                    <h2 class="spotify-giant-heading">@RenderAnimatedLetters("URGES SURFED", 22)</h2>
+                                </div>
+
+                                <div class="spotify-hero-metric-card folder-card-waves">
+                                    <div class="folder-tab">
+                                        <span class="folder-tab-text">@RenderAnimatedLetters("NEUROPLASTIC RESISTANCE", 35)</span>
+                                    </div>
+                                    <div class="folder-content">
+                                        <div class="folder-water-wave-bg"></div>
+                                        <div class="hero-metric-body relative-z">
+                                            <span class="hero-stat-huge">@RenderAnimatedLetters(AppState.UrgesSurfedCount.ToString(), 55)</span>
+                                            <div class="hero-stat-details">
+                                                <span class="hero-stat-unit">@RenderAnimatedLetters("WINS", 58)</span>
+                                                <span class="hero-stat-subtext">@RenderAnimatedLetters("Chemical cravings faced & extinguished", 63)</span>
+                                            </div>
+                                        </div>
+                                        <div class="folder-bottom-banner banner-waves relative-z">
+                                            <span class="folder-banner-label">@RenderAnimatedLetters("LTD SYNAPTIC PRUNING ACTIVE", 95)</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -358,6 +386,22 @@
                         <h2 class="victory-title">Your @HabitService.GetConsecutiveStreak()-Day Streak Remains Untouched.</h2>
                         <p class="victory-body">
                             You looked the chemical dopamine urge dead in the eyes and refused to fold. Your synaptic pathways (LTD) are physically adapting right now.
+                        </p>
+                    </div>
+
+                    <div class="victory-counter-flash-box">
+                        <span class="vcf-kicker">SYNAPTIC RESISTANCE REINFORCED</span>
+                        <div class="vcf-count-row">
+                            <span class="vcf-label">URGES SURFED</span>
+                            <span class="vcf-number-animate">
+                                <span class="vcf-old">@Math.Max(0, AppState.UrgesSurfedCount)</span>
+                                <span class="vcf-arrow">→</span>
+                                <span class="vcf-new">@(AppState.UrgesSurfedCount + 1)</span>
+                            </span>
+                            <span class="vcf-pill">+1 SYNAPTIC WIN</span>
+                        </div>
+                        <p class="vcf-quote">
+                            "When you call out my name, I will run to you again... I would do anything in the name of love"
                         </p>
                     </div>
 

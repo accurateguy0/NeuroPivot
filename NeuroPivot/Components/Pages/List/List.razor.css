@@ -1,10 +1,15 @@
 .list-container {
-    padding-top: clamp(6.8rem, 12vh, 8.5rem) !important;
-    margin-top: 0 !important;
+    min-height: calc(100vh - 4.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 4rem !important;
+    padding-bottom: 2rem !important;
+    margin: 0 auto !important;
 }
 
 .list-page-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
     text-align: center;
 }
 
@@ -128,5 +133,73 @@
     background: var(--accent-pink, #E6AACE);
     color: #121214;
     box-shadow: 0 0 15px rgba(230, 170, 206, 0.35);
+}
+
+/* 5-Second Motor Cancellation (rIFG Freeze) Modal */
+.freeze-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(10, 10, 12, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: fadeInFreeze 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInFreeze {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.freeze-modal-box {
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.2rem;
+}
+
+.freeze-instruction {
+    font-family: var(--font-mono, monospace);
+    font-size: clamp(1.2rem, 3.5vw, 1.65rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #f8fafc;
+    margin: 0;
+    text-transform: lowercase;
+    opacity: 0.95;
+}
+
+.btn-freeze-continue {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.85rem 1.75rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    animation: buttonPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes buttonPopIn {
+    0% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.btn-freeze-continue:hover {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.04);
 }
 

@@ -794,6 +794,174 @@ window.nobsAudio = {
             console.error('Cutoff alert audio error', e);
             return Promise.resolve();
         }
+    },
+
+    // =========================================================================
+    // BIOPHILIC SYNTHESIZED SOUNDSCAPES: ALPINE WIND & OCEAN SWELL
+    // =========================================================================
+    _mountainWindNode: null,
+    _oceanWaveNode: null,
+
+    playMountainWindAmbience: function (targetVolume) {
+        if (this._mountainWindNode) return;
+        try {
+            const ctx = this.getAudioContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const masterVol = (typeof targetVolume === 'number') ? Math.max(0, Math.min(1, targetVolume)) : 0.22;
+
+            // 5-second seamless noise buffer
+            const bufferSize = ctx.sampleRate * 4;
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            let b0 = 0, b1 = 0, b2 = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99 * b0 + white * 0.05;
+                b1 = 0.96 * b1 + white * 0.11;
+                b2 = 0.86 * b2 + white * 0.25;
+                output[i] = (b0 + b1 + b2) * 0.35;
+            }
+
+            const noise = ctx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            noise.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(320, now);
+            filter.Q.setValueAtTime(1.8, now);
+
+            // Subtle wind gust oscillation LFO
+            const lfo = ctx.createOscillator();
+            lfo.frequency.setValueAtTime(0.15, now);
+            const lfoGain = ctx.createGain();
+            lfoGain.gain.setValueAtTime(140, now);
+            lfo.connect(lfoGain);
+            lfoGain.connect(filter.frequency);
+
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(masterVol, now + 1.2);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            noise.start(now);
+            lfo.start(now);
+
+            this._mountainWindNode = { noise, lfo, gain, ctx };
+        } catch (err) {
+            console.warn('Mountain wind audio error:', err);
+        }
+    },
+
+    stopMountainWindAmbience: function () {
+        if (!this._mountainWindNode) return;
+        try {
+            const { noise, lfo, gain, ctx } = this._mountainWindNode;
+            const now = ctx.currentTime;
+            gain.gain.linearRampToValueAtTime(0.0001, now + 0.8);
+            setTimeout(() => {
+                try { noise.stop(); lfo.stop(); noise.disconnect(); lfo.disconnect(); } catch (e) {}
+            }, 850);
+        } catch (e) {}
+        this._mountainWindNode = null;
+    },
+
+    playOceanWaveAmbience: function (targetVolume) {
+        if (this._oceanWaveNode) return;
+        try {
+            const ctx = this.getAudioContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const masterVol = (typeof targetVolume === 'number') ? Math.max(0, Math.min(1, targetVolume)) : 0.25;
+
+            // 6-second pink noise buffer
+            const bufferSize = ctx.sampleRate * 5;
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            let b0 = 0, b1 = 0, b2 = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99 * b0 + white * 0.05;
+                b1 = 0.95 * b1 + white * 0.12;
+                b2 = 0.85 * b2 + white * 0.28;
+                output[i] = (b0 + b1 + b2) * 0.38;
+            }
+
+            const noise = ctx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            noise.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(350, now);
+            filter.Q.setValueAtTime(2.2, now);
+
+            // Wave swell LFO (periodic surge and recession ~0.1Hz)
+            const lfo = ctx.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.setValueAtTime(0.12, now);
+            const lfoGain = ctx.createGain();
+            lfoGain.gain.setValueAtTime(320, now);
+            lfo.connect(lfoGain);
+            lfoGain.connect(filter.frequency);
+
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(masterVol, now + 1.2);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            noise.start(now);
+            lfo.start(now);
+
+            this._oceanWaveNode = { noise, lfo, gain, ctx };
+        } catch (err) {
+            console.warn('Ocean wave audio error:', err);
+        }
+    },
+
+    stopOceanWaveAmbience: function () {
+        if (!this._oceanWaveNode) return;
+        try {
+            const { noise, lfo, gain, ctx } = this._oceanWaveNode;
+            const now = ctx.currentTime;
+            gain.gain.linearRampToValueAtTime(0.0001, now + 0.8);
+            setTimeout(() => {
+                try { noise.stop(); lfo.stop(); noise.disconnect(); lfo.disconnect(); } catch (e) {}
+            }, 850);
+        } catch (e) {}
+        this._oceanWaveNode = null;
+    },
+
+    playVictorySound: function () {
+        try {
+            const ctx = this.getAudioContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            // Empowering celestial chord arpeggio (C# Major / F# Major resolution)
+            const notes = [277.18, 349.23, 415.30, 554.37, 698.46, 830.61]; // C#4, F4, G#4, C#5, F5, G#5
+            notes.forEach((freq, idx) => {
+                const osc = ctx.createOscillator();
+                const g = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + (idx * 0.09));
+                g.gain.setValueAtTime(0.0001, now + (idx * 0.09));
+                g.gain.linearRampToValueAtTime(0.16, now + (idx * 0.09) + 0.04);
+                g.gain.exponentialRampToValueAtTime(0.0001, now + (idx * 0.09) + 2.8);
+                osc.connect(g);
+                g.connect(ctx.destination);
+                osc.start(now + (idx * 0.09));
+                osc.stop(now + (idx * 0.09) + 2.9);
+            });
+        } catch (err) {
+            console.warn('Victory audio error:', err);
+        }
     }
 };
 

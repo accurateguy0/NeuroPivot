@@ -1,0 +1,9 @@
+UptimeRobot to send a ping to dawidk.it every 10 minutes so it never goes to sleep.
+
+Cloudflare acts as your front door: handles your domain DNS (dawidk.it), blocks DDoS attacks, provides free SSL, and caches your heavy media files (like your soundscapes and breathing exercise audios) at the edge.
+
+Render acts as the engine, runs your .NET 10 Docker container and handles the backend logic.
+
+Supabase get a permanent $0 database.
+
+Docker to run a C# / .NET application on Render is with . Render does not have a native .NET runtime.
