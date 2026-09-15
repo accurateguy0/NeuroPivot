@@ -1116,42 +1116,6 @@ window.nobsProduxScrollytelling = {
             }
         }
 
-        // Dedicated Audio Soundscapes: Mountain Wind & Water Waves (.wav audio files)
-        const mountainAudio = document.getElementById('mountainAmbienceAudio');
-        const waterAudio = document.getElementById('waterWavesAudio');
-
-        if (p <= 0.25) {
-            // Mountain section active (top card)
-            if (mountainAudio) {
-                const mVol = Math.max(0, Math.min(0.65, 0.65 * (1 - (p / 0.25))));
-                mountainAudio.volume = mVol;
-                if (mountainAudio.paused && mVol > 0.05) mountainAudio.play().catch(() => {});
-            }
-            if (waterAudio && !waterAudio.paused) waterAudio.pause();
-        } else if (p >= 0.45 && p <= 1.20) {
-            // Urges Surfed section (water waves active)
-            if (mountainAudio && !mountainAudio.paused) mountainAudio.pause();
-            if (waterAudio) {
-                let wNorm = 1.0;
-                if (p < 0.65) {
-                    wNorm = (p - 0.45) / 0.20;
-                } else if (p > 0.95) {
-                    wNorm = Math.max(0, 1 - (p - 0.95) / 0.25);
-                }
-                const wVol = Math.max(0, Math.min(0.70, 0.70 * wNorm));
-                waterAudio.volume = wVol;
-                if (waterAudio.paused && wVol > 0.05) {
-                    waterAudio.play().catch(() => {});
-                } else if (wVol <= 0.01 && !waterAudio.paused) {
-                    waterAudio.pause();
-                }
-            }
-        } else {
-            // Past data stream (Day Diary cards and beyond)
-            if (mountainAudio && !mountainAudio.paused) mountainAudio.pause();
-            if (waterAudio && !waterAudio.paused) waterAudio.pause();
-        }
-
         // -------------------------------------------------------------
         // SCENE 0: DATA STREAM + PINNED DAY DIARY (0.0 -> 2.7)
         // -------------------------------------------------------------
@@ -1185,6 +1149,57 @@ window.nobsProduxScrollytelling = {
                         currentScrollY = diaryOffset;
                     }
                     dataStream.style.transform = `translate3d(0, ${(-currentScrollY).toFixed(1)}px, 0)`;
+
+                    // Check exact visibility of Top Streak card (Section 1) and Urges Surfed card (Section 3.5)
+                    const containerH = dataContainer.clientHeight || 450;
+                    const streakCard = s0.querySelector('.folder-card-streak');
+                    const wavesCard = s0.querySelector('.folder-card-waves');
+
+                    let isStreakInView = false;
+                    let isWavesInView = false;
+
+                    if (streakCard) {
+                        const streakSec = streakCard.closest('.spotify-data-section') || streakCard;
+                        const sTop = streakSec.offsetTop - currentScrollY;
+                        isStreakInView = (sTop > -180 && sTop < containerH * 0.40 && p <= 0.22);
+                    }
+
+                    if (wavesCard) {
+                        const wavesSec = wavesCard.closest('.spotify-data-section') || wavesCard;
+                        const wTop = wavesSec.offsetTop - currentScrollY;
+                        isWavesInView = (wTop > -150 && wTop < containerH * 0.70 && p >= 0.52 && p < 1.05);
+                    }
+
+                    const mountainAudio = document.getElementById('mountainAmbienceAudio');
+                    const waterAudio = document.getElementById('waterWavesAudio');
+
+                    if (mountainAudio) {
+                        if (isStreakInView) {
+                            mountainAudio.volume = 0.65;
+                            if (mountainAudio.paused) mountainAudio.play().catch(() => {});
+                        } else {
+                            if (!mountainAudio.paused) mountainAudio.pause();
+                        }
+                    }
+
+                    if (waterAudio) {
+                        if (isWavesInView) {
+                            waterAudio.volume = 0.75;
+                            if (waterAudio.paused) waterAudio.play().catch(() => {});
+                        } else {
+                            if (!waterAudio.paused) waterAudio.pause();
+                        }
+                    }
+
+                    if (bg && !bg.muted && !bg._hasPlayedOnce) {
+                        if (isWavesInView) {
+                            bg.volume = 0.12; // Duck for water waves
+                        } else if (isStreakInView) {
+                            bg.volume = 0.22; // Duck for mountain wind
+                        } else {
+                            bg.volume = 0.40;
+                        }
+                    }
 
                     // Trigger letter animations for data sections as each enters the viewport
                     const sections = s0.querySelectorAll('.spotify-data-section');
@@ -1277,6 +1292,11 @@ window.nobsProduxScrollytelling = {
                     track.style.transform = `translate3d(${(-maxShiftX).toFixed(1)}px, ${(-maxShiftY).toFixed(1)}px, 0)`;
                 }
 
+                const ma = document.getElementById('mountainAmbienceAudio');
+                const wa = document.getElementById('waterWavesAudio');
+                if (ma && !ma.paused) ma.pause();
+                if (wa && !wa.paused) wa.pause();
+
                 s0.style.display = 'flex';
                 s0.style.zIndex = '15';
                 s0.style.opacity = op0.toFixed(3);
@@ -1289,6 +1309,10 @@ window.nobsProduxScrollytelling = {
                 s0.style.zIndex = '1';
                 s0.style.opacity = '0';
                 s0.style.pointerEvents = 'none';
+                const ma = document.getElementById('mountainAmbienceAudio');
+                const wa = document.getElementById('waterWavesAudio');
+                if (ma && !ma.paused) ma.pause();
+                if (wa && !wa.paused) wa.pause();
             }
         }
 
