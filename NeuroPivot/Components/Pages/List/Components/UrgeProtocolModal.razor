@@ -15,6 +15,10 @@
             <!-- Background Ambient Music ("The City of Lost Hope") -->
             <audio id="urgeBgMusic" src="sounds/the_city_of_lost_hope.mp3" preload="auto"></audio>
 
+            <!-- Biophilic Mountain & Ocean Waves Ambience Audio -->
+            <audio id="mountainAmbienceAudio" src="sounds/mountain_ambience.wav" preload="auto" loop></audio>
+            <audio id="waterWavesAudio" src="sounds/water_waves_sound.wav" preload="auto" loop></audio>
+
             <!-- Biophilic Heart Coherence Guided Breathing Audio -->
             <audio id="breathingAudioPlayer" preload="auto" playsinline>
                 <source src="sounds/breathing_exercise.mp3" type="audio/mpeg" />
@@ -50,7 +54,10 @@
                                         <span class="folder-tab-text">@RenderAnimatedLetters("UNBROKEN CHAIN", 28)</span>
                                     </div>
                                     <div class="folder-content">
-                                        <div class="folder-mountain-bg"></div>
+                                        <video class="folder-mountain-video" autoplay loop muted playsinline>
+                                            <source src="videos/mountain_timelapse.mp4" type="video/mp4" />
+                                        </video>
+                                        <div class="folder-mountain-overlay"></div>
                                         <div class="hero-metric-body relative-z">
                                             <span class="hero-stat-huge">@RenderAnimatedLetters(HabitService.GetHighestStreak().ToString(), 41)</span>
                                             <div class="hero-stat-details">

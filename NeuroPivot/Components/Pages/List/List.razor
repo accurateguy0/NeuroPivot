@@ -45,12 +45,13 @@
     <div class="freeze-modal-backdrop" @onclick:stopPropagation="true">
         <div class="freeze-modal-box">
             <p class="freeze-instruction">stop any activity for 5s</p>
-            @if (isFreezeCompleted)
-            {
-                <button type="button" class="btn-freeze-continue animated-fade-in" @onclick="ProceedToUrgeModal">
+            <div class="freeze-action-slot">
+                <button type="button" 
+                        class="btn-freeze-continue @(isFreezeCompleted ? "is-visible" : "")" 
+                        @onclick="ProceedToUrgeModal">
                     Continue to Urge Protocol →
                 </button>
-            }
+            </div>
         </div>
     </div>
 }

@@ -919,6 +919,20 @@ window.nobsProduxScrollytelling = {
                 ba.loop = false;
                 ba.currentTime = 0;
             }
+            const ma = document.getElementById('mountainAmbienceAudio');
+            if (ma) {
+                ma.muted = false;
+                ma.volume = 0.60;
+                ma.loop = true;
+                ma.currentTime = 0;
+            }
+            const wa = document.getElementById('waterWavesAudio');
+            if (wa) {
+                wa.muted = false;
+                wa.volume = 0.70;
+                wa.loop = true;
+                wa.currentTime = 0;
+            }
             this.syncBreathingText(0);
             const sections = document.querySelectorAll('.spotify-data-section');
             sections.forEach((s, idx) => {
