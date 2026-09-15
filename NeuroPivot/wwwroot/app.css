@@ -1039,9 +1039,31 @@ h1:focus, h2:focus, h3:focus, h4:focus, [tabindex]:focus {
     overflow-x: auto;
     transform: rotateX(180deg);
     border: 1px solid var(--border-color);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(127, 183, 190, 0.4) rgba(255, 255, 255, 0.03);
 }
 .habit-scroll-wrapper > table {
     transform: rotateX(180deg);
+}
+.habit-scroll-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+.habit-scroll-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 9999px;
+}
+.habit-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(127, 183, 190, 0.35);
+    border-radius: 9999px;
+    border: none;
+}
+.habit-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(127, 183, 190, 0.7);
+}
+.habit-scroll-wrapper::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 /* Tactile Button Physicality (Audio-Visual Sync) */
