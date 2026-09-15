@@ -25,8 +25,8 @@ public class UserAccount
     public int CurrentActiveDay { get; set; } = 1;
     public bool IsDayLocked { get; set; } = false;
     public bool ChallengeComplete { get; set; } = false;
-    public DateTime ChallengeStartDate { get; set; } = DateTime.Today;
-    public DateTime LastActiveDate { get; set; } = DateTime.Today;
+    public DateTime ChallengeStartDate { get; set; } = DateTime.UtcNow.Date;
+    public DateTime LastActiveDate { get; set; } = DateTime.UtcNow.Date;
     public int ConsecutiveStreak { get; set; } = 0;
     public int HighestStreak { get; set; } = 0;
     public DateTime? LastStreakQualifyDate { get; set; } = null;
@@ -125,31 +125,60 @@ public class AccountService
             if (_initialized) return;
             try
             {
-                using var db = _dbContextFactory.CreateDbContext();
-
+                // Step 1: Check if Users table exists in an isolated context
+                bool usersTableExists = false;
                 try
                 {
-                    var creator = Microsoft.EntityFrameworkCore.Infrastructure.AccessorExtensions.GetService<Microsoft.EntityFrameworkCore.Storage.IDatabaseCreator>(db.Database)
-                        as Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator;
-                    creator?.CreateTables();
+                    using var testDb = _dbContextFactory.CreateDbContext();
+                    _ = testDb.Users.Take(1).ToList();
+                    usersTableExists = true;
                 }
                 catch
                 {
-                    try { db.Database.EnsureCreated(); } catch { }
+                    usersTableExists = false;
                 }
 
-                // Check for migration from legacy accounts.json if DB is empty
-                MigrateLegacyAccountsIfPresent(db);
-
-                // Ensure default admin account exists if no admin is present
-                var admin = db.Users.FirstOrDefault(u => u.Username.ToLower() == "admin");
-                if (admin == null)
+                if (!usersTableExists)
                 {
-                    var defaultAdmin = CreateDefaultAdminAccount();
-                    defaultAdmin.PasswordHash = _passwordHasher.HashPassword("admin");
-                    db.Users.Add(defaultAdmin);
-                    db.SaveChanges();
+                    try
+                    {
+                        using var createDb = _dbContextFactory.CreateDbContext();
+                        var creator = Microsoft.EntityFrameworkCore.Infrastructure.AccessorExtensions.GetService<Microsoft.EntityFrameworkCore.Storage.IDatabaseCreator>(createDb.Database)
+                            as Microsoft.EntityFrameworkCore.Storage.IRelationalDatabaseCreator;
+                        creator?.CreateTables();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[AccountService Init] Notice on CreateTables: {ex.Message}");
+                        try
+                        {
+                            using var fallbackDb = _dbContextFactory.CreateDbContext();
+                            fallbackDb.Database.EnsureCreated();
+                        }
+                        catch { }
+                    }
                 }
+
+                // Step 2: Migrate legacy accounts in a clean context if present
+                using (var migDb = _dbContextFactory.CreateDbContext())
+                {
+                    MigrateLegacyAccountsIfPresent(migDb);
+                }
+
+                // Step 3: Ensure default admin account exists in a fresh, clean context
+                using (var adminDb = _dbContextFactory.CreateDbContext())
+                {
+                    var admin = adminDb.Users.FirstOrDefault(u => u.Username.ToLower() == "admin");
+                    if (admin == null)
+                    {
+                        var defaultAdmin = CreateDefaultAdminAccount();
+                        defaultAdmin.PasswordHash = _passwordHasher.HashPassword("admin");
+                        adminDb.Users.Add(defaultAdmin);
+                        adminDb.SaveChanges();
+                        Console.WriteLine("[AccountService Init] Default admin account successfully seeded.");
+                    }
+                }
+
                 _initialized = true;
             }
             catch (Exception ex)
@@ -242,11 +271,11 @@ public class AccountService
             CurrentActiveDay = 3,
             IsDayLocked = false,
             ChallengeComplete = false,
-            ChallengeStartDate = DateTime.Today.AddDays(-2),
-            LastActiveDate = DateTime.Today,
+            ChallengeStartDate = DateTime.UtcNow.Date.AddDays(-2),
+            LastActiveDate = DateTime.UtcNow.Date,
             ConsecutiveStreak = 3,
             HighestStreak = 3,
-            LastStreakQualifyDate = DateTime.Today,
+            LastStreakQualifyDate = DateTime.UtcNow.Date,
             AcknowledgedStreakMilestone = 0,
             Habits = new List<HabitItem> { h1, h2, h3, h4, h5, h6 },
             IsDarkMode = true,
@@ -298,37 +327,45 @@ public class AccountService
             return new AuthResult { Success = false, ErrorMessage = "This username is reserved. Please choose another username." };
         }
 
-        using var db = await _dbContextFactory.CreateDbContextAsync();
-        var normalized = username.ToLower();
-        bool exists = await db.Users.AnyAsync(a => a.Username.ToLower() == normalized);
-        if (exists)
+        try
         {
-            return new AuthResult { Success = false, ErrorMessage = "An account with this username already exists. Please sign in." };
+            using var db = await _dbContextFactory.CreateDbContextAsync();
+            var normalized = username.ToLower();
+            bool exists = await db.Users.AnyAsync(a => a.Username.ToLower() == normalized);
+            if (exists)
+            {
+                return new AuthResult { Success = false, ErrorMessage = "An account with this username already exists. Please sign in." };
+            }
+
+            var newAccount = new UserAccount
+            {
+                Username = username,
+                PasswordHash = _passwordHasher.HashPassword(password),
+                CreatedAt = DateTime.UtcNow,
+                CurrentGoal = "habits",
+                CurrentActiveDay = 1,
+                IsDayLocked = false,
+                ChallengeComplete = false,
+                ChallengeStartDate = DateTime.UtcNow.Date,
+                LastActiveDate = DateTime.UtcNow.Date,
+                Habits = new List<HabitItem>(),
+                IsDarkMode = true,
+                SoundVolume = 80,
+                SleepNotificationsEnabled = true,
+                WebsiteTimeSeconds = 0
+            };
+
+            db.Users.Add(newAccount);
+            await db.SaveChangesAsync();
+
+            ActiveAccount = newAccount;
+            return new AuthResult { Success = true, Account = newAccount };
         }
-
-        var newAccount = new UserAccount
+        catch (Exception ex)
         {
-            Username = username,
-            PasswordHash = _passwordHasher.HashPassword(password),
-            CreatedAt = DateTime.UtcNow,
-            CurrentGoal = "habits",
-            CurrentActiveDay = 1,
-            IsDayLocked = false,
-            ChallengeComplete = false,
-            ChallengeStartDate = DateTime.Today,
-            LastActiveDate = DateTime.Today,
-            Habits = new List<HabitItem>(),
-            IsDarkMode = true,
-            SoundVolume = 80,
-            SleepNotificationsEnabled = true,
-            WebsiteTimeSeconds = 0
-        };
-
-        db.Users.Add(newAccount);
-        await db.SaveChangesAsync();
-
-        ActiveAccount = newAccount;
-        return new AuthResult { Success = true, Account = newAccount };
+            Console.WriteLine($"[SignUp Error] {ex.Message}");
+            return new AuthResult { Success = false, ErrorMessage = $"Unable to create account: {ex.Message}" };
+        }
     }
 
     public async Task<AuthResult> SignInAsync(string username, string password)
@@ -346,35 +383,43 @@ public class AccountService
             return new AuthResult { Success = false, ErrorMessage = "Please enter your password." };
         }
 
-        using var db = await _dbContextFactory.CreateDbContextAsync();
-        var normalized = username.ToLower();
-        var account = await db.Users.FirstOrDefaultAsync(a => a.Username.ToLower() == normalized);
-
-        if (account == null)
+        try
         {
-            return new AuthResult { Success = false, ErrorMessage = "Account does not exist. Please check your username or sign up." };
-        }
+            using var db = await _dbContextFactory.CreateDbContextAsync();
+            var normalized = username.ToLower();
+            var account = await db.Users.FirstOrDefaultAsync(a => a.Username.ToLower() == normalized);
 
-        // Verify with cryptographic password hasher
-        bool isValid = _passwordHasher.VerifyPassword(account.PasswordHash, password);
-        if (!isValid)
-        {
-            // Legacy plaintext fallback check during migration
-            if (string.IsNullOrEmpty(account.PasswordHash) && account.Password == password)
+            if (account == null)
             {
-                account.PasswordHash = _passwordHasher.HashPassword(password);
-                await db.SaveChangesAsync();
-                isValid = true;
+                return new AuthResult { Success = false, ErrorMessage = "Account does not exist. Please check your username or sign up." };
             }
-        }
 
-        if (!isValid)
+            // Verify with cryptographic password hasher
+            bool isValid = _passwordHasher.VerifyPassword(account.PasswordHash, password);
+            if (!isValid)
+            {
+                // Legacy plaintext fallback check during migration
+                if (string.IsNullOrEmpty(account.PasswordHash) && account.Password == password)
+                {
+                    account.PasswordHash = _passwordHasher.HashPassword(password);
+                    await db.SaveChangesAsync();
+                    isValid = true;
+                }
+            }
+
+            if (!isValid)
+            {
+                return new AuthResult { Success = false, ErrorMessage = "Incorrect password. Please try again." };
+            }
+
+            ActiveAccount = account;
+            return new AuthResult { Success = true, Account = account };
+        }
+        catch (Exception ex)
         {
-            return new AuthResult { Success = false, ErrorMessage = "Incorrect password. Please try again." };
+            Console.WriteLine($"[SignIn Error] {ex.Message}");
+            return new AuthResult { Success = false, ErrorMessage = $"Database sign-in error: {ex.Message}" };
         }
-
-        ActiveAccount = account;
-        return new AuthResult { Success = true, Account = account };
     }
 
     public void SetActiveAccount(UserAccount? account)

@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using NeuroPivot.Components;
 
+// Enable Npgsql legacy timestamp behavior for PostgreSQL/Supabase compatibility
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

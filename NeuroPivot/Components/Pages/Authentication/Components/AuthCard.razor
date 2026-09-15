@@ -157,6 +157,10 @@
                 ReturnToAppShell();
             }
         }
+        catch (Exception ex)
+        {
+            errorMessage = $"Authentication error: {ex.Message}";
+        }
         finally
         {
             isSubmitting = false;
