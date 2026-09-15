@@ -612,8 +612,13 @@
                     setTimeout(() => {
                         const bg2 = document.getElementById('urgeBgMusic');
                         if (bg2 && bg2.paused && !bg2.muted && !bg2._hasPlayedOnce) {
-                            bg2.volume = 0.45;
+                            bg2.volume = 0.35;
                             bg2.play().catch(() => {});
+                        }
+                        const ma = document.getElementById('mountainAmbienceAudio');
+                        if (ma && ma.paused) {
+                            ma.volume = 0.65;
+                            ma.play().catch(() => {});
                         }
                     }, 80);
                 ");
@@ -737,6 +742,10 @@
                 }
                 const bg = document.getElementById('urgeBgMusic');
                 if (bg) { bg.pause(); bg.currentTime = 0; }
+                const ma = document.getElementById('mountainAmbienceAudio');
+                if (ma) { ma.pause(); ma.currentTime = 0; }
+                const wa = document.getElementById('waterWavesAudio');
+                if (wa) { wa.pause(); wa.currentTime = 0; }
                 const v1 = document.getElementById('shuzoVideoPlayer');
                 if (v1) { v1.pause(); }
                 const v2 = document.getElementById('natureVideoPlayer');

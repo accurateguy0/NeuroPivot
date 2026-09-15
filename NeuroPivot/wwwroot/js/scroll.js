@@ -973,7 +973,7 @@ window.nobsProduxScrollytelling = {
 
     jumpTo: function (target) {
         if (target === 'breathing' || target === 3.0 || target === 3) {
-            this.targetProgress = 4.1;
+            this.targetProgress = 4.90;
             const nv = document.getElementById('natureVideoPlayer');
             if (nv) {
                 nv.muted = this._natureMuted;
@@ -985,12 +985,12 @@ window.nobsProduxScrollytelling = {
                 this.playBreathingAudio();
             }
         } else if (typeof target === 'number') {
-            const map = [0.0, 1.0, 2.9, 4.1, 5.0];
+            const map = [0.0, 1.0, 3.5, 4.9, 5.8];
             const idx = Math.floor(target);
             if (idx >= 0 && idx < map.length) {
                 this.targetProgress = map[idx];
             } else {
-                this.targetProgress = Math.max(0.0, Math.min(5.10, target));
+                this.targetProgress = Math.max(0.0, Math.min(6.00, target));
             }
         }
     },
@@ -1000,19 +1000,22 @@ window.nobsProduxScrollytelling = {
         e.preventDefault();
 
         // High precision scrolling physics tailored per section:
-        // Slower, more granular scroll in Data Section (p < 1.2), Day Diary (1.2 <= p < 2.45), and Breathing (3.55 <= p <= 4.45)
+        // Slower, more granular scroll in Data Section (p < 1.0), Day Diary (1.0 <= p < 2.30),
+        // Japanese Video expansion (2.80 <= p <= 4.25), and Breathing (4.35 <= p <= 5.35)
         const p = this.targetProgress;
         let multiplier = 0.0014;
         if (p < 1.0) {
             multiplier = 0.00065; // ~2.5x slower for data metrics and quotes
-        } else if (p < 2.35) {
+        } else if (p < 2.30) {
             multiplier = 0.00048; // comfortable pace for shine and day diary cards inspection
-        } else if (p >= 3.55 && p <= 4.45) {
+        } else if (p >= 2.80 && p <= 4.25) {
+            multiplier = 0.00070; // deliberate, extended scroll pacing for Japanese video player expansion
+        } else if (p >= 4.35 && p <= 5.35) {
             multiplier = 0.00035; // ~4x slower anti-skimming scroll deceleration for guided HRV breathing
         }
 
         const delta = e.deltaY * multiplier;
-        this.targetProgress = Math.max(0.0, Math.min(5.10, this.targetProgress + delta));
+        this.targetProgress = Math.max(0.0, Math.min(6.00, this.targetProgress + delta));
     },
 
     onTouchStart: function (e) {
@@ -1030,14 +1033,16 @@ window.nobsProduxScrollytelling = {
             let multiplier = 0.0030;
             if (p < 1.0) {
                 multiplier = 0.0014; // ~2.5x slower
-            } else if (p < 2.35) {
+            } else if (p < 2.30) {
                 multiplier = 0.0010; // ~3.5x slower
-            } else if (p >= 3.55 && p <= 4.45) {
+            } else if (p >= 2.80 && p <= 4.25) {
+                multiplier = 0.0016; // extended scroll for Japanese video expanding
+            } else if (p >= 4.35 && p <= 5.35) {
                 multiplier = 0.00075; // ~4x slower touch deceleration for guided HRV breathing
             }
             const deltaY = (this._touchStartY - currentY) * multiplier;
             this._touchStartY = currentY;
-            this.targetProgress = Math.max(0.0, Math.min(5.10, this.targetProgress + deltaY));
+            this.targetProgress = Math.max(0.0, Math.min(6.00, this.targetProgress + deltaY));
             if (e.cancelable) e.preventDefault();
         }
     },
@@ -1052,16 +1057,16 @@ window.nobsProduxScrollytelling = {
             return;
         }
         const p = this.targetProgress;
-        const step = (p < 2.45) ? 0.08 : 0.25;
+        const step = (p < 2.45) ? 0.08 : 0.20;
         if (e.key === 'ArrowDown' || e.key === 'PageDown') {
             e.preventDefault();
-            this.targetProgress = Math.min(5.10, this.targetProgress + step);
+            this.targetProgress = Math.min(6.00, this.targetProgress + step);
         } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
             e.preventDefault();
             this.targetProgress = Math.max(0.0, this.targetProgress - step);
         } else if (e.key === ' ') {
             e.preventDefault();
-            this.targetProgress = Math.min(5.10, this.targetProgress + (step * 1.5));
+            this.targetProgress = Math.min(6.00, this.targetProgress + (step * 1.5));
         }
     },
 
@@ -1074,8 +1079,8 @@ window.nobsProduxScrollytelling = {
 
         // Manage ambient background music ("The City of Lost Hope")
         // Plays during Scene 0 across all cards of the Day Diary.
-        // Fades out gently as we swipe from Day Diary into Scene 2 (Japanese video, p: 2.35 -> 2.65).
-        // Once past Day Diary (p > 2.65) or on track end, it marks _hasPlayedOnce = true and never plays again.
+        // Fades out gently as we scroll down from Day Diary into Scene 2 (Japanese video, p: 2.30 -> 2.75).
+        // Once past Day Diary (p > 2.75) or on track end, it marks _hasPlayedOnce = true and never plays again.
         if (bg) {
             if (!bg._endedHooked) {
                 bg._endedHooked = true;
@@ -1087,12 +1092,18 @@ window.nobsProduxScrollytelling = {
             }
 
             if (!bg.muted && !bg._hasPlayedOnce) {
-                if (p <= 2.35) {
-                    bg.volume = 0.45;
+                if (p <= 2.30) {
+                    let baseVol = 0.40;
+                    if (p <= 0.25) {
+                        baseVol = 0.22; // Duck slightly for mountain wind
+                    } else if (p >= 0.45 && p <= 1.20) {
+                        baseVol = 0.15; // Duck so water waves sound is rich and audible
+                    }
+                    bg.volume = baseVol;
                     if (bg.paused) bg.play().catch(() => {});
-                } else if (p > 2.35 && p <= 2.65) {
-                    const fadeNorm = (p - 2.35) / 0.30;
-                    bg.volume = Math.max(0, 0.45 * (1 - fadeNorm));
+                } else if (p > 2.30 && p <= 2.75) {
+                    const fadeNorm = (p - 2.30) / 0.45;
+                    bg.volume = Math.max(0, 0.40 * (1 - fadeNorm));
                     if (bg.paused) bg.play().catch(() => {});
                 } else {
                     bg.volume = 0;
@@ -1105,21 +1116,40 @@ window.nobsProduxScrollytelling = {
             }
         }
 
-        // Procedural Ambience Soundscapes: Mountain Wind (Top Card) & Ocean Waves (Urges Surfed)
-        if (window.nobsAudio) {
-            if (p <= 0.20) {
-                // Top card with mountain peak artwork
-                window.nobsAudio.playMountainWindAmbience(0.35);
-                window.nobsAudio.stopOceanWaveAmbience();
-            } else if (p >= 0.45 && p <= 1.05) {
-                // Urges Surfed section with water wave visual
-                window.nobsAudio.playOceanWaveAmbience(0.35);
-                window.nobsAudio.stopMountainWindAmbience();
-            } else if (p > 1.25) {
-                // When moving into Day Diary cards and beyond
-                window.nobsAudio.stopMountainWindAmbience();
-                window.nobsAudio.stopOceanWaveAmbience();
+        // Dedicated Audio Soundscapes: Mountain Wind & Water Waves (.wav audio files)
+        const mountainAudio = document.getElementById('mountainAmbienceAudio');
+        const waterAudio = document.getElementById('waterWavesAudio');
+
+        if (p <= 0.25) {
+            // Mountain section active (top card)
+            if (mountainAudio) {
+                const mVol = Math.max(0, Math.min(0.65, 0.65 * (1 - (p / 0.25))));
+                mountainAudio.volume = mVol;
+                if (mountainAudio.paused && mVol > 0.05) mountainAudio.play().catch(() => {});
             }
+            if (waterAudio && !waterAudio.paused) waterAudio.pause();
+        } else if (p >= 0.45 && p <= 1.20) {
+            // Urges Surfed section (water waves active)
+            if (mountainAudio && !mountainAudio.paused) mountainAudio.pause();
+            if (waterAudio) {
+                let wNorm = 1.0;
+                if (p < 0.65) {
+                    wNorm = (p - 0.45) / 0.20;
+                } else if (p > 0.95) {
+                    wNorm = Math.max(0, 1 - (p - 0.95) / 0.25);
+                }
+                const wVol = Math.max(0, Math.min(0.70, 0.70 * wNorm));
+                waterAudio.volume = wVol;
+                if (waterAudio.paused && wVol > 0.05) {
+                    waterAudio.play().catch(() => {});
+                } else if (wVol <= 0.01 && !waterAudio.paused) {
+                    waterAudio.pause();
+                }
+            }
+        } else {
+            // Past data stream (Day Diary cards and beyond)
+            if (mountainAudio && !mountainAudio.paused) mountainAudio.pause();
+            if (waterAudio && !waterAudio.paused) waterAudio.pause();
         }
 
         // -------------------------------------------------------------
@@ -1232,12 +1262,12 @@ window.nobsProduxScrollytelling = {
 
                     this.updateCardHover();
                 }
-            } else if (p >= 2.30 && p <= 2.80) {
-                // Scene 0 glides from right to left out of view
-                const norm0 = Math.min(1, Math.max(0, (p - 2.30) / 0.50));
+            } else if (p >= 2.30 && p <= 2.85) {
+                // Scene 0 scrolls vertically UP out of view (normal scroll down)
+                const norm0 = Math.min(1, Math.max(0, (p - 2.30) / 0.55));
                 const ease0 = norm0 * norm0 * (3 - 2 * norm0);
-                const txPct0 = -ease0 * 100; // 0% -> -100% (moving to the left)
-                const op0 = norm0 > 0.90 ? Math.max(0, 1 - (norm0 - 0.90) / 0.10) : 1.0;
+                const tyPct0 = -ease0 * 100; // 0% -> -100% (moving up out of frame)
+                const op0 = norm0 > 0.92 ? Math.max(0, 1 - (norm0 - 0.92) / 0.08) : 1.0;
 
                 const track = document.getElementById('produxDiagonalTrack');
                 const cards = s0.querySelectorAll('.produx-diagonal-card');
@@ -1250,7 +1280,7 @@ window.nobsProduxScrollytelling = {
                 s0.style.display = 'flex';
                 s0.style.zIndex = '15';
                 s0.style.opacity = op0.toFixed(3);
-                s0.style.transform = `translate3d(${txPct0.toFixed(2)}%, 0, 0)`;
+                s0.style.transform = `translate3d(0, ${tyPct0.toFixed(2)}%, 0)`;
                 s0.style.boxShadow = 'none';
                 s0.style.filter = 'none';
                 s0.style.pointerEvents = norm0 > 0.4 ? 'none' : 'auto';
@@ -1263,7 +1293,7 @@ window.nobsProduxScrollytelling = {
         }
 
         // -------------------------------------------------------------
-        // SCENE 2: THE RAW SPARK (Motivation Video) (2.30 -> 3.90)
+        // SCENE 2: THE RAW SPARK (Motivation Video) (2.30 -> 4.70)
         // -------------------------------------------------------------
         if (s2) {
             const sv = document.getElementById('shuzoVideoPlayer');
@@ -1277,22 +1307,22 @@ window.nobsProduxScrollytelling = {
                 });
             }
 
-            if (p >= 2.30 && p <= 3.90) {
-                if (p < 2.80) {
-                    // Glides IN from the RIGHT to the LEFT into center
-                    const norm2In = Math.min(1, Math.max(0, (p - 2.30) / 0.50));
+            if (p >= 2.30 && p <= 4.70) {
+                if (p < 2.85) {
+                    // Normal vertical scroll IN from BOTTOM into center
+                    const norm2In = Math.min(1, Math.max(0, (p - 2.30) / 0.55));
                     const easeIn2 = norm2In * norm2In * (3 - 2 * norm2In);
-                    const txPct2In = (1 - easeIn2) * 100; // +100% -> 0%
+                    const tyPct2In = (1 - easeIn2) * 100; // +100% -> 0% (scrolling up into place)
                     s2.style.display = 'flex';
                     s2.style.zIndex = '20';
                     s2.style.opacity = '1';
-                    s2.style.transform = `translate3d(${txPct2In.toFixed(2)}%, 0, 0)`;
-                    s2.style.boxShadow = (norm2In > 0.02 && norm2In < 0.98) ? '-12px 0 35px rgba(0, 0, 0, 0.4)' : 'none';
+                    s2.style.transform = `translate3d(0, ${tyPct2In.toFixed(2)}%, 0)`;
+                    s2.style.boxShadow = (norm2In > 0.02 && norm2In < 0.98) ? '0 -12px 35px rgba(0, 0, 0, 0.4)' : 'none';
                     s2.style.filter = 'none';
                     s2.style.pointerEvents = norm2In > 0.7 ? 'auto' : 'none';
-                } else if (p > 3.45) {
+                } else if (p > 4.25) {
                     // Glides OUT to the LEFT towards Nature video
-                    const normOut2 = Math.min(1, Math.max(0, (p - 3.45) / 0.45));
+                    const normOut2 = Math.min(1, Math.max(0, (p - 4.25) / 0.45));
                     const easeOut2 = normOut2 * normOut2 * (3 - 2 * normOut2);
                     const txPct2Out = -easeOut2 * 100; // 0% -> -100%
                     const op2 = normOut2 > 0.90 ? Math.max(0, 1 - (normOut2 - 0.90) / 0.10) : 1.0;
@@ -1314,10 +1344,10 @@ window.nobsProduxScrollytelling = {
                     s2.style.pointerEvents = 'auto';
                 }
 
-                // Video container expands smoothly
-                const expandNorm = Math.min(1, Math.max(0, (p - 2.60) / 0.50));
+                // Video container expands smoothly over a LONGER scroll distance (p: 2.85 -> 4.15)
+                const expandNorm = Math.min(1, Math.max(0, (p - 2.85) / 1.30));
                 const easeExpand = expandNorm * expandNorm * (3 - 2 * expandNorm);
-                const videoScale = 0.92 + (0.08 * easeExpand);
+                const videoScale = 0.86 + (0.14 * easeExpand);
                 if (expandingBox) {
                     expandingBox.style.transform = `scale(${videoScale.toFixed(3)})`;
                 }
@@ -1337,7 +1367,7 @@ window.nobsProduxScrollytelling = {
                 }
 
                 // Auto-play video
-                if (p >= 2.70 && p <= 3.50) {
+                if (p >= 2.85 && p <= 4.25) {
                     if (sv && sv.paused && !sv.ended && !this._shuzoEnded) {
                         sv.play().catch(() => {});
                     }
@@ -1355,17 +1385,17 @@ window.nobsProduxScrollytelling = {
         }
 
         // -------------------------------------------------------------
-        // SCENE 3: PHYSIOLOGICAL SIGH (Nature Video) (3.45 -> 4.95)
+        // SCENE 3: PHYSIOLOGICAL SIGH (Nature Video) (4.25 -> 5.75)
         // -------------------------------------------------------------
         if (s3) {
             const nv = document.getElementById('natureVideoPlayer');
             const natureExpandingBox = document.getElementById('natureExpandingBox');
             const natureSoundBtn = document.getElementById('natureSoundBtn');
 
-            if (p >= 3.45 && p <= 4.95) {
-                if (p < 3.90) {
+            if (p >= 4.25 && p <= 5.75) {
+                if (p < 4.70) {
                     // Glides IN from the RIGHT to the LEFT into center
-                    const norm3In = Math.min(1, Math.max(0, (p - 3.45) / 0.45));
+                    const norm3In = Math.min(1, Math.max(0, (p - 4.25) / 0.45));
                     const easeIn3 = norm3In * norm3In * (3 - 2 * norm3In);
                     const txPct3In = (1 - easeIn3) * 100; // +100% -> 0%
                     s3.style.display = 'flex';
@@ -1375,9 +1405,9 @@ window.nobsProduxScrollytelling = {
                     s3.style.boxShadow = (norm3In > 0.02 && norm3In < 0.98) ? '-12px 0 35px rgba(0, 0, 0, 0.4)' : 'none';
                     s3.style.filter = 'none';
                     s3.style.pointerEvents = norm3In > 0.7 ? 'auto' : 'none';
-                } else if (p > 4.35) {
+                } else if (p > 5.35) {
                     // Pure normal vertical scroll upward out of view
-                    const scrollNorm = Math.min(1, Math.max(0, (p - 4.35) / 0.60));
+                    const scrollNorm = Math.min(1, Math.max(0, (p - 5.35) / 0.60));
                     const sceneTy = -scrollNorm * 100;
                     s3.style.display = 'flex';
                     s3.style.zIndex = '10';
@@ -1385,7 +1415,7 @@ window.nobsProduxScrollytelling = {
                     s3.style.transform = `translate3d(0, ${sceneTy.toFixed(2)}%, 0)`;
                     s3.style.boxShadow = 'none';
                     s3.style.filter = 'none';
-                    s3.style.pointerEvents = (p <= 4.65) ? 'auto' : 'none';
+                    s3.style.pointerEvents = (p <= 5.50) ? 'auto' : 'none';
                 } else {
                     // Fully active centered
                     s3.style.display = 'flex';
@@ -1397,10 +1427,9 @@ window.nobsProduxScrollytelling = {
                     s3.style.pointerEvents = 'auto';
                 }
                 s3.style.filter = 'none';
-                s3.style.pointerEvents = (p <= 4.65) ? 'auto' : 'none';
 
                 // Video container expands smoothly
-                const expandNorm = Math.min(1, Math.max(0, (p - 3.60) / 0.40));
+                const expandNorm = Math.min(1, Math.max(0, (p - 4.40) / 0.40));
                 const easeExpand = expandNorm * expandNorm * (3 - 2 * expandNorm);
                 const videoScale = 0.92 + (0.08 * easeExpand);
                 if (natureExpandingBox) {
@@ -1408,7 +1437,7 @@ window.nobsProduxScrollytelling = {
                 }
 
                 if (natureSoundBtn) {
-                    if (p >= 3.55 && p <= 4.60) {
+                    if (p >= 4.70 && p <= 5.40) {
                         natureSoundBtn.style.opacity = '1';
                         natureSoundBtn.style.pointerEvents = 'auto';
                         natureSoundBtn.style.transform = 'translateY(0)';
@@ -1432,53 +1461,46 @@ window.nobsProduxScrollytelling = {
                             }, 500);
                         });
                         nv.addEventListener('ended', () => {
-                            // Switch interchangeably between nature and water beach ONLY when video ends completely
                             if (window.nobsProduxScrollytelling) {
                                 window.nobsProduxScrollytelling.switchNatureVideo();
                             }
                         });
                     }
 
-                    if (p > 4.35) {
-                        // Immediately turn off sound when scrolled down towards Scene 4
+                    if (p > 5.35) {
                         nv.muted = true;
                         nv.volume = 0;
-                        if (this._breathingPlaying) {
-                            this.pauseBreathingAudio();
-                        } else {
-                            const ba = document.getElementById('breathingAudioPlayer');
-                            if (ba && !ba.paused) {
-                                ba.pause();
-                            }
-                        }
                     } else {
                         nv.muted = this._natureMuted;
                         nv.volume = this._natureMuted ? 0 : 0.35;
-
-                        // Play guided breathing audio when in Scene 3 (only once per urge click)
-                        if (!this._breathingEnded) {
-                            const ba = document.getElementById('breathingAudioPlayer');
-                            if (!this._breathingPlaying || (ba && ba.paused)) {
-                                this.playBreathingAudio();
-                            }
-                        }
                     }
 
-                    if (nv.paused && !nv._playPending) {
+                    if (nv.paused && !nv._playPending && p <= 5.45) {
                         nv._playPending = true;
-                        if (nv.readyState === 0) {
-                            nv.load();
-                        }
+                        if (nv.readyState === 0) nv.load();
                         const pPromise = nv.play();
                         if (pPromise !== undefined) {
-                            pPromise.then(() => {
-                                nv._playPending = false;
-                            }).catch(() => {
-                                nv._playPending = false;
-                            });
+                            pPromise.then(() => { nv._playPending = false; }).catch(() => { nv._playPending = false; });
                         } else {
                             nv._playPending = false;
                         }
+                    }
+                }
+
+                // CRITICAL USER REQUIREMENT: Play guided breathing audio ONLY when fully in Scene 3 (p >= 4.70 && p <= 5.35)
+                if (p >= 4.70 && p <= 5.35) {
+                    if (!this._breathingEnded) {
+                        const ba = document.getElementById('breathingAudioPlayer');
+                        if (!this._breathingPlaying || (ba && ba.paused)) {
+                            this.playBreathingAudio();
+                        }
+                    }
+                } else {
+                    if (this._breathingPlaying) {
+                        this.pauseBreathingAudio();
+                    } else {
+                        const ba = document.getElementById('breathingAudioPlayer');
+                        if (ba && !ba.paused) ba.pause();
                     }
                 }
 
@@ -1498,36 +1520,32 @@ window.nobsProduxScrollytelling = {
                     natureSoundBtn.style.transform = 'translateY(12px)';
                 }
 
-                if (nv && !nv.paused) {
-                    nv.pause();
-                }
+                if (nv && !nv.paused) nv.pause();
                 if (this._breathingPlaying) {
                     this.pauseBreathingAudio();
                 } else {
                     const ba = document.getElementById('breathingAudioPlayer');
-                    if (ba && !ba.paused) {
-                        ba.pause();
-                    }
+                    if (ba && !ba.paused) ba.pause();
                 }
             }
         }
 
         // -------------------------------------------------------------
-        // SCENE 4: VICTORY LOCK & ACTIONS (4.35 -> 5.10)
+        // SCENE 4: VICTORY LOCK & ACTIONS (5.35 -> 6.00)
         // -------------------------------------------------------------
         if (s4) {
-            if (p >= 4.35) {
+            if (p >= 5.35) {
                 // Pure normal vertical scroll in from bottom directly connected to Scene 3
-                const scrollNorm = Math.min(1, Math.max(0, (p - 4.35) / 0.60));
+                const scrollNorm = Math.min(1, Math.max(0, (p - 5.35) / 0.60));
                 const tyPct = (1 - scrollNorm) * 100; // percentage: 100% -> 0%
                 s4.style.display = 'flex';
                 s4.style.zIndex = '25';
-                s4.style.opacity = '1'; // Full opacity throughout normal scroll
+                s4.style.opacity = '1';
                 s4.style.transform = `translate3d(0, ${tyPct.toFixed(2)}%, 0)`;
                 s4.style.filter = 'none';
                 s4.style.pointerEvents = scrollNorm >= 0.5 ? 'auto' : 'none';
 
-                if (p >= 4.95 && !this.confettiFired) {
+                if (p >= 5.85 && !this.confettiFired) {
                     this.confettiFired = true;
                     if (window.nobsConfetti) window.nobsConfetti.launch();
                     if (window.nobsAudio) window.nobsAudio.playVictorySound();
@@ -1537,7 +1555,7 @@ window.nobsProduxScrollytelling = {
                 s4.style.zIndex = '1';
                 s4.style.opacity = '0';
                 s4.style.pointerEvents = 'none';
-                if (p < 4.30) {
+                if (p < 5.30) {
                     this.confettiFired = false;
                 }
             }
@@ -1620,6 +1638,10 @@ window.nobsProduxScrollytelling = {
         this.syncBreathingText(0);
         const sections = document.querySelectorAll('.spotify-data-section');
         sections.forEach(s => s.classList.remove('in-view'));
+        const ma = document.getElementById('mountainAmbienceAudio');
+        if (ma) { ma.pause(); ma.currentTime = 0; }
+        const wa = document.getElementById('waterWavesAudio');
+        if (wa) { wa.pause(); wa.currentTime = 0; }
         if (window.nobsAudio) {
             window.nobsAudio.stopMountainWindAmbience();
             window.nobsAudio.stopOceanWaveAmbience();
@@ -1629,11 +1651,11 @@ window.nobsProduxScrollytelling = {
 
 // Global Event Listeners attached once on window:
 (function () {
-    // User gesture audio unlock for Scene 3
+    // User gesture audio unlock for Scene 3 (ONLY when fully in Scene 3)
     window.addEventListener('pointerdown', function (e) {
         if (!window.nobsProduxScrollytelling || !window.nobsProduxScrollytelling.isModalOpen()) return;
         const p = window.nobsProduxScrollytelling.currentProgress;
-        if (p >= 3.50 && p <= 4.85) {
+        if (p >= 4.70 && p <= 5.35) {
             if (!window.nobsProduxScrollytelling._breathingEnded) {
                 const ba = document.getElementById('breathingAudioPlayer');
                 if (ba && ba.paused) {
