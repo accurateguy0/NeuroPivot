@@ -170,6 +170,73 @@
     flex-direction: column;
     align-items: center;
     gap: 1.8rem;
+    transform-origin: center center;
+    will-change: transform, filter, opacity;
+}
+
+/* Cinematic Black Hole Singularity Vacuum Animation on Freeze Modal */
+.freeze-modal-backdrop.is-dolly-zooming {
+    animation: freezeBackdropToBlack 1.2s cubic-bezier(0.4, 0, 0.8, 1) forwards;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.freeze-modal-backdrop.is-dolly-zooming::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Pure black void expanding from center — no color, no glow */
+    background: radial-gradient(circle at center, #000000 0%, #000000 40%, rgba(0, 0, 0, 0.0) 100%);
+    opacity: 0;
+    animation: freezeVoidExpand 1.2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.freeze-modal-box.is-dolly-zooming {
+    animation: freezeBoxImplode 1.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+    pointer-events: none;
+    position: relative;
+    z-index: 10;
+}
+
+@keyframes freezeBackdropToBlack {
+    0%   { background: rgba(10, 10, 12, 0.94); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+    40%  { background: rgba(2, 2, 3, 0.99);    backdrop-filter: blur(48px); -webkit-backdrop-filter: blur(48px); }
+    100% { background: #000000;                 backdrop-filter: blur(0px);  -webkit-backdrop-filter: blur(0px); }
+}
+
+@keyframes freezeVoidExpand {
+    0%   { opacity: 0;    transform: scale(0); }
+    30%  { opacity: 0.7;  transform: scale(0.5); }
+    65%  { opacity: 0.95; transform: scale(1.5); }
+    100% { opacity: 1;    transform: scale(4); }
+}
+
+@keyframes freezeBoxImplode {
+    0% {
+        transform: scale(1);
+        filter: blur(0px) brightness(1);
+        opacity: 1;
+    }
+    30% {
+        /* Light begins to die — pulled toward the center */
+        transform: scale(0.88);
+        filter: blur(3px) brightness(0.55);
+        opacity: 0.9;
+    }
+    65% {
+        /* Shrinking into the void, no rotation — pure depth implosion */
+        transform: scale(0.45);
+        filter: blur(12px) brightness(0.12);
+        opacity: 0.35;
+    }
+    100% {
+        /* Complete oblivion — gone */
+        transform: scale(0.05);
+        filter: blur(28px) brightness(0);
+        opacity: 0;
+    }
 }
 
 .freeze-instruction {
@@ -213,9 +280,12 @@
 }
 
 .btn-freeze-continue.is-visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative;
+    z-index: 20;
     transform: scale(1);
 }
 
@@ -223,5 +293,16 @@
     background: rgba(255, 255, 255, 0.24);
     border-color: rgba(255, 255, 255, 0.8);
     transform: scale(1.04);
+}
+
+.btn-freeze-continue.is-dolly-zooming {
+    background: #000000 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: inset 0 0 15px #000000, 0 0 25px rgba(0, 0, 0, 0.9) !important;
+    transform: scale(0.9) !important;
+    filter: brightness(0.35) blur(1px) !important;
+    pointer-events: none !important;
+    transition: all 0.15s ease-out !important;
 }
 

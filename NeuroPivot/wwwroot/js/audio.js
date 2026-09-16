@@ -940,28 +940,7 @@ window.nobsAudio = {
     },
 
     playVictorySound: function () {
-        try {
-            const ctx = this.getAudioContext();
-            if (!ctx) return;
-            const now = ctx.currentTime;
-            // Empowering celestial chord arpeggio (C# Major / F# Major resolution)
-            const notes = [277.18, 349.23, 415.30, 554.37, 698.46, 830.61]; // C#4, F4, G#4, C#5, F5, G#5
-            notes.forEach((freq, idx) => {
-                const osc = ctx.createOscillator();
-                const g = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, now + (idx * 0.09));
-                g.gain.setValueAtTime(0.0001, now + (idx * 0.09));
-                g.gain.linearRampToValueAtTime(0.16, now + (idx * 0.09) + 0.04);
-                g.gain.exponentialRampToValueAtTime(0.0001, now + (idx * 0.09) + 2.8);
-                osc.connect(g);
-                g.connect(ctx.destination);
-                osc.start(now + (idx * 0.09));
-                osc.stop(now + (idx * 0.09) + 2.9);
-            });
-        } catch (err) {
-            console.warn('Victory audio error:', err);
-        }
+        // Silenced: End section keeps calm, grounded silence without synth chime
     }
 };
 

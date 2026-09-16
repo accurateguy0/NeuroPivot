@@ -1,0 +1,166 @@
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+@if (IsOpen)
+{
+    <div class="crop-modal-overlay" @onclick="HandleCancel">
+        <div class="crop-modal-card" @onclick:stopPropagation="true">
+            <button type="button" class="crop-modal-close-btn" @onclick="HandleCancel" aria-label="Close">✕</button>
+
+            <div class="crop-modal-header">
+                <h3 class="crop-modal-title">@Title</h3>
+                <p class="crop-modal-sub">@Subtitle</p>
+            </div>
+
+            <div class="crop-frame-wrapper">
+                <div id="@ContainerId" class="crop-container-frame"></div>
+            </div>
+
+            <div class="crop-controls-section">
+                <div class="crop-zoom-row">
+                    <button type="button" class="crop-zoom-btn" @onclick="ZoomOut" title="Zoom out">−</button>
+                    <input type="range" 
+                           id="@($"{ContainerId}_zoom")" 
+                           min="1.0" 
+                           max="3.5" 
+                           step="0.01" 
+                           value="@currentZoom" 
+                           class="crop-zoom-slider" />
+                    <button type="button" class="crop-zoom-btn" @onclick="ZoomIn" title="Zoom in">+</button>
+                    <button type="button" class="crop-reset-btn" @onclick="ResetCrop" title="Reset framing">↺</button>
+                </div>
+                <div class="crop-hint-row">
+                    <span>Drag photo to position face • Slider or scroll wheel to zoom</span>
+                </div>
+            </div>
+
+            <div class="crop-modal-footer">
+                <button type="button" class="btn-crop-cancel" @onclick="HandleCancel">Cancel</button>
+                <button type="button" class="btn-crop-apply" @onclick="HandleConfirm" disabled="@isProcessing">
+                    @(isProcessing ? "Framing..." : "Apply & Save")
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; } = false;
+    [Parameter] public string? ImageSrc { get; set; }
+    [Parameter] public string Title { get; set; } = "Adjust & Crop Photo";
+    [Parameter] public string Subtitle { get; set; } = "Drag to frame the face or subject properly.";
+    [Parameter] public int AspectWidth { get; set; } = 3;
+    [Parameter] public int AspectHeight { get; set; } = 4;
+    [Parameter] public EventCallback<string> OnConfirmed { get; set; }
+    [Parameter] public EventCallback OnCancelled { get; set; }
+
+    private string ContainerId = $"crop_{Guid.NewGuid():N}";
+    private double currentZoom = 1.0;
+    private bool isProcessing = false;
+    private bool wasOpen = false;
+    private string? lastImageSrc = null;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && (!wasOpen || lastImageSrc != ImageSrc))
+        {
+            wasOpen = true;
+            lastImageSrc = ImageSrc;
+            currentZoom = 1.0;
+            if (!string.IsNullOrWhiteSpace(ImageSrc))
+            {
+                try
+                {
+                    await JSRuntime.InvokeVoidAsync("nobsCropper.init", ContainerId, ImageSrc, AspectWidth, AspectHeight);
+                }
+                catch { }
+            }
+        }
+        else if (!IsOpen && wasOpen)
+        {
+            wasOpen = false;
+            lastImageSrc = null;
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("nobsCropper.destroy", ContainerId);
+            }
+            catch { }
+        }
+    }
+
+    private async Task OnZoomSliderInput(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double val))
+        {
+            currentZoom = val;
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("nobsCropper.setZoom", ContainerId, val);
+            }
+            catch { }
+        }
+    }
+
+    private async Task ZoomIn()
+    {
+        currentZoom = Math.Min(3.5, currentZoom + 0.2);
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsCropper.setZoom", ContainerId, currentZoom);
+        }
+        catch { }
+    }
+
+    private async Task ZoomOut()
+    {
+        currentZoom = Math.Max(1.0, currentZoom - 0.2);
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsCropper.setZoom", ContainerId, currentZoom);
+        }
+        catch { }
+    }
+
+    private async Task ResetCrop()
+    {
+        currentZoom = 1.0;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsCropper.reset", ContainerId);
+        }
+        catch { }
+    }
+
+    private async Task HandleConfirm()
+    {
+        if (isProcessing) return;
+        isProcessing = true;
+        try
+        {
+            var croppedDataUrl = await JSRuntime.InvokeAsync<string>("nobsCropper.getCroppedDataUrl", ContainerId, 270, 360);
+            if (!string.IsNullOrWhiteSpace(croppedDataUrl))
+            {
+                await OnConfirmed.InvokeAsync(croppedDataUrl);
+            }
+        }
+        catch { }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private async Task HandleCancel()
+    {
+        await OnCancelled.InvokeAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsCropper.destroy", ContainerId);
+        }
+        catch { }
+    }
+}

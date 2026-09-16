@@ -42,13 +42,14 @@
 
 @if (showFreezeModal)
 {
-    <div class="freeze-modal-backdrop" @onclick:stopPropagation="true">
-        <div class="freeze-modal-box">
+    <div class="freeze-modal-backdrop @(isDollyZooming ? "is-dolly-zooming" : "")" @onclick:stopPropagation="true">
+        <div class="freeze-modal-box @(isDollyZooming ? "is-dolly-zooming" : "")">
             <p class="freeze-instruction">stop any activity for 5s</p>
             <div class="freeze-action-slot">
                 <button type="button" 
-                        class="btn-freeze-continue @(isFreezeCompleted ? "is-visible" : "")" 
-                        @onclick="ProceedToUrgeModal">
+                        class="btn-freeze-continue @(isFreezeCompleted ? "is-visible" : "") @(isDollyZooming ? "is-dolly-zooming" : "")" 
+                        @onclick="ProceedToUrgeModal"
+                        @onclick:stopPropagation="true">
                     Continue to Urge Protocol →
                 </button>
             </div>
@@ -84,6 +85,7 @@
     private bool showUrgeModal = false;
     private bool showFreezeModal = false;
     private bool isFreezeCompleted = false;
+    private bool isDollyZooming = false;
     private System.Threading.Timer? _freezeTimer;
     private bool showDailyCheckInModal = false;
     private bool _hasCheckedDailyPopup = false;
@@ -227,13 +229,22 @@
         }, null, 5000, System.Threading.Timeout.Infinite);
     }
 
-    private void ProceedToUrgeModal()
+    private async Task ProceedToUrgeModal()
     {
+        if (isDollyZooming) return;
+        isDollyZooming = true;
+        StateHasChanged();
+
+        // Allow full black-hole vacuum to consume the screen before revealing the popup
+        await Task.Delay(1200);
+
         showFreezeModal = false;
         isFreezeCompleted = false;
         _freezeTimer?.Dispose();
         _freezeTimer = null;
+        isDollyZooming = false;
         showUrgeModal = true;
+        await InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()

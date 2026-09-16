@@ -40,6 +40,9 @@ public class UserAccount
     public int UrgesSurfedCount { get; set; } = 0;
     public List<int> FavoriteArchiveDays { get; set; } = new();
 
+    [NotMapped]
+    public List<AnchorCardItem> AnchorCards { get; set; } = new();
+
     // Goals & Diagnostics (Personalization Telemetry)
     public string CurrentGoal { get; set; } = "habits";
     public string AddictionLevel { get; set; } = "average";
@@ -89,6 +92,15 @@ public class RelapseEntry
     public string HaltState { get; set; } = ""; // Hungry, Angry, Lonely, Tired, None
     public string FrictionFailure { get; set; } = ""; // Environmental barrier that failed
     public string CalibrationAction { get; set; } = ""; // Solution / rule adjustment
+}
+
+public class AnchorCardItem
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string Title { get; set; } = "";
+    public string Note { get; set; } = "";
+    public string ImageUrl { get; set; } = "";
+    public string Category { get; set; } = "self"; // self, loved_ones, future
 }
 
 public class AuthResult

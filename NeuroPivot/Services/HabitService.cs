@@ -335,10 +335,9 @@ public class HabitService
             UpdateStreakOnQualify();
         }
 
-        // 1. Milestone: 4 Habits Completed (Celebration Pop-up + Confetti)
+        // 1. Milestone: 4 Habits Completed (Celebration Pop-up without confetti)
         if (completedToday == 4)
         {
-            await _jsRuntime.InvokeVoidAsync("nobsConfetti.launch");
             _ = SaveHabitsToActiveAccountAsync();
             NotifyStateChanged();
             return HabitMilestone.FourHabitsCompleted;

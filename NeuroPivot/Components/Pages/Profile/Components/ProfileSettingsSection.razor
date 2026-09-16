@@ -19,6 +19,17 @@
             </button>
         </div>
 
+        <!-- Loved Ones Photos -->
+        <div class="setting-item border-top">
+            <div class="setting-text-col">
+                <div class="setting-title">loved ones photos</div>
+                <div class="setting-subtitle">Photos of your younger self and loved ones shown during urge surfing</div>
+            </div>
+            <button type="button" class="nobs-btn btn-loved-ones-photos" @onclick="OpenLovedOnesModal">
+                photos
+            </button>
+        </div>
+
         @if (AppState.CurrentGoal?.Equals("sleep", StringComparison.OrdinalIgnoreCase) == true)
         {
             <!-- 2. Sleep & Wake Routine -->
@@ -105,9 +116,163 @@
     </div>
 </div>
 
+@if (isLovedOnesModalOpen)
+{
+    var photoCards = PhotoCards;
+    var hasSelfPhoto = HasSelfPhoto;
+    <div class="modal-backdrop-overlay" @onclick="CloseLovedOnesModal">
+        <div class="loved-ones-modal-card" @onclick:stopPropagation="true">
+            <button type="button" class="loved-ones-modal-close-btn" @onclick="CloseLovedOnesModal" aria-label="Close">✕</button>
+
+            <div class="loved-ones-modal-header">
+                <h3 class="loved-ones-modal-title">loved ones photos</h3>
+                <p class="loved-ones-modal-sub">
+                    @(hasSelfPhoto ? "Add loved ones (family, close friends, partners)" : "Add your younger version of yourself")
+                </p>
+            </div>
+
+            <!-- Carousel Area -->
+            <div class="loved-ones-carousel-wrapper">
+                <button type="button" 
+                        class="loved-ones-carousel-nav-btn prev-btn @(lovedOnesCarouselIndex == 0 ? "disabled" : "")" 
+                        @onclick="PrevLovedOnesPhoto" 
+                        aria-label="Previous photo">
+                    ‹
+                </button>
+
+                <div class="loved-ones-carousel-viewport">
+                    <div class="loved-ones-carousel-track" style="@($"transform: translateX(-{lovedOnesCarouselIndex * 240}px);")">
+                        @for (int pi = 0; pi < photoCards.Count; pi++)
+                        {
+                            var pc = photoCards[pi];
+                            <div class="loved-ones-card">
+                                <div class="loved-ones-card-img-wrap">
+                                    <img src="@pc.ImageUrl" alt="@pc.Title" class="loved-ones-card-img" />
+                                </div>
+
+                                @if (editingCardId == pc.Id)
+                                {
+                                    <div class="loved-ones-naming-form">
+                                        <input type="text" 
+                                               class="loved-ones-naming-input" 
+                                               placeholder="@(pc.Category == "self" ? "Name (e.g. Younger me...)" : "Name (e.g. Mom, Leo...)")" 
+                                               maxlength="28" 
+                                               @bind="editingCardTitle" 
+                                               @bind:event="oninput" 
+                                               @onkeydown="@(e => HandleCardTitleKeyDown(e, pc.Id))" 
+                                               autofocus />
+                                        <div class="loved-ones-naming-btn-row">
+                                            <button type="button" class="loved-ones-save-btn" @onclick="() => SaveCardTitle(pc.Id)">Save</button>
+                                            <button type="button" class="loved-ones-cancel-btn" @onclick="CancelCardTitle">✕</button>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="loved-ones-card-meta">
+                                        <div class="loved-ones-card-title-row">
+                                            <h4 class="loved-ones-card-title" title="@pc.Title">
+                                                @(string.IsNullOrWhiteSpace(pc.Title) ? (pc.Category == "self" ? "Younger Self" : "Loved One") : pc.Title)
+                                            </h4>
+                                            <button type="button" class="loved-ones-icon-btn" title="Edit name" @onclick="() => StartEditingCard(pc)">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="loved-ones-card-action-row">
+                                            <button type="button" class="loved-ones-crop-btn" title="Adjust / Crop photo" @onclick="() => OpenCropForExistingCard(pc)">
+                                                Crop
+                                            </button>
+                                            <label class="loved-ones-change-btn" title="Change photo">
+                                                <span>Change</span>
+                                                <InputFile OnChange="@(e => HandleCardImageUpload(e, pc.Id))" accept="image/*" style="display:none;" />
+                                            </label>
+                                            <button type="button" class="loved-ones-delete-btn" title="Delete photo" @onclick="() => HandleDeleteCard(pc.Id)">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <!-- Furthest right: Placeholder slot for adding a new picture -->
+                        <label class="loved-ones-card loved-ones-placeholder-card" title="Click to upload picture">
+                            <InputFile OnChange="HandleNewPhotoUpload" accept="image/*" style="display:none;" />
+                            <div class="loved-ones-placeholder-inner">
+                                @if (isUploadingPhoto)
+                                {
+                                    <div class="loved-ones-upload-spinner"></div>
+                                    <span class="loved-ones-placeholder-title">Loading photo...</span>
+                                }
+                                else
+                                {
+                                    <div class="loved-ones-plus-circle">
+                                        <span class="loved-ones-plus-icon">+</span>
+                                    </div>
+                                    <span class="loved-ones-placeholder-title">
+                                        @(hasSelfPhoto ? "Add Loved One" : "Add Younger Self")
+                                    </span>
+                                    <span class="loved-ones-placeholder-desc">Click to upload</span>
+                                }
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" 
+                        class="loved-ones-carousel-nav-btn next-btn @(lovedOnesCarouselIndex >= photoCards.Count ? "disabled" : "")" 
+                        @onclick="NextLovedOnesPhoto" 
+                        aria-label="Next photo">
+                    ›
+                </button>
+            </div>
+
+            <!-- Dot Indicators -->
+            <div class="loved-ones-carousel-dots">
+                @for (int di = 0; di <= photoCards.Count; di++)
+                {
+                    int dIdx = di;
+                    <span class="loved-ones-dot @(lovedOnesCarouselIndex == dIdx ? "active" : "")" @onclick="() => lovedOnesCarouselIndex = dIdx"></span>
+                }
+            </div>
+
+            <div class="loved-ones-modal-footer">
+                <button type="button" class="nobs-btn btn-done" @onclick="CloseLovedOnesModal">Done</button>
+            </div>
+        </div>
+    </div>
+}
+
+<ImageCropModal IsOpen="@isCropModalOpen"
+                ImageSrc="@cropImageSrc"
+                Title="Frame &amp; Crop Photo"
+                Subtitle="Drag to position the face in the frame. Use the slider or wheel to zoom."
+                AspectWidth="3"
+                AspectHeight="4"
+                OnConfirmed="HandleCropConfirmed"
+                OnCancelled="HandleCropCancelled" />
+
 @code {
     private bool isDollyZooming = false;
     private System.Threading.CancellationTokenSource? dollyCts;
+
+    private bool isLovedOnesModalOpen = false;
+    private int lovedOnesCarouselIndex = 0;
+    private string? editingCardId = null;
+    private string editingCardTitle = "";
+
+    // Image Crop Modal State
+    private bool isCropModalOpen = false;
+    private string? cropImageSrc = null;
+    private string? pendingCropCardId = null;
+    private bool pendingIsNewCard = false;
+    private string? pendingCategory = null;
+
+    private List<AnchorCardItem> PhotoCards => AppState.GetEffectiveAnchorCards().Where(c => !string.IsNullOrWhiteSpace(c.ImageUrl)).ToList();
+    private bool HasSelfPhoto => AppState.GetEffectiveAnchorCards().Any(c => c.Category == "self" && !string.IsNullOrWhiteSpace(c.ImageUrl));
 
     protected override void OnInitialized()
     {
@@ -248,6 +413,248 @@
                 await JSRuntime.InvokeVoidAsync("nobsAudio.playFmSynthBass", vol);
             }
             catch { }
+        }
+    }
+
+    private void OpenLovedOnesModal()
+    {
+        lovedOnesCarouselIndex = 0;
+        editingCardId = null;
+        editingCardTitle = "";
+        isLovedOnesModalOpen = true;
+    }
+
+    private void CloseLovedOnesModal()
+    {
+        isLovedOnesModalOpen = false;
+        editingCardId = null;
+        editingCardTitle = "";
+    }
+
+    private void PrevLovedOnesPhoto()
+    {
+        if (lovedOnesCarouselIndex > 0)
+        {
+            lovedOnesCarouselIndex--;
+        }
+    }
+
+    private void NextLovedOnesPhoto()
+    {
+        var count = PhotoCards.Count;
+        if (lovedOnesCarouselIndex < count)
+        {
+            lovedOnesCarouselIndex++;
+        }
+    }
+
+    private void StartEditingCard(AnchorCardItem card)
+    {
+        editingCardId = card.Id;
+        editingCardTitle = card.Title ?? "";
+    }
+
+    private void CancelCardTitle()
+    {
+        editingCardId = null;
+        editingCardTitle = "";
+    }
+
+    private async Task SaveCardTitle(string cardId)
+    {
+        var card = AppState.GetEffectiveAnchorCards().FirstOrDefault(c => c.Id == cardId);
+        if (card != null)
+        {
+            card.Title = string.IsNullOrWhiteSpace(editingCardTitle)
+                ? (card.Category == "self" ? "Younger Self" : "Loved One")
+                : editingCardTitle.Trim();
+            await AppState.AddOrUpdateAnchorCard(card);
+        }
+        editingCardId = null;
+        editingCardTitle = "";
+        StateHasChanged();
+    }
+
+    private async Task HandleCardTitleKeyDown(KeyboardEventArgs e, string cardId)
+    {
+        if (e.Key == "Enter")
+        {
+            await SaveCardTitle(cardId);
+        }
+        else if (e.Key == "Escape")
+        {
+            CancelCardTitle();
+        }
+    }
+
+    private void OpenCropForExistingCard(AnchorCardItem card)
+    {
+        if (string.IsNullOrWhiteSpace(card.ImageUrl)) return;
+        cropImageSrc = card.ImageUrl;
+        pendingIsNewCard = false;
+        pendingCropCardId = card.Id;
+        isCropModalOpen = true;
+    }
+
+    private bool isUploadingPhoto = false;
+
+    private async Task HandleNewPhotoUpload(InputFileChangeEventArgs e)
+    {
+        isUploadingPhoto = true;
+        StateHasChanged();
+        try
+        {
+            var file = e.File;
+            if (file == null) return;
+            var resized = await file.RequestImageFileAsync("image/jpeg", 800, 800);
+            using var ms = new MemoryStream();
+            await resized.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024).CopyToAsync(ms);
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var dataUrl = $"data:image/jpeg;base64,{base64}";
+
+            var anchorCards = AppState.GetEffectiveAnchorCards();
+            bool hasSelf = anchorCards.Any(c => c.Category == "self" && !string.IsNullOrWhiteSpace(c.ImageUrl));
+
+            cropImageSrc = dataUrl;
+            pendingIsNewCard = true;
+            pendingCropCardId = null;
+            pendingCategory = !hasSelf ? "self" : "loved_ones";
+            isCropModalOpen = true;
+        }
+        catch { }
+        finally
+        {
+            isUploadingPhoto = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleCardImageUpload(InputFileChangeEventArgs e, string cardId)
+    {
+        try
+        {
+            var file = e.File;
+            if (file == null) return;
+            var resized = await file.RequestImageFileAsync("image/jpeg", 800, 800);
+            using var ms = new MemoryStream();
+            await resized.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024).CopyToAsync(ms);
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var dataUrl = $"data:image/jpeg;base64,{base64}";
+
+            cropImageSrc = dataUrl;
+            pendingIsNewCard = false;
+            pendingCropCardId = cardId;
+            isCropModalOpen = true;
+            StateHasChanged();
+        }
+        catch { }
+    }
+
+    private async Task HandleCropConfirmed(string croppedDataUrl)
+    {
+        isCropModalOpen = false;
+        cropImageSrc = null;
+        var wasNewCard = pendingIsNewCard;
+        var targetCat = pendingCategory;
+        var targetCardId = pendingCropCardId;
+        pendingCropCardId = null;
+        pendingIsNewCard = false;
+        pendingCategory = null;
+        StateHasChanged();
+
+        if (wasNewCard)
+        {
+            var allCards = AppState.GetEffectiveAnchorCards();
+            string newCardId;
+            if (targetCat == "self")
+            {
+                var selfCard = allCards.FirstOrDefault(c => c.Category == "self");
+                if (selfCard == null)
+                {
+                    selfCard = new AnchorCardItem
+                    {
+                        Id = "default-self",
+                        Title = "Younger Self",
+                        Category = "self",
+                        Note = "Protect this kid. Treat yourself like someone you are responsible for helping.",
+                        ImageUrl = croppedDataUrl
+                    };
+                }
+                else
+                {
+                    selfCard.ImageUrl = croppedDataUrl;
+                    if (string.IsNullOrWhiteSpace(selfCard.Title)) selfCard.Title = "Younger Self";
+                }
+                newCardId = selfCard.Id;
+                await AppState.AddOrUpdateAnchorCard(selfCard);
+            }
+            else
+            {
+                var lovedCard = new AnchorCardItem
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Title = "Loved One",
+                    Category = "loved_ones",
+                    Note = "The people who believe in your highest potential.",
+                    ImageUrl = croppedDataUrl
+                };
+                newCardId = lovedCard.Id;
+                await AppState.AddOrUpdateAnchorCard(lovedCard);
+            }
+
+            editingCardId = newCardId;
+            editingCardTitle = "";
+
+            var updatedCards = AppState.GetEffectiveAnchorCards().Where(c => !string.IsNullOrWhiteSpace(c.ImageUrl)).ToList();
+            var targetIdx = updatedCards.FindIndex(c => c.Id == newCardId);
+            if (targetIdx >= 0)
+            {
+                lovedOnesCarouselIndex = targetIdx;
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(targetCardId))
+        {
+            var card = AppState.GetEffectiveAnchorCards().FirstOrDefault(c => c.Id == targetCardId);
+            if (card != null)
+            {
+                card.ImageUrl = croppedDataUrl;
+                await AppState.AddOrUpdateAnchorCard(card);
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private void HandleCropCancelled()
+    {
+        isCropModalOpen = false;
+        cropImageSrc = null;
+        pendingCropCardId = null;
+        pendingIsNewCard = false;
+        pendingCategory = null;
+    }
+
+    private async Task HandleDeleteCard(string cardId)
+    {
+        var card = AppState.GetEffectiveAnchorCards().FirstOrDefault(c => c.Id == cardId);
+        if (card != null)
+        {
+            if (card.Category == "self")
+            {
+                card.ImageUrl = "";
+                await AppState.AddOrUpdateAnchorCard(card);
+            }
+            else
+            {
+                await AppState.RemoveAnchorCard(cardId);
+            }
+
+            var count = AppState.GetEffectiveAnchorCards().Count(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
+            if (lovedOnesCarouselIndex > count)
+            {
+                lovedOnesCarouselIndex = count;
+            }
+            StateHasChanged();
         }
     }
 

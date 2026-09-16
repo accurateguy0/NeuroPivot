@@ -1034,16 +1034,12 @@ h1:focus, h2:focus, h3:focus, h4:focus, [tabindex]:focus {
     background-image: radial-gradient(circle at 50% 25%, rgba(127, 183, 190, 0.09) 0%, transparent 65%);
 }*/
 
-/* Top Scrollbar for Habit Table */
+/* Bottom Scrollbar for Habit Table */
 .habit-scroll-wrapper {
     overflow-x: auto;
-    transform: rotateX(180deg);
     border: 1px solid var(--border-color);
     scrollbar-width: thin;
     scrollbar-color: rgba(127, 183, 190, 0.4) rgba(255, 255, 255, 0.03);
-}
-.habit-scroll-wrapper > table {
-    transform: rotateX(180deg);
 }
 .habit-scroll-wrapper::-webkit-scrollbar {
     height: 6px;

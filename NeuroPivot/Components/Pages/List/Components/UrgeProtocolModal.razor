@@ -8,7 +8,7 @@
 {
     <div class="modal-backdrop-overlay" id="urgeModalBackdrop">
         <!-- Centered Pinned Modal Card with PRODUX Scrollytelling -->
-        <div class="nobs-modal-card urge-modal-square animated-fade-in" 
+        <div class="nobs-modal-card urge-modal-square" 
              id="urgePinnedCard"
              @onclick:stopPropagation="true">
             
@@ -17,7 +17,7 @@
 
             <!-- Biophilic Mountain & Ocean Waves Ambience Audio -->
             <audio id="mountainAmbienceAudio" src="sounds/mountain_ambience.wav" preload="auto" loop></audio>
-            <audio id="waterWavesAudio" src="sounds/water_waves_sound.wav" preload="auto" loop></audio>
+            <audio id="waterWavesAudio" src="sounds/water_wave_sound.mp3" preload="auto" loop></audio>
 
             <!-- Biophilic Heart Coherence Guided Breathing Audio -->
             <audio id="breathingAudioPlayer" preload="auto" playsinline>
@@ -35,6 +35,15 @@
             <!-- Master Scrollytelling Scenes Stage -->
             <div class="urge-scenes-stage">
                 
+                <!-- SCENE PRE-0: STATS INTRO (STANDALONE FULL-SCREEN REFLECTION) -->
+                <div id="urge-scene-stats-intro" class="urge-scene-layer stats-intro-scene">
+                    <div class="stats-intro-fullpage-content">
+                        <div class="stats-intro-ambient-ring"></div>
+                        
+                        <h2 class="stats-intro-giant-quote">let's look at your past stats</h2>
+                    </div>
+                </div>
+
                 <!-- SCENE 0: PERSISTENCE WRAPPED (Continuous Vertical Scroll Stream) -->
                 <div id="urge-scene-0" class="urge-scene-layer spotify-scene">
 
@@ -49,17 +58,17 @@
                                     <h2 class="spotify-giant-heading">@RenderAnimatedLetters("TOP STREAK", 19)</h2>
                                 </div>
 
-                                <div class="spotify-hero-metric-card folder-card-streak">
+                                <div class="spotify-hero-metric-card folder-card-streak folder-card-streak-prime">
                                     <div class="folder-tab">
                                         <span class="folder-tab-text">@RenderAnimatedLetters("UNBROKEN CHAIN", 28)</span>
                                     </div>
                                     <div class="folder-content">
-                                        <video class="folder-mountain-video" autoplay loop muted playsinline>
+                                        <video id="mountainTimelapseVideo" class="folder-mountain-video" autoplay loop muted playsinline preload="auto">
                                             <source src="videos/mountain_timelapse.mp4" type="video/mp4" />
                                         </video>
                                         <div class="folder-mountain-overlay"></div>
-                                        <div class="hero-metric-body relative-z">
-                                            <span class="hero-stat-huge">@RenderAnimatedLetters(HabitService.GetHighestStreak().ToString(), 41)</span>
+                                        <div class="hero-metric-body relative-z hero-metric-body-prime">
+                                            <span class="hero-stat-huge hero-stat-mega">@RenderAnimatedLetters(HabitService.GetHighestStreak().ToString(), 41)</span>
                                             <div class="hero-stat-details">
                                                 <span class="hero-stat-unit">@RenderAnimatedLetters("DAYS", 44)</span>
                                                 <span class="hero-stat-subtext">@RenderAnimatedLetters("Unbroken chain of discipline", 48)</span>
@@ -149,8 +158,8 @@
                                         <span class="folder-tab-text">@RenderAnimatedLetters("NEUROPLASTIC RESISTANCE", 35)</span>
                                     </div>
                                     <div class="folder-content">
-                                        <video class="folder-water-wave-video" autoplay loop muted playsinline>
-                                            <source src="videos/water_wave.mp4" type="video/mp4" />
+                                        <video id="waterWaveVideo" class="folder-water-wave-video" autoplay loop muted playsinline preload="auto">
+                                            <source src="videos/water_wave.mp4?v=3" type="video/mp4" />
                                         </video>
                                         <div class="folder-water-wave-overlay"></div>
                                         <div class="hero-metric-body relative-z">
@@ -187,8 +196,8 @@
                                             var cardDate = HabitService.ChallengeStartDate.AddDays(dayNum - 1).Date;
                                             var log = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == cardDate);
                                             int idx = i;
-                                            double leftPx = idx * 360.0;
-                                            double topPx = idx * 75.0;
+                                            double leftPx = idx * 400.0;
+                                            double topPx = idx * 70.0;
                                             bool isFav = AppState.IsDayFavorited(dayNum);
                                             
                                             <div class="produx-diagonal-card @(dayNum == 1 ? "day-1-origin" : "") @(isFav ? "is-favorite-card" : "")"
@@ -270,9 +279,223 @@
                     </div>
                 </div>
 
+                <!-- SCENE 1.1: GROUNDING ANCHORS PHOTO CUE & CAROUSEL -->
+                <div id="urge-scene-photo-cue" class="urge-scene-layer photo-cue-scene" style="display: none; opacity: 0;">
+                    <div class="photo-cue-fullpage-content">
+                        <div class="photo-cue-ambient-ring"></div>
+                        <span class="photo-cue-kicker">GROUNDING ANCHORS</span>
+                        
+                        @{
+                            var allAnchorCards = AppState.GetEffectiveAnchorCards();
+                            bool hasSelfPhoto = allAnchorCards.Any(c => c.Category == "self" && !string.IsNullOrWhiteSpace(c.ImageUrl));
+                            var photoCards = allAnchorCards.Where(c => !string.IsNullOrWhiteSpace(c.ImageUrl)).ToList();
+                        }
+
+                        <h2 class="photo-cue-giant-heading">
+                            @(hasSelfPhoto 
+                                ? "Add any loved ones (family, close friends, any partners)" 
+                                : "Add your younger version of yourself")
+                        </h2>
+                        
+                        <p class="photo-cue-subheading">
+                            You can customize further in settings
+                        </p>
+
+                        <!-- Photo Carousel Section -->
+                        <div class="photo-cue-carousel-wrapper">
+                            <button type="button" 
+                                    class="cue-carousel-nav-btn prev-btn @(cueCarouselIndex == 0 ? "disabled" : "")" 
+                                    @onclick="PrevCuePhoto"
+                                    aria-label="Previous photos">
+                                ‹
+                            </button>
+
+                            <div class="cue-carousel-viewport" id="cueCarouselViewport">
+                                <div class="cue-carousel-track" style="transform: translateX(-@(cueCarouselIndex * 240)px);">
+                                    @for (int pi = 0; pi < photoCards.Count; pi++)
+                                    {
+                                        var pc = photoCards[pi];
+                                        <div class="cue-carousel-card existing-photo-card">
+                                            <div class="cue-card-img-wrap">
+                                                <img src="@pc.ImageUrl" alt="@pc.Title" class="cue-card-img" />
+                                            </div>
+                                            @if (editingCardId == pc.Id)
+                                            {
+                                                <div class="cue-card-naming-form">
+                                                    <input type="text" 
+                                                           class="cue-card-naming-input" 
+                                                           placeholder="@(pc.Category == "self" ? "Name (e.g. Younger me, 7yo self...)" : "Name (e.g. Mom, Leo, Buddy...)")" 
+                                                           maxlength="28" 
+                                                           @bind="editingCardTitle" 
+                                                           @bind:event="oninput" 
+                                                           @onkeydown="@(e => HandleCardTitleKeyDown(e, pc.Id))" 
+                                                           autofocus />
+                                                    <div class="cue-naming-btn-row">
+                                                        <button type="button" class="cue-naming-save-btn" @onclick="() => SaveCardTitle(pc.Id)">Save</button>
+                                                        <button type="button" class="cue-naming-cancel-btn" @onclick="CancelCardTitle">✕</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="cue-card-details">
+                                                    <div class="cue-card-title-wrap">
+                                                        <h4 class="cue-card-title" title="@pc.Title">@pc.Title</h4>
+                                                        <button type="button" class="cue-card-edit-btn" title="Edit name" @onclick="() => StartEditingCard(pc)">
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <div class="cue-card-btn-group">
+                                                        <button type="button" class="cue-card-crop-btn" title="Adjust / Crop photo" @onclick="() => OpenCropForExistingCard(pc)">
+                                                            Crop
+                                                        </button>
+                                                        <label class="cue-card-replace-btn" title="Change photo">
+                                                            <span>Change</span>
+                                                            <InputFile OnChange="@(e => HandleCardImageUpload(e, pc.Id))" accept="image/*" style="display:none;" />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+
+                                    <!-- Furthest right: Placeholder slot for adding a new picture -->
+                                    <label class="cue-carousel-card placeholder-photo-card" title="Click to upload picture">
+                                        <InputFile OnChange="HandleCuePhotoUpload" accept="image/*" style="display:none;" />
+                                        <div class="cue-placeholder-inner">
+                                            @if (isUploadingPhoto)
+                                            {
+                                                <div class="cue-upload-spinner"></div>
+                                                <span class="cue-placeholder-text">Loading photo...</span>
+                                            }
+                                            else
+                                            {
+                                                <div class="cue-placeholder-icon-wrap">
+                                                    <span class="cue-plus-icon">+</span>
+                                                </div>
+                                                <span class="cue-placeholder-text">
+                                                    @(hasSelfPhoto ? "Add Loved One" : "Add Younger Self")
+                                                </span>
+                                                <span class="cue-placeholder-sub">Click to upload</span>
+                                            }
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="button" 
+                                    class="cue-carousel-nav-btn next-btn @(cueCarouselIndex >= photoCards.Count ? "disabled" : "")" 
+                                    @onclick="NextCuePhoto" 
+                                    aria-label="Next photos">
+                                ›
+                            </button>
+                        </div>
+
+                        <!-- Dot Indicators -->
+                        <div class="cue-carousel-dots">
+                            @for (int di = 0; di <= photoCards.Count; di++)
+                            {
+                                int dIdx = di;
+                                <span class="cue-dot @(cueCarouselIndex == dIdx ? "active" : "")" @onclick="() => cueCarouselIndex = dIdx"></span>
+                            }
+                        </div>
+
+                        <!-- Confirmation / Proceed OK Button -->
+                        <div class="cue-action-row">
+                            <button type="button" class="cue-ok-btn" @onclick="HandleCueOk" title="Continue">
+                                <span>OK</span>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12l5 5L20 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCENE 1.2: RELATIONAL & SELF-CARE ANCHOR FLASHCARD DECK (SWIPE SCROLL) -->
+                <div id="urge-scene-anchors" class="urge-scene-layer anchor-deck-scene" style="display: none; opacity: 0;">
+                    <!-- Sleek Transparent Sound Toggle Button on the Right Upper Side -->
+                    <button type="button" 
+                            id="callMyNameSoundBtn" 
+                            class="anchor-sound-btn" 
+                            @onclick="ToggleCallMyNameSound" 
+                            title="Toggle music sound"
+                            aria-label="Toggle music sound">
+                        @if (!isCallMyNameMuted)
+                        {
+                            <span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                </svg>
+                                <span class="sound-text">SOUND ON</span>
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                                <span class="sound-text">SOUND OFF</span>
+                            </span>
+                        }
+                    </button>
+
+                    <div class="anchor-deck-fullpage-content">
+                        <div class="anchor-ambient-ring"></div>
+                        <span class="anchor-kicker">WHO YOU ARE PROTECTING</span>
+                        <h2 class="anchor-giant-heading">Remember who counts on you.</h2>
+                        <p class="anchor-subheading">Treat yourself like someone you are responsible for helping.</p>
+                        
+                        <div class="anchor-card-deck" id="anchorCardDeck">
+                            @{
+                                var anchorCards = AppState.GetEffectiveAnchorCards();
+                            }
+                            @for (int i = 0; i < anchorCards.Count; i++)
+                            {
+                                var card = anchorCards[i];
+                                int cardIdx = i;
+                                <div class="anchor-card" id="anchorCard_@cardIdx" data-index="@cardIdx">
+                                    <div class="anchor-photo-frame">
+                                        @if (!string.IsNullOrEmpty(card.ImageUrl))
+                                        {
+                                            <img src="@card.ImageUrl" alt="@card.Title" class="anchor-photo-img" />
+                                        }
+                                        else
+                                        {
+                                            <div class="anchor-photo-placeholder">
+                                                <span class="anchor-ph-icon">🛡️</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="anchor-card-meta">
+                                        <span class="anchor-category-pill">@card.Category.ToUpperInvariant()</span>
+                                        <h3 class="anchor-card-title">@card.Title</h3>
+                                        <p class="anchor-card-note">“@card.Note”</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SCENE 1.5: "YOU'VE COME THIS FAR..." (STANDALONE FULL-SCREEN MOMENTUM ANCHOR) -->
+                <div id="urge-scene-far" class="urge-scene-layer far-scene" style="display: none; opacity: 0;">
+                    <div class="far-fullpage-content">
+                        <div class="far-ambient-ring"></div>
+                        <span class="far-kicker">MOMENTUM RECOGNITION</span>
+                        <h2 class="far-giant-quote">“you've come this far...”</h2>
+                    </div>
+                </div>
+
                 <!-- SCENE 2: THE RAW SPARK (Cinematic Motivation Video) -->
                 <div id="urge-scene-2" class="urge-scene-layer spark-scene" style="display: none; opacity: 0;">
-                    <h2 class="slide-headline">you've come this far...</h2>
                     <div id="shuzoExpandingBox" class="hero-expanding-video-box">
                         <video id="shuzoVideoPlayer" 
                                 class="hero-cinematic-video" 
@@ -328,6 +551,60 @@
                     </div>
                 </div>
 
+                <!-- SCENE 2.3: SOMATIC AWARENESS / AFFECT LABELING (STANDALONE FULL-SCREEN) -->
+                <div id="urge-scene-affect" class="urge-scene-layer affect-scene" style="display: none; opacity: 0;">
+                    <div class="affect-fullpage-content">
+                        @if (!isAffectBridgeFadedIn)
+                        {
+                            <div class="affect-ambient-ring"></div>
+                            <span class="affect-kicker">SOMATIC INTEROCEPTION</span>
+                            <h2 class="affect-giant-heading">What are you feeling in your body right now?</h2>
+                            <p class="affect-subheading">Labeling physical sensations de-escalates amygdala hyperactivity before entering coherent breathing.</p>
+                            
+                            <div class="affect-box-container">
+                                <div class="affect-input-wrap">
+                                    <input type="text" 
+                                           class="affect-input" 
+                                           maxlength="80" 
+                                           placeholder="e.g. tight chest, racing thoughts, restless..." 
+                                           @bind="affectLabelText" 
+                                           @bind:event="oninput" 
+                                           @onkeydown="HandleAffectKeyDown" />
+                                    <span class="affect-char-counter">@(affectLabelText?.Length ?? 0)/80</span>
+                                </div>
+                                <div class="affect-action-row">
+                                    @if (!string.IsNullOrWhiteSpace(affectLabelText))
+                                    {
+                                        <button type="button" class="btn-affect-save" @onclick="SaveAffectLabel">Save & Acknowledge</button>
+                                    }
+                                    <button type="button" class="btn-affect-skip" @onclick="SkipAffectLabel">Skip Step →</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="affect-bridge-in-place anim-fade-in-bridge">
+                                @if (isAffectLabelSaved)
+                                {
+                                    <div class="affect-saved-blended-pill">saved ✓</div>
+                                }
+                                <div class="bridge-noise-ambient-ring"></div>
+                                <h2 class="bridge-giant-quote">“Let's leave all the noise behind.”</h2>
+                                <p class="bridge-subtext">Take a breath. We're going to slow everything down and breathe together for 90 seconds. Scroll down to start.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- SCENE 2.5: COGNITIVE BRIDGE (STANDALONE FULL-SCREEN INTERVENTION) -->
+                <div id="urge-scene-bridge" class="urge-scene-layer bridge-scene" style="display: none; opacity: 0;">
+                    <div class="bridge-fullpage-content">
+                        <div class="bridge-noise-ambient-ring"></div>
+                        <h2 class="bridge-giant-quote">“Let's leave all the noise behind.”</h2>
+                        <p class="bridge-subtext">Take a breath. We're going to slow everything down and breathe together for 90 seconds. Scroll down to start.</p>
+                    </div>
+                </div>
+
                 <!-- SCENE 3: BIOPHILIC BREATHING EXERCISE -->
                 <div id="urge-scene-3" class="urge-scene-layer nature-breathing-scene" style="display: none; opacity: 0;">
                     <h2 class="slide-headline">Breathing Exercise</h2>
@@ -379,72 +656,92 @@
                             <span class="phase-live-label" id="phaseLiveLabel">HRV PROTOCOL INTRO</span>
                             <span class="phase-live-timer" id="phaseLiveTimer">0:25</span>
                         </div>
-                        <div class="breath-live-caption-box" id="breathLiveCaptionBox">
+                        <div class="breath-live-caption-box breath-caption-live-box" id="breathLiveCaptionBox">
                             <p class="breath-caption-text" id="breathCaptionText">
                                 Coherent breathing specifically for heart rate variability (HRV).
                             </p>
-                            <button type="button" id="skipIntroBtn" class="skip-intro-pill-btn" onclick="if (window.nobsProduxScrollytelling) window.nobsProduxScrollytelling.skipIntro();" title="Jump straight to the 5-minute breathing chimes">
-                                ⚡ Skip Intro (Jump to 0:25)
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- SCENE 4: VICTORY LOCK & ACTION DIVERGENCE -->
+                <!-- SCENE 4: VICTORY LOCK & ACTION DIVERGENCE (APPROACH-IDENTITY REFRAMED) -->
                 <div id="urge-scene-4" class="urge-scene-layer victory-scene" style="display: none; opacity: 0;">
                     <div class="victory-hero-box">
-                        <h2 class="victory-title">Your @HabitService.GetConsecutiveStreak()-Day Streak Remains Untouched.</h2>
+                        <h2 class="victory-title">You chose this. Day @HabitService.GetConsecutiveStreak() is yours.</h2>
                         <p class="victory-body">
-                            You looked the chemical dopamine urge dead in the eyes and refused to fold. Your synaptic pathways (LTD) are physically adapting right now.
+                            You just physically rewired your brain. That's not willpower — that's biology. Every second you held the line weakened the old loop and reinforced the new standard.
                         </p>
                     </div>
 
-                    <div class="victory-counter-flash-box">
+                    <div class="victory-counter-flash-box @(isActionTriggered ? "box-glow-confirmed" : "")">
                         <span class="vcf-kicker">SYNAPTIC RESISTANCE REINFORCED</span>
                         <div class="vcf-count-row">
                             <span class="vcf-label">URGES SURFED</span>
-                            <span class="vcf-number-animate">
-                                <span class="vcf-old">@Math.Max(0, AppState.UrgesSurfedCount)</span>
-                                <span class="vcf-arrow">→</span>
-                                <span class="vcf-new">@(AppState.UrgesSurfedCount + 1)</span>
-                            </span>
-                            <span class="vcf-pill">+1 SYNAPTIC WIN</span>
+                            <div class="vcf-number-slot">
+                                <span class="vcf-digit current @(isActionTriggered ? "anim-slide-out-left" : "")">
+                                    @Math.Max(0, AppState.UrgesSurfedCount)
+                                </span>
+                                @if (isActionTriggered)
+                                {
+                                    <span class="vcf-digit next anim-slide-in-right">
+                                        @(AppState.UrgesSurfedCount + 1)
+                                    </span>
+                                }
+                            </div>
                         </div>
-                        <p class="vcf-quote">
-                            "When you call out my name, I will run to you again... I would do anything in the name of love"
-                        </p>
                     </div>
 
-                    <h3 class="exit-action-title">What next actionable step will you take?</h3>
+                    <div class="exit-action-header-row">
+                        <h3 class="exit-action-title">What would be your first step now?</h3>
+                    </div>
 
-                    <div class="exit-actions-grid">
-                        <button type="button" class="exit-action-btn" @onclick='() => HandleFinishAction("Drink cold water")'>
-                            <span class="ea-icon">💧</span>
-                            <div class="ea-text">
-                                <div class="ea-name">Drink 500ml Cold Water</div>
-                                <div class="ea-desc">Mammalian dive reflex & metabolic grounding</div>
-                            </div>
-                            <span class="ea-arrow">→</span>
-                        </button>
-
-                        <button type="button" class="exit-action-btn" @onclick='() => HandleFinishAction("2-min walk outside")'>
-                            <span class="ea-icon">🚶</span>
-                            <div class="ea-text">
-                                <div class="ea-name">2-Min Walk Outside / Open Window</div>
-                                <div class="ea-desc">Panoramic visual flow to down-regulate focus</div>
-                            </div>
-                            <span class="ea-arrow">→</span>
-                        </button>
-
-                        <button type="button" class="exit-action-btn primary" @onclick='() => HandleFinishAction("Return to 21-Day List")'>
+                    <div class="exit-actions-grid @(isBreathingGateUnlocked ? "" : "is-gated")" 
+                         id="exitActionsGrid"
+                         @onmousemove="HandleExitGridMouseMove"
+                         @onmouseleave="HandleExitGridMouseLeave">
+                        <button type="button" 
+                                class="exit-action-btn primary @(selectedActionIndex == 0 ? "btn-blinking-lights" : "")" 
+                                disabled="@(isActionTriggered || !isBreathingGateUnlocked)"
+                                @onclick='() => HandleFinishAction("Return to 21-Day Habit Challenge", 0)'>
                             <span class="ea-icon">⚔️</span>
                             <div class="ea-text">
                                 <div class="ea-name">Return to 21-Day Habit Challenge</div>
-                                <div class="ea-desc">Resume daily protocol execution with clean slate</div>
+                                <div class="ea-desc">Resume daily protocol execution with clean slate & unwavering focus</div>
+                            </div>
+                            <span class="ea-arrow">→</span>
+                        </button>
+
+                        <button type="button" 
+                                class="exit-action-btn @(selectedActionIndex == 1 ? "btn-blinking-lights" : "")" 
+                                disabled="@(isActionTriggered || !isBreathingGateUnlocked)"
+                                @onclick='() => HandleFinishAction("Restorative body care", 1)'>
+                            <span class="ea-icon">💧</span>
+                            <div class="ea-text">
+                                <div class="ea-name">Do something restorative for your body</div>
+                                <div class="ea-desc">Drink 500ml cold water, wash face, or step outside into fresh air</div>
+                            </div>
+                            <span class="ea-arrow">→</span>
+                        </button>
+
+                        <button type="button" 
+                                class="exit-action-btn @(selectedActionIndex == 2 ? "btn-blinking-lights" : "")" 
+                                disabled="@(isActionTriggered || !isBreathingGateUnlocked)"
+                                @onclick='() => HandleFinishAction("Connect with someone", 2)'>
+                            <span class="ea-icon">💬</span>
+                            <div class="ea-text">
+                                <div class="ea-name">Connect with someone who matters</div>
+                                <div class="ea-desc">Text a friend or family member, or go be around people</div>
                             </div>
                             <span class="ea-arrow">→</span>
                         </button>
                     </div>
+
+                    @if (!isBreathingGateUnlocked && isHoveringGatedExit)
+                    {
+                        <div class="cursor-gated-tooltip" style="left: @(tooltipX)px; top: @(tooltipY)px;">
+                            finish the breathing first
+                        </div>
+                    }
                 </div>
 
             </div>
@@ -452,12 +749,28 @@
     </div>
 }
 
+<ImageCropModal IsOpen="@isCropModalOpen"
+                ImageSrc="@cropImageSrc"
+                Title="Frame &amp; Crop Photo"
+                Subtitle="Drag to position the face in the frame. Use the slider or wheel to zoom."
+                AspectWidth="3"
+                AspectHeight="4"
+                OnConfirmed="HandleCropConfirmed"
+                OnCancelled="HandleCropCancelled" />
+
 @code {
     [Parameter]
     public bool IsOpen { get; set; }
 
     [Parameter]
     public EventCallback OnClose { get; set; }
+
+    // Image Crop Modal State
+    private bool isCropModalOpen = false;
+    private string? cropImageSrc = null;
+    private string? pendingCropCardId = null;
+    private bool pendingIsNewCard = false;
+    private string? pendingCategory = null;
 
     // Video Player State - Default sound is strictly OFF (muted = true)
     private bool isShuzoMuted = true;
@@ -574,57 +887,376 @@
         catch { }
     }
 
+    private bool isCallMyNameMuted = true;
+
+    private async Task ToggleCallMyNameSound()
+    {
+        isCallMyNameMuted = !isCallMyNameMuted;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.toggleCallMyNameSound", isCallMyNameMuted);
+        }
+        catch { }
+        StateHasChanged();
+    }
+
+    private void OpenCropForExistingCard(AnchorCardItem card)
+    {
+        if (string.IsNullOrWhiteSpace(card.ImageUrl)) return;
+        cropImageSrc = card.ImageUrl;
+        pendingIsNewCard = false;
+        pendingCropCardId = card.Id;
+        isCropModalOpen = true;
+    }
+
+    private async Task HandleCardImageUpload(InputFileChangeEventArgs e, string cardId)
+    {
+        try
+        {
+            var file = e.File;
+            if (file == null) return;
+            var resized = await file.RequestImageFileAsync("image/jpeg", 800, 800);
+            using var ms = new MemoryStream();
+            await resized.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024).CopyToAsync(ms);
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var dataUrl = $"data:image/jpeg;base64,{base64}";
+            
+            cropImageSrc = dataUrl;
+            pendingIsNewCard = false;
+            pendingCropCardId = cardId;
+            isCropModalOpen = true;
+            StateHasChanged();
+        }
+        catch { }
+    }
+
+    private int cueCarouselIndex = 0;
+
+    private void PrevCuePhoto()
+    {
+        if (cueCarouselIndex > 0)
+        {
+            cueCarouselIndex--;
+            StateHasChanged();
+        }
+    }
+
+    private void NextCuePhoto()
+    {
+        var photoCardsCount = AppState.GetEffectiveAnchorCards().Count(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
+        if (cueCarouselIndex < photoCardsCount)
+        {
+            cueCarouselIndex++;
+            StateHasChanged();
+        }
+    }
+
+    private string? editingCardId = null;
+    private string editingCardTitle = "";
+
+    private void StartEditingCard(AnchorCardItem card)
+    {
+        editingCardId = card.Id;
+        editingCardTitle = card.Title;
+        StateHasChanged();
+    }
+
+    private async Task SaveCardTitle(string cardId)
+    {
+        var card = AppState.GetEffectiveAnchorCards().FirstOrDefault(c => c.Id == cardId);
+        if (card != null)
+        {
+            if (!string.IsNullOrWhiteSpace(editingCardTitle))
+            {
+                card.Title = editingCardTitle.Trim();
+            }
+            await AppState.AddOrUpdateAnchorCard(card);
+        }
+        editingCardId = null;
+        editingCardTitle = "";
+        StateHasChanged();
+    }
+
+    private void CancelCardTitle()
+    {
+        editingCardId = null;
+        editingCardTitle = "";
+        StateHasChanged();
+    }
+
+    private async Task HandleCardTitleKeyDown(KeyboardEventArgs e, string cardId)
+    {
+        if (e.Key == "Enter")
+        {
+            await SaveCardTitle(cardId);
+        }
+        else if (e.Key == "Escape")
+        {
+            CancelCardTitle();
+        }
+    }
+
+    private bool isUploadingPhoto = false;
+
+    private async Task HandleCuePhotoUpload(InputFileChangeEventArgs e)
+    {
+        isUploadingPhoto = true;
+        StateHasChanged();
+        try
+        {
+            var file = e.File;
+            if (file == null) return;
+            var resized = await file.RequestImageFileAsync("image/jpeg", 800, 800);
+            using var ms = new MemoryStream();
+            await resized.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024).CopyToAsync(ms);
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var dataUrl = $"data:image/jpeg;base64,{base64}";
+
+            var anchorCards = AppState.GetEffectiveAnchorCards();
+            bool hasSelf = anchorCards.Any(c => c.Category == "self" && !string.IsNullOrWhiteSpace(c.ImageUrl));
+
+            cropImageSrc = dataUrl;
+            pendingIsNewCard = true;
+            pendingCropCardId = null;
+            pendingCategory = !hasSelf ? "self" : "loved_ones";
+            isCropModalOpen = true;
+        }
+        catch { }
+        finally
+        {
+            isUploadingPhoto = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleCropConfirmed(string croppedDataUrl)
+    {
+        isCropModalOpen = false;
+        cropImageSrc = null;
+        var wasNewCard = pendingIsNewCard;
+        var targetCat = pendingCategory;
+        var targetCardId = pendingCropCardId;
+        pendingCropCardId = null;
+        pendingIsNewCard = false;
+        pendingCategory = null;
+        StateHasChanged();
+
+        if (wasNewCard)
+        {
+            var anchorCards = AppState.GetEffectiveAnchorCards();
+            string newCardId;
+            if (targetCat == "self")
+            {
+                var selfCard = anchorCards.FirstOrDefault(c => c.Category == "self");
+                if (selfCard == null)
+                {
+                    selfCard = new AnchorCardItem
+                    {
+                        Id = "default-self",
+                        Title = "Younger Self",
+                        Category = "self",
+                        Note = "Protect this kid. Treat yourself like someone you are responsible for helping.",
+                        ImageUrl = croppedDataUrl
+                    };
+                }
+                else
+                {
+                    selfCard.ImageUrl = croppedDataUrl;
+                    if (string.IsNullOrWhiteSpace(selfCard.Title)) selfCard.Title = "Younger Self";
+                }
+                newCardId = selfCard.Id;
+                await AppState.AddOrUpdateAnchorCard(selfCard);
+            }
+            else
+            {
+                var lovedCard = new AnchorCardItem
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Title = "Loved One",
+                    Category = "loved_ones",
+                    Note = "The people who believe in your highest potential.",
+                    ImageUrl = croppedDataUrl
+                };
+                newCardId = lovedCard.Id;
+                await AppState.AddOrUpdateAnchorCard(lovedCard);
+            }
+
+            editingCardId = newCardId;
+            editingCardTitle = "";
+
+            var updatedCards = AppState.GetEffectiveAnchorCards().Where(c => !string.IsNullOrWhiteSpace(c.ImageUrl)).ToList();
+            var targetIdx = updatedCards.FindIndex(c => c.Id == newCardId);
+            if (targetIdx >= 0)
+            {
+                cueCarouselIndex = targetIdx;
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(targetCardId))
+        {
+            var card = AppState.GetEffectiveAnchorCards().FirstOrDefault(c => c.Id == targetCardId);
+            if (card != null)
+            {
+                card.ImageUrl = croppedDataUrl;
+                await AppState.AddOrUpdateAnchorCard(card);
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task HandleCueOk()
+    {
+        bool hasAnyPhotos = AppState.GetEffectiveAnchorCards().Any(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
+        try
+        {
+            // Update JS with current photo state, then unlock the gate
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.setHasPhotos", hasAnyPhotos);
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.unlockCueGate", hasAnyPhotos);
+        }
+        catch { }
+    }
+
+    private void HandleCropCancelled()
+    {
+        isCropModalOpen = false;
+        cropImageSrc = null;
+        pendingCropCardId = null;
+        pendingIsNewCard = false;
+        pendingCategory = null;
+    }
+
+    // Affect Labeling (Somatic Interoceptive Step)
+    private string affectLabelText = "";
+    private bool isAffectLabelSaved = false;
+    private bool isAffectBridgeFadedIn = false;
+
+    // 90-Second Breathing Gate State & Cursor Tooltip
+    private bool isBreathingGateUnlocked = false;
+    private bool isHoveringGatedExit = false;
+    private double tooltipX = 0;
+    private double tooltipY = 0;
+    private DotNetObjectReference<UrgeProtocolModal>? _dotNetRef;
+
+    private void HandleExitGridMouseMove(MouseEventArgs e)
+    {
+        if (!isBreathingGateUnlocked)
+        {
+            isHoveringGatedExit = true;
+            tooltipX = e.ClientX + 14;
+            tooltipY = e.ClientY + 14;
+        }
+    }
+
+    private void HandleExitGridMouseLeave()
+    {
+        isHoveringGatedExit = false;
+    }
+
+    private async Task SaveAffectLabel()
+    {
+        if (string.IsNullOrWhiteSpace(affectLabelText)) return;
+        var trimmed = affectLabelText.Trim();
+        if (trimmed.Length > 80) trimmed = trimmed.Substring(0, 80);
+
+        isAffectLabelSaved = true;
+        isAffectBridgeFadedIn = true;
+        try
+        {
+            // Unlock scroll gate in JS without jumping scroll position
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.unlockAffectGate");
+
+            // Save somatic affect reflection directly into today's DailyMoodEntry notes
+            var today = DateTime.Today;
+            var existing = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == today);
+            if (existing != null)
+            {
+                var prefix = string.IsNullOrWhiteSpace(existing.Note) ? "" : $"{existing.Note} | ";
+                existing.Note = $"{prefix}[Urge Somatic: {trimmed}]";
+                AppState.AddDailyMoodLog(existing);
+            }
+            else
+            {
+                var newEntry = new DailyMoodEntry
+                {
+                    Date = today,
+                    MoodTag = "good",
+                    Note = $"[Urge Somatic: {trimmed}]",
+                    HabitsCompletedOnDay = HabitService.Habits.Count(h => h.IsCompletedOnDay(HabitService.CurrentActiveDay)),
+                    TotalHabitsCount = HabitService.Habits.Count > 0 ? HabitService.Habits.Count : 6
+                };
+                AppState.AddDailyMoodLog(newEntry);
+            }
+        }
+        catch { }
+        StateHasChanged();
+    }
+
+    private async Task SkipAffectLabel()
+    {
+        isAffectBridgeFadedIn = true;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.unlockAffectGate");
+        }
+        catch { }
+        StateHasChanged();
+    }
+
+    private async Task HandleAffectKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SaveAffectLabel();
+        }
+    }
+
+    [JSInvokable]
+    public void UnlockBreathingGate()
+    {
+        if (!isBreathingGateUnlocked)
+        {
+            isBreathingGateUnlocked = true;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
     // Breathing Timer State (Heart Coherence / HRV: 5s Inhale / 5s Exhale)
     private bool _wasOpen = false;
+    private bool isActionTriggered = false;
+    private int selectedActionIndex = -1;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (IsOpen && !_wasOpen)
         {
             _wasOpen = true;
+            isActionTriggered = false;
+            selectedActionIndex = -1;
             isBgMusicMuted = false;
             isShuzoMuted = true;
             isNatureMuted = true;
             isShuzoEnded = false;
+            isCallMyNameMuted = true;
+            affectLabelText = "";
+            isAffectLabelSaved = false;
+            isAffectBridgeFadedIn = false;
+            isBreathingGateUnlocked = false;
+            isHoveringGatedExit = false;
+            editingCardId = null;
+            editingCardTitle = "";
+
+            _dotNetRef?.Dispose();
+            _dotNetRef = DotNetObjectReference.Create(this);
+
             try
             {
-                await JSRuntime.InvokeVoidAsync("eval", @"
-                    if (window.nobsProduxScrollytelling) {
-                        window.nobsProduxScrollytelling.init(true);
-                    }
-                    const bg = document.getElementById('urgeBgMusic');
-                    if (bg) {
-                        bg.loop = false;
-                        bg._hasPlayedOnce = false;
-                        bg.muted = false;
-                        bg.volume = 0.45;
-                        bg.currentTime = 0;
-                        bg.play().catch(() => {});
-                    }
-                    const sv = document.getElementById('shuzoVideoPlayer');
-                    if (sv) { sv.muted = true; }
-                    const nv = document.getElementById('natureVideoPlayer');
-                    if (nv) { nv.muted = true; nv.volume = 0.35; }
-                    const ba = document.getElementById('breathingAudioPlayer');
-                    if (ba) {
-                        ba.muted = false;
-                        ba.volume = 0.85;
-                        ba.loop = false;
-                        ba.currentTime = 0;
-                    }
-                    setTimeout(() => {
-                        const bg2 = document.getElementById('urgeBgMusic');
-                        if (bg2 && bg2.paused && !bg2.muted && !bg2._hasPlayedOnce) {
-                            bg2.volume = 0.35;
-                            bg2.play().catch(() => {});
-                        }
-                        const ma = document.getElementById('mountainAmbienceAudio');
-                        if (ma && ma.paused) {
-                            ma.volume = 0.65;
-                            ma.play().catch(() => {});
-                        }
-                    }, 80);
-                ");
+                if (_dotNetRef != null)
+                {
+                    await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.setDotNetHelper", _dotNetRef);
+                }
+                bool hasAnyPhotos = AppState.GetEffectiveAnchorCards().Any(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
+                await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.setHasPhotos", hasAnyPhotos);
+                await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.init", true, hasAnyPhotos);
             }
             catch { }
         }
@@ -720,9 +1352,24 @@
         };
     }
 
-    private async Task HandleFinishAction(string actionName)
+    private async Task HandleFinishAction(string actionName, int index)
     {
+        if (isActionTriggered) return;
+        isActionTriggered = true;
+        selectedActionIndex = index;
+        StateHasChanged();
+
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("eval", "if (window.nobsAudio) window.nobsAudio.playClick();");
+        }
+        catch { }
+
+        // Wait for button blinking lights & number slide-in transition animation (~1.6s)
+        await Task.Delay(1600);
+
         _wasOpen = false;
+        isCallMyNameMuted = true;
         await HabitService.LogUrgeSurfedAsync();
         StopAllAudio();
         await OnClose.InvokeAsync();
@@ -731,6 +1378,7 @@
     private async Task HandleCancel()
     {
         _wasOpen = false;
+        isCallMyNameMuted = true;
         StopAllAudio();
         await OnClose.InvokeAsync();
     }
@@ -749,6 +1397,8 @@
                 if (ma) { ma.pause(); ma.currentTime = 0; }
                 const wa = document.getElementById('waterWavesAudio');
                 if (wa) { wa.pause(); wa.currentTime = 0; }
+                const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
+                if (ca) { ca.pause(); ca.currentTime = 0; }
                 const v1 = document.getElementById('shuzoVideoPlayer');
                 if (v1) { v1.pause(); }
                 const v2 = document.getElementById('natureVideoPlayer');
@@ -762,6 +1412,8 @@
 
     public void Dispose()
     {
+        _dotNetRef?.Dispose();
+        _dotNetRef = null;
         StopAllAudio();
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NeuroPivot.Components;
 
 // Enable Npgsql legacy timestamp behavior for PostgreSQL/Supabase compatibility
+// NeuroPivot Application Entrypoint - Standalone Full-Screen Cognitive Bridge Scene (Scene 2.5)
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 
@@ -10,7 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddHubOptions(options =>
+    {
+        options.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
+    });
+
+builder.Services.Configure<Microsoft.AspNetCore.SignalR.HubOptions>(options =>
+{
+    options.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
+});
 
 // Configure database provider (PostgreSQL for cloud / Supabase, SQLite for local fallback)
 var postgresConn = builder.Configuration.GetConnectionString("DefaultConnection")

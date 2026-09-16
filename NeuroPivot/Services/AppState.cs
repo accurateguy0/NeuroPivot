@@ -37,6 +37,7 @@ public class AppState : IDisposable
     public List<RelapseEntry> RelapseLogs { get; private set; } = new();
     public int UrgesSurfedCount { get; private set; } = 0;
     public List<int> FavoriteArchiveDays { get; private set; } = new();
+    public List<AnchorCardItem> AnchorCards { get; private set; } = new();
 
     // User Profile
     public string UserRole { get; private set; } = "Science Optimizer";
@@ -173,6 +174,7 @@ public class AppState : IDisposable
         RelapseLogs = account.RelapseLogs != null ? new List<RelapseEntry>(account.RelapseLogs) : new List<RelapseEntry>();
         UrgesSurfedCount = account.UrgesSurfedCount;
         FavoriteArchiveDays = account.FavoriteArchiveDays != null ? new List<int>(account.FavoriteArchiveDays) : new List<int>();
+        AnchorCards = account.AnchorCards != null ? new List<AnchorCardItem>(account.AnchorCards) : new List<AnchorCardItem>();
         IsDarkMode = account.IsDarkMode;
         SoundVolume = account.SoundVolume;
         SleepNotificationsEnabled = account.SleepNotificationsEnabled;
@@ -417,6 +419,81 @@ public class AppState : IDisposable
         _ = SaveFullSessionAsync();
     }
 
+    public async Task SetAnchorCards(List<AnchorCardItem> cards)
+    {
+        AnchorCards = cards ?? new();
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public async Task AddOrUpdateAnchorCard(AnchorCardItem card)
+    {
+        if (card == null) return;
+        var existing = AnchorCards.FirstOrDefault(c => c.Id == card.Id);
+        if (existing != null)
+        {
+            existing.Title = card.Title;
+            existing.Note = card.Note;
+            existing.ImageUrl = card.ImageUrl;
+            existing.Category = card.Category;
+        }
+        else
+        {
+            AnchorCards.Add(card);
+        }
+        SyncActiveAccount();
+        NotifyStateChanged();
+        _ = SaveFullSessionAsync();
+    }
+
+    public async Task RemoveAnchorCard(string cardId)
+    {
+        if (string.IsNullOrWhiteSpace(cardId)) return;
+        var count = AnchorCards.RemoveAll(c => c.Id == cardId);
+        if (count > 0)
+        {
+            SyncActiveAccount();
+            NotifyStateChanged();
+            _ = SaveFullSessionAsync();
+        }
+    }
+
+    public List<AnchorCardItem> GetEffectiveAnchorCards()
+    {
+        if (AnchorCards != null && AnchorCards.Count > 0)
+        {
+            return AnchorCards;
+        }
+        return new List<AnchorCardItem>
+        {
+            new AnchorCardItem
+            {
+                Id = "default-self",
+                Title = "Your Younger Self",
+                Category = "self",
+                Note = "Protect this kid. Treat yourself like someone you are responsible for helping.",
+                ImageUrl = ""
+            },
+            new AnchorCardItem
+            {
+                Id = "default-loved",
+                Title = "The People In Your Corner",
+                Category = "loved_ones",
+                Note = "The standard you hold builds their security and peace of mind.",
+                ImageUrl = ""
+            },
+            new AnchorCardItem
+            {
+                Id = "default-future",
+                Title = "Who You Are Becoming",
+                Category = "future",
+                Note = "The strength you forge today is what your future circle will lean on tomorrow.",
+                ImageUrl = ""
+            }
+        };
+    }
+
     public void SetDailyMoodLogs(List<DailyMoodEntry> logs)
     {
         DailyMoodLogs = logs != null ? new List<DailyMoodEntry>(logs) : new();
@@ -480,6 +557,7 @@ public class AppState : IDisposable
             _accountService.ActiveAccount.RelapseLogs = RelapseLogs;
             _accountService.ActiveAccount.UrgesSurfedCount = UrgesSurfedCount;
             _accountService.ActiveAccount.FavoriteArchiveDays = FavoriteArchiveDays;
+            _accountService.ActiveAccount.AnchorCards = AnchorCards != null ? new List<AnchorCardItem>(AnchorCards) : new List<AnchorCardItem>();
             _accountService.ActiveAccount.IsDarkMode = IsDarkMode;
             _accountService.ActiveAccount.SoundVolume = SoundVolume;
             _accountService.ActiveAccount.SleepNotificationsEnabled = SleepNotificationsEnabled;
@@ -523,6 +601,7 @@ public class AppState : IDisposable
                 await _localStorage.SetItemAsync("nobs_relapse_logs", RelapseLogs);
                 await _localStorage.SetItemAsync("nobs_urges_surfed_count", UrgesSurfedCount);
                 await _localStorage.SetItemAsync("nobs_favorite_archive_days", FavoriteArchiveDays);
+                await _localStorage.SetItemAsync("nobs_anchor_cards", AnchorCards);
                 await _localStorage.SetItemAsync("nobs_website_time_seconds", WebsiteTimeSeconds);
                 await _localStorage.SetItemAsync("nobs_profile_section", ActiveProfileSection);
                 await _localStorage.SetItemAsync("nobs_user_role", UserRole);
@@ -608,11 +687,13 @@ public class AppState : IDisposable
                     var savedRelapseLogs = await _localStorage.GetItemAsync<List<RelapseEntry>>("nobs_relapse_logs");
                     var savedUrges = await _localStorage.GetItemAsync<int?>("nobs_urges_surfed_count");
                     var savedFavs = await _localStorage.GetItemAsync<List<int>>("nobs_favorite_archive_days");
+                    var savedAnchors = await _localStorage.GetItemAsync<List<AnchorCardItem>>("nobs_anchor_cards");
                     if (!string.IsNullOrEmpty(savedMotivation)) InitialHabitMotivation = savedMotivation;
                     if (savedMoodLogs != null) DailyMoodLogs = savedMoodLogs;
                     if (savedRelapseLogs != null) RelapseLogs = savedRelapseLogs;
                     if (savedUrges.HasValue) UrgesSurfedCount = savedUrges.Value;
                     if (savedFavs != null) FavoriteArchiveDays = savedFavs;
+                    if (savedAnchors != null && savedAnchors.Count > 0) AnchorCards = savedAnchors;
                 }
 
                 // Restore active view from local storage if saved, otherwise default to landing page

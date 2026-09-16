@@ -52,28 +52,28 @@ window.nobsBreathingTimeline = [
         "end": 5.5,
         "label": "HRV PROTOCOL INTRO",
         "phase": "intro",
-        "text": "“So I looked at all the things that can raise your heart rate variability, and I started doing this breathing technique specifically for heart rate variability, and it went up.”"
+        "text": "So I looked at all the things that can raise your heart rate variability, and I started doing this breathing technique specifically for heart rate variability, and it went up."
     },
     {
         "start": 5.5,
         "end": 10.5,
         "label": "HRV PROTOCOL INTRO",
         "phase": "intro",
-        "text": "“Awesome. So it's... Great. tested. Great. Let's do it together. Here, I'll play it.”"
+        "text": "Awesome. So it's... Great. tested. Great. Let's do it together. Here, I'll play it."
     },
     {
         "start": 10.5,
         "end": 19.5,
         "label": "HRV PROTOCOL INTRO",
         "phase": "intro",
-        "text": "“It'll say, 'Take a deep breath,' and then you'll hear the sound... if you follow me for the first inhale and exhale, you'll know what sound means what.”"
+        "text": "It'll say, 'Take a deep breath,' and then you'll hear the sound... if you follow me for the first inhale and exhale, you'll know what sound means what."
     },
     {
         "start": 19.5,
         "end": 24.2,
         "label": "CLOSE YOUR EYES",
         "phase": "intro",
-        "text": "“And you do this eyes closed, typically? — I do it eyes closed. Okay, we'll close our eyes.”"
+        "text": "And you do this eyes closed, typically? â€” I do it eyes closed. Okay, we'll close our eyes."
     },
     {
         "start": 24.2,
@@ -82,7 +82,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 1,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Guided Deep Inhale with Rick & guide..."
+        "text": " [Inhale Chime] Guided Deep Inhale with Rick & guide..."
     },
     {
         "start": 29.4,
@@ -91,7 +91,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 1,
         "total": 31,
-        "text": "💨 [Exhale Chime] Smooth, complete exhale with the guide..."
+        "text": " [Exhale Chime] Smooth, complete exhale with the guide..."
     },
     {
         "start": 35.2,
@@ -100,7 +100,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 2,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Smooth inhalation through nose..."
+        "text": " [Inhale Chime] Smooth inhalation through nose..."
     },
     {
         "start": 40.5,
@@ -109,7 +109,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 2,
         "total": 31,
-        "text": "💨 [Exhale Chime] Gentle, unforced release..."
+        "text": " [Exhale Chime] Gentle, unforced release..."
     },
     {
         "start": 46.2,
@@ -118,7 +118,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 3,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Deep diaphragmatic breath..."
+        "text": " [Inhale Chime] Deep diaphragmatic breath..."
     },
     {
         "start": 51.5,
@@ -127,7 +127,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 3,
         "total": 31,
-        "text": "💨 [Exhale Chime] Relaxing shoulders and jaw..."
+        "text": " [Exhale Chime] Relaxing shoulders and jaw..."
     },
     {
         "start": 57.2,
@@ -136,7 +136,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 4,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Filling lower lungs with air..."
+        "text": " [Inhale Chime] Filling lower lungs with air..."
     },
     {
         "start": 62.5,
@@ -145,7 +145,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 4,
         "total": 31,
-        "text": "💨 [Exhale Chime] Smooth, slow exhale..."
+        "text": " [Exhale Chime] Smooth, slow exhale..."
     },
     {
         "start": 68.2,
@@ -154,7 +154,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 5,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Expanding ribcage gently..."
+        "text": " [Inhale Chime] Expanding ribcage gently..."
     },
     {
         "start": 73.5,
@@ -163,7 +163,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 5,
         "total": 31,
-        "text": "💨 [Exhale Chime] Releasing all physical tension..."
+        "text": " [Exhale Chime] Releasing all physical tension..."
     },
     {
         "start": 79.2,
@@ -172,7 +172,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 6,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Calm, steady nasal inhalation..."
+        "text": " [Inhale Chime] Calm, steady nasal inhalation..."
     },
     {
         "start": 84.5,
@@ -181,7 +181,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 6,
         "total": 31,
-        "text": "💨 [Exhale Chime] Letting go of urge friction..."
+        "text": " [Exhale Chime] Letting go of urge friction..."
     },
     {
         "start": 90.2,
@@ -190,7 +190,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 7,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Centering awareness on heart..."
+        "text": " [Inhale Chime] Centering awareness on heart..."
     },
     {
         "start": 95.5,
@@ -199,7 +199,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 7,
         "total": 31,
-        "text": "💨 [Exhale Chime] Long, calm release through nose..."
+        "text": " [Exhale Chime] Long, calm release through nose..."
     },
     {
         "start": 101.2,
@@ -208,7 +208,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 8,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Synchronizing heart rate variability..."
+        "text": "[Inhale Chime] Synchronizing heart rate variability..."
     },
     {
         "start": 106.5,
@@ -217,7 +217,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 8,
         "total": 31,
-        "text": "💨 [Exhale Chime] Deep parasympathetic tone..."
+        "text": " [Exhale Chime] Deep parasympathetic tone..."
     },
     {
         "start": 111.2,
@@ -226,7 +226,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 9,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Smooth rhythm in and out..."
+        "text": "[Inhale Chime] Smooth rhythm in and out..."
     },
     {
         "start": 117.5,
@@ -235,7 +235,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 9,
         "total": 31,
-        "text": "💨 [Exhale Chime] Complete, effortless release..."
+        "text": " [Exhale Chime] Complete, effortless release..."
     },
     {
         "start": 123.2,
@@ -244,7 +244,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 10,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Pure resonant frequency breath..."
+        "text": " [Inhale Chime] Pure resonant frequency breath..."
     },
     {
         "start": 128.5,
@@ -253,7 +253,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 10,
         "total": 31,
-        "text": "💨 [Exhale Chime] Emptying lungs completely..."
+        "text": " [Exhale Chime] Emptying lungs completely..."
     },
     {
         "start": 134.2,
@@ -262,7 +262,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 11,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Slow and effortless airflow..."
+        "text": " [Inhale Chime] Slow and effortless airflow..."
     },
     {
         "start": 139.5,
@@ -271,7 +271,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 11,
         "total": 31,
-        "text": "💨 [Exhale Chime] Body settling into profound stillness..."
+        "text": " [Exhale Chime] Body settling into profound stillness..."
     },
     {
         "start": 145.2,
@@ -280,7 +280,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 12,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Vagal nerve stimulation active..."
+        "text": " [Inhale Chime] Vagal nerve stimulation active..."
     },
     {
         "start": 150.2,
@@ -289,7 +289,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 12,
         "total": 31,
-        "text": "💨 [Exhale Chime] Releasing stress and resistance..."
+        "text": " [Exhale Chime] Releasing stress and resistance..."
     },
     {
         "start": 156.2,
@@ -298,7 +298,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 13,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Expanding chest softly..."
+        "text": " [Inhale Chime] Expanding chest softly..."
     },
     {
         "start": 160.6,
@@ -307,7 +307,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 13,
         "total": 31,
-        "text": "💨 [Exhale Chime] Smooth airflow out..."
+        "text": " [Exhale Chime] Smooth airflow out..."
     },
     {
         "start": 167.2,
@@ -316,7 +316,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 14,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Steady breath, peaceful mind..."
+        "text": " [Inhale Chime] Steady breath, peaceful mind..."
     },
     {
         "start": 171.4,
@@ -325,7 +325,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 14,
         "total": 31,
-        "text": "💨 [Exhale Chime] Slowing heart rhythm naturally..."
+        "text": " [Exhale Chime] Slowing heart rhythm naturally..."
     },
     {
         "start": 177.6,
@@ -334,7 +334,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 15,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Down-regulating nervous system..."
+        "text": " [Inhale Chime] Down-regulating nervous system..."
     },
     {
         "start": 183.5,
@@ -343,7 +343,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 15,
         "total": 31,
-        "text": "💨 [Exhale Chime] Letting tension dissolve..."
+        "text": " [Exhale Chime] Letting tension dissolve..."
     },
     {
         "start": 189.2,
@@ -352,7 +352,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 16,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Deep soothing inspiration..."
+        "text": " [Inhale Chime] Deep soothing inspiration..."
     },
     {
         "start": 194.5,
@@ -361,7 +361,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 16,
         "total": 31,
-        "text": "💨 [Exhale Chime] Deep peace settling in..."
+        "text": " [Exhale Chime] Deep peace settling in..."
     },
     {
         "start": 200.2,
@@ -370,7 +370,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 17,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Steady parasympathetic flow..."
+        "text": " [Inhale Chime] Steady parasympathetic flow..."
     },
     {
         "start": 205.5,
@@ -379,7 +379,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 17,
         "total": 31,
-        "text": "💨 [Exhale Chime] Quiet exhale with chime..."
+        "text": " [Exhale Chime] Quiet exhale with chime..."
     },
     {
         "start": 211.2,
@@ -388,7 +388,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 18,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Nourishing heart and brain..."
+        "text": " [Inhale Chime] Nourishing heart and brain..."
     },
     {
         "start": 216.5,
@@ -397,7 +397,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 18,
         "total": 31,
-        "text": "💨 [Exhale Chime] Resting in autonomic coherence..."
+        "text": "[Exhale Chime] Resting in autonomic coherence..."
     },
     {
         "start": 222.2,
@@ -406,7 +406,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 19,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Smooth inhalation with chime..."
+        "text": "[Inhale Chime] Smooth inhalation with chime..."
     },
     {
         "start": 227.5,
@@ -415,7 +415,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 19,
         "total": 31,
-        "text": "💨 [Exhale Chime] Gentle, quiet airflow out..."
+        "text": "[Exhale Chime] Gentle, quiet airflow out..."
     },
     {
         "start": 233.2,
@@ -424,7 +424,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 20,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Harmonizing cardiac rhythm..."
+        "text": " [Inhale Chime] Harmonizing cardiac rhythm..."
     },
     {
         "start": 238.5,
@@ -433,7 +433,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 20,
         "total": 31,
-        "text": "💨 [Exhale Chime] Softening belly and face..."
+        "text": " [Exhale Chime] Softening belly and face..."
     },
     {
         "start": 244.2,
@@ -442,7 +442,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 21,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Unforced, gentle intake..."
+        "text": " [Inhale Chime] Unforced, gentle intake..."
     },
     {
         "start": 249.5,
@@ -451,7 +451,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 21,
         "total": 31,
-        "text": "💨 [Exhale Chime] Smooth release..."
+        "text": " [Exhale Chime] Smooth release..."
     },
     {
         "start": 255.2,
@@ -460,7 +460,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 22,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Clarity and calmness expanding..."
+        "text": " [Inhale Chime] Clarity and calmness expanding..."
     },
     {
         "start": 260.5,
@@ -469,7 +469,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 22,
         "total": 31,
-        "text": "💨 [Exhale Chime] Sinking into grounded stillness..."
+        "text": " [Exhale Chime] Sinking into grounded stillness..."
     },
     {
         "start": 266.1,
@@ -478,7 +478,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 23,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Soft, even breath..."
+        "text": " [Inhale Chime] Soft, even breath..."
     },
     {
         "start": 271.5,
@@ -487,7 +487,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 23,
         "total": 31,
-        "text": "💨 [Exhale Chime] Nervous system fully stabilized..."
+        "text": " [Exhale Chime] Nervous system fully stabilized..."
     },
     {
         "start": 277.2,
@@ -496,7 +496,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 24,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Deep resonance..."
+        "text": " [Inhale Chime] Deep resonance..."
     },
     {
         "start": 282.5,
@@ -505,7 +505,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 24,
         "total": 31,
-        "text": "💨 [Exhale Chime] Effortless relaxation..."
+        "text": " [Exhale Chime] Effortless relaxation..."
     },
     {
         "start": 288.2,
@@ -514,7 +514,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 25,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Effortless nasal airflow..."
+        "text": " [Inhale Chime] Effortless nasal airflow..."
     },
     {
         "start": 293.5,
@@ -523,7 +523,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 25,
         "total": 31,
-        "text": "💨 [Exhale Chime] Gentle release of tension..."
+        "text": " [Exhale Chime] Gentle release of tension..."
     },
     {
         "start": 299.2,
@@ -532,7 +532,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 26,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Entering deep coherence state..."
+        "text": "[Inhale Chime] Entering deep coherence state..."
     },
     {
         "start": 304.5,
@@ -541,7 +541,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 26,
         "total": 31,
-        "text": "💨 [Exhale Chime] Quiet and steady exhale..."
+        "text": " [Exhale Chime] Quiet and steady exhale..."
     },
     {
         "start": 310.2,
@@ -550,7 +550,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 27,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Smooth and peaceful breath..."
+        "text": " [Inhale Chime] Smooth and peaceful breath..."
     },
     {
         "start": 315.5,
@@ -559,7 +559,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 27,
         "total": 31,
-        "text": "💨 [Exhale Chime] Smooth surrender of tension..."
+        "text": " [Exhale Chime] Smooth surrender of tension..."
     },
     {
         "start": 321.2,
@@ -568,7 +568,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 28,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Steady rhythm anchoring you..."
+        "text": " [Inhale Chime] Steady rhythm anchoring you..."
     },
     {
         "start": 326.5,
@@ -577,7 +577,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 28,
         "total": 31,
-        "text": "💨 [Exhale Chime] Calm, complete release..."
+        "text": " [Exhale Chime] Calm, complete release..."
     },
     {
         "start": 332.2,
@@ -586,7 +586,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 29,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Smooth deep breath..."
+        "text": " [Inhale Chime] Smooth deep breath..."
     },
     {
         "start": 337.5,
@@ -595,7 +595,7 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 29,
         "total": 31,
-        "text": "💨 [Exhale Chime] Smooth and steady release..."
+        "text": " [Exhale Chime] Smooth and steady release..."
     },
     {
         "start": 343.2,
@@ -604,7 +604,7 @@ window.nobsBreathingTimeline = [
         "phase": "inhale",
         "breath": 30,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Penultimate deep inhale..."
+        "text": "[Inhale Chime] Penultimate deep inhale..."
     },
     {
         "start": 348.6,
@@ -613,46 +613,46 @@ window.nobsBreathingTimeline = [
         "phase": "exhale",
         "breath": 30,
         "total": 31,
-        "text": "💨 [Exhale Chime] Penultimate smooth exhale..."
+        "text": " [Exhale Chime] Penultimate smooth exhale..."
     },
     {
         "start": 354.2,
         "end": 359.5,
-        "label": "INHALE THROUGH NOSE",
-        "phase": "inhale",
+        "label": "5-MIN COHERENCE COMPLETE",
+        "phase": "complete",
         "breath": 31,
         "total": 31,
-        "text": "🔔 [Inhale Chime] Final deep inhale with chime..."
+        "text": " That was five minutes. I like that. Feels nice, doesn't it? Yeah."
     },
     {
         "start": 359.5,
         "end": 372,
-        "label": "SLOW SMOOTH EXHALE",
-        "phase": "exhale",
+        "label": "5-MIN COHERENCE COMPLETE",
+        "phase": "complete",
         "breath": 31,
         "total": 31,
-        "text": "💨 [Exhale Chime] Final slow exhale • 5 minutes complete!"
+        "text": " I noticed I don't spontaneously breathe at that cadence. I breathe quite a bit faster. Mhm. So especially on the exhale."
     },
     {
         "start": 372,
         "end": 379,
         "label": "5-MIN COHERENCE COMPLETE",
         "phase": "complete",
-        "text": "“That was five minutes. I like that. Feels nice, doesn't it? — Yeah.”"
+        "text": "So once I got into a rhythm of it, yeah, the mind just goes pseudo random for me. What about for you?"
     },
     {
         "start": 379,
         "end": 387,
         "label": "5-MIN COHERENCE COMPLETE",
         "phase": "complete",
-        "text": "“I noticed I don't spontaneously breathe at that cadence. I breathe quite a bit faster. — Mhm. So especially on the exhale.”"
+        "text": ""
     },
     {
         "start": 387,
         "end": 397.5,
         "label": "5-MIN COHERENCE COMPLETE",
         "phase": "complete",
-        "text": "“So once I got into a rhythm of it, yeah, the mind just goes pseudo random for me. What about for you?”"
+        "text": ""
     }
 ];
 
@@ -664,18 +664,29 @@ window.nobsProduxScrollytelling = {
     animFrame: null,
     targetProgress: 0.0,
     currentProgress: 0.0,
-    confettiFired: false,
+    victorySoundFired: false,
     active: false,
     _touchStartY: 0,
 
     _shuzoEnded: false,
+    _affectAcknowledged: false,
     _breathingAudio: null,
     _breathingPlaying: false,
     _breathingEnded: false,
+    _breathingGateUnlocked: false,
+    _dotNetHelper: null,
     _natureMuted: true,
     _natureVideos: ['videos/nature_wildlife.mp4', 'videos/water_beach_video.mp4'],
     _natureIndex: 0,
     _lastNatureSwitchTime: 0,
+
+    unlockAffectGate: function () {
+        this._affectAcknowledged = true;
+    },
+
+    setDotNetHelper: function (helper) {
+        this._dotNetHelper = helper;
+    },
 
     replayShuzo: function () {
         this._shuzoEnded = false;
@@ -753,7 +764,7 @@ window.nobsProduxScrollytelling = {
 
         if (timerEl) {
             if (entry.phase === 'complete') {
-                timerEl.textContent = '5:00 ✓';
+                timerEl.textContent = '5:00 âœ“';
             } else if (entry.phase === 'intro') {
                 const secsToStart = Math.max(1, Math.ceil(24.2 - t));
                 timerEl.textContent = secsToStart > 0 ? (secsToStart <= 9 ? `0:0${secsToStart}` : `0:${secsToStart}`) : '0:01';
@@ -784,6 +795,50 @@ window.nobsProduxScrollytelling = {
                 skipBtn.style.display = 'inline-flex';
             } else {
                 skipBtn.style.display = 'none';
+            }
+        }
+
+        // 90-Second Clinically-Gated Urge Surfing Progress Calculation
+        // Acute dopamine craving peaks within 90s. We measure active breathing time from start.
+        const gateTargetSeconds = 90.0;
+        const gateFillEl = document.getElementById('breathGateFill');
+        const gateTimeEl = document.getElementById('breathGateTime');
+        const gateBadgeEl = document.getElementById('exitGateBadge');
+        const exitGridEl = document.getElementById('exitActionsGrid');
+
+        const activeElapsed = Math.max(0, Math.min(gateTargetSeconds, t));
+        const gatePct = Math.min(100, Math.max(0, (activeElapsed / gateTargetSeconds) * 100));
+
+        if (gateFillEl) {
+            gateFillEl.style.width = `${gatePct.toFixed(1)}%`;
+        }
+
+        if (gateTimeEl) {
+            if (t >= gateTargetSeconds) {
+                gateTimeEl.textContent = '90s / 90s âœ“';
+                gateTimeEl.style.color = '#7FB7BE';
+            } else {
+                gateTimeEl.textContent = `${Math.floor(t)}/90s`;
+                gateTimeEl.style.color = '';
+            }
+        }
+
+        if (t >= gateTargetSeconds && !this._breathingGateUnlocked) {
+            this._breathingGateUnlocked = true;
+            if (gateBadgeEl) {
+                gateBadgeEl.classList.remove('is-locked');
+                gateBadgeEl.classList.add('is-unlocked');
+                gateBadgeEl.textContent = 'âœ“ 90s Surfed â€” Actions Ready';
+            }
+            if (exitGridEl) {
+                exitGridEl.classList.remove('is-gated');
+                const btns = exitGridEl.querySelectorAll('.exit-action-btn');
+                btns.forEach(b => b.removeAttribute('disabled'));
+            }
+            if (this._dotNetHelper) {
+                try {
+                    this._dotNetHelper.invokeMethodAsync('UnlockBreathingGate');
+                } catch (e) { }
             }
         }
     },
@@ -892,7 +947,99 @@ window.nobsProduxScrollytelling = {
         return this.toggleNatureSound(isMuted);
     },
 
-    init: function (forceReset) {
+    toggleCallMyNameSound: function (isMuted) {
+        this._callMyNameMuted = !!isMuted;
+        const audio = this.getCallMyNameAudio();
+        if (!audio) return;
+
+        if (this._callMyNameMuted) {
+            // Fade out and pause
+            if (this._callMyNameFadeTimer) clearInterval(this._callMyNameFadeTimer);
+            this._callMyNameFadeTimer = setInterval(() => {
+                if (audio.volume > 0.04) {
+                    audio.volume = Math.max(0, audio.volume - 0.035);
+                } else {
+                    audio.volume = 0;
+                    if (!audio.paused) audio.pause();
+                    clearInterval(this._callMyNameFadeTimer);
+                    this._callMyNameFadeTimer = null;
+                }
+            }, 40);
+        } else {
+            // Resume and fade in
+            if (this._callMyNameFadeTimer) clearInterval(this._callMyNameFadeTimer);
+            audio.volume = 0;
+            if (!this._callMyNameEnded && audio.paused) {
+                const pp = audio.play();
+                if (pp !== undefined) pp.catch(() => {});
+            }
+            this._callMyNameFadeTimer = setInterval(() => {
+                if (audio.volume < 0.47) {
+                    audio.volume = Math.min(0.50, audio.volume + 0.035);
+                } else {
+                    audio.volume = 0.50;
+                    clearInterval(this._callMyNameFadeTimer);
+                    this._callMyNameFadeTimer = null;
+                }
+            }, 40);
+        }
+    },
+
+    getCallMyNameAudio: function () {
+        if (!this._callMyNameAudio) {
+            this._callMyNameAudio = new Audio('sounds/call_my_name.mp3');
+            this._callMyNameAudio.preload = 'auto';
+            this._callMyNameAudio.loop = false;
+            this._callMyNameAudio.volume = 0;   // starts silent; toggled by button
+            this._callMyNameAudio.addEventListener('ended', () => {
+                this._callMyNameEnded = true;
+            });
+        }
+        return this._callMyNameAudio;
+    },
+
+    setupLoopingVideo: function (v) {
+        if (!v || v._loopHooked) return;
+        v._loopHooked = true;
+        v.muted = true;
+        v.loop = true;
+        v.playsInline = true;
+        v.addEventListener('pause', () => {
+            if (this.active && this.currentProgress <= 2.4 && v.paused && !v._playPending) {
+                this.safePlayVideo(v);
+            }
+        });
+    },
+
+    safePlayVideo: function (v) {
+        if (!v) return;
+        this.setupLoopingVideo(v);
+        v.muted = true;
+        if (v.paused && !v._playPending) {
+            v._playPending = true;
+            if (v.networkState === HTMLMediaElement.NETWORK_EMPTY) v.load();
+            const p = v.play();
+            if (p !== undefined) {
+                p.then(() => {
+                    v._playPending = false;
+                }).catch(() => {
+                    v._playPending = false;
+                });
+            } else {
+                v._playPending = false;
+            }
+        }
+    },
+
+    init: function (forceReset, hasPhotos) {
+        if (typeof hasPhotos === 'boolean') {
+            this._hasAnchorPhotos = hasPhotos;
+        } else if (typeof this._hasAnchorPhotos !== 'boolean') {
+            const deck = document.getElementById('anchorCardDeck');
+            const existingPhotoImgs = deck ? deck.querySelectorAll('.anchor-photo-img') : [];
+            this._hasAnchorPhotos = existingPhotoImgs.length > 0;
+        }
+
         if (this.active && !forceReset) {
             // Already active, do not reset progress! Just maintain render state
             this.render(this.currentProgress);
@@ -901,17 +1048,54 @@ window.nobsProduxScrollytelling = {
         if (forceReset || !this.active) {
             this.targetProgress = 0.0;
             this.currentProgress = 0.0;
-            this.confettiFired = false;
+            this.victorySoundFired = false;
             this._shuzoEnded = false;
+            this._affectAcknowledged = false;
+            this._cueAcknowledged = false;
+            this._skipAnchors = false;
+            this._isFadingToAnchors = false;
             this._breathingPlaying = false;
             this._breathingEnded = false;
+            this._breathingGateUnlocked = false;
             this._natureIndex = 0;
             this._lastNatureSwitchTime = 0;
             this._natureMuted = true;
+            this._callMyNameMuted = true; // Sound OFF by default
+            this._audioUnlocked = false; // Guard: audios stay silent until 2s delay elapses
+            this._anchorsExitAccumulator = 0;
+            this._anchorsTouchAccumulator = 0;
+            this._anchorsKeyPushes = 0;
+            this._lastAnchorScrollTime = 0;
+            this._lastAnchorTouchTime = 0;
+
+            const gateFillEl = document.getElementById('breathGateFill');
+            if (gateFillEl) gateFillEl.style.width = '0%';
+            const gateTimeEl = document.getElementById('breathGateTime');
+            if (gateTimeEl) { gateTimeEl.textContent = '0/90s'; gateTimeEl.style.color = ''; }
+            const gateBadgeEl = document.getElementById('exitGateBadge');
+            if (gateBadgeEl) {
+                gateBadgeEl.classList.remove('is-unlocked');
+                gateBadgeEl.classList.add('is-locked');
+                gateBadgeEl.textContent = 'Locked (Complete 90s Breathing)';
+            }
+            const exitGridEl = document.getElementById('exitActionsGrid');
+            if (exitGridEl) {
+                exitGridEl.classList.add('is-gated');
+                const btns = exitGridEl.querySelectorAll('.exit-action-btn');
+                btns.forEach(b => b.setAttribute('disabled', 'disabled'));
+            }
+
+            // Videos start immediately (muted) â€” decoder pre-warming, no sound
             const sv = document.getElementById('shuzoVideoPlayer');
             if (sv) { sv.muted = true; }
             const nv = document.getElementById('natureVideoPlayer');
             if (nv) { nv.muted = true; nv.volume = 0; }
+            const mv = document.getElementById('mountainTimelapseVideo');
+            if (mv) { mv.muted = true; this.safePlayVideo(mv); }
+            const wv = document.getElementById('waterWaveVideo');
+            if (wv) { wv.muted = true; this.safePlayVideo(wv); }
+
+            // Breathing audio pre-configured but NOT played yet
             const ba = document.getElementById('breathingAudioPlayer');
             if (ba) {
                 ba.muted = false;
@@ -919,20 +1103,48 @@ window.nobsProduxScrollytelling = {
                 ba.loop = false;
                 ba.currentTime = 0;
             }
+
+            // All audios start SILENT â€” they unlock after 2s (unblur animation = 2.2s)
             const ma = document.getElementById('mountainAmbienceAudio');
             if (ma) {
                 ma.muted = false;
-                ma.volume = 0.60;
+                ma.volume = 0;
                 ma.loop = true;
-                ma.currentTime = 0;
             }
             const wa = document.getElementById('waterWavesAudio');
             if (wa) {
                 wa.muted = false;
-                wa.volume = 0.70;
+                wa.volume = 0;
                 wa.loop = true;
-                wa.currentTime = 0;
             }
+            const bg = document.getElementById('urgeBgMusic');
+            if (bg) {
+                bg.muted = false;
+                bg.volume = 0;
+            }
+
+            this._callMyNameEnded = false;
+            if (this._callMyNameAudio) {
+                this._callMyNameAudio.pause();
+                this._callMyNameAudio.currentTime = 0;
+            } else {
+                const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
+                if (ca) {
+                    ca.pause();
+                    ca.currentTime = 0;
+                    ca.volume = 0.50;
+                }
+            }
+
+            // After 2s: unblur is complete. Audio unlock is enabled, but stays silent
+            // on the Stats Intro screen ("let's look at your past stats").
+            // Central audio engine in render() will fade in bg music only when scrolling into stats (p >= 0.75).
+            const self = this;
+            if (this._audioUnlockTimer) clearTimeout(this._audioUnlockTimer);
+            this._audioUnlockTimer = setTimeout(() => {
+                self._audioUnlocked = true;
+            }, 2000);
+
             this.syncBreathingText(0);
             const sections = document.querySelectorAll('.spotify-data-section');
             sections.forEach((s, idx) => {
@@ -952,7 +1164,7 @@ window.nobsProduxScrollytelling = {
                     try {
                         const diff = this.targetProgress - this.currentProgress;
                         if (Math.abs(diff) > 0.0005) {
-                            this.currentProgress += diff * 0.15; // Smooth exponential lerp
+                            this.currentProgress += diff * 0.22; // Snappy, responsive exponential lerp
                         } else if (this.currentProgress !== this.targetProgress) {
                             this.currentProgress = this.targetProgress;
                         }
@@ -972,8 +1184,9 @@ window.nobsProduxScrollytelling = {
     },
 
     jumpTo: function (target) {
-        if (target === 'breathing' || target === 3.0 || target === 3) {
-            this.targetProgress = 4.90;
+        if (target === 'breathing' || target === 6.0 || target === 6) {
+            this._affectAcknowledged = true;
+            this.targetProgress = 8.10;
             const nv = document.getElementById('natureVideoPlayer');
             if (nv) {
                 nv.muted = this._natureMuted;
@@ -985,13 +1198,21 @@ window.nobsProduxScrollytelling = {
                 this.playBreathingAudio();
             }
         } else if (typeof target === 'number') {
-            const map = [0.0, 1.0, 3.5, 4.9, 5.8];
+            const map = [0.0, 0.60, 2.05, 3.65, 5.00, 5.45, 6.10, 7.50, 8.10, 9.35];
             const idx = Math.floor(target);
+            let val = 0.0;
             if (idx >= 0 && idx < map.length) {
-                this.targetProgress = map[idx];
+                val = map[idx];
             } else {
-                this.targetProgress = Math.max(0.0, Math.min(6.00, target));
+                val = Math.max(0.0, Math.min(10.00, target));
             }
+            if (val >= 3.65 && !this._cueAcknowledged) {
+                this._cueAcknowledged = true;
+            }
+            if (val > 7.50 && !this._affectAcknowledged) {
+                this._affectAcknowledged = true;
+            }
+            this.targetProgress = val;
         }
     },
 
@@ -1000,22 +1221,85 @@ window.nobsProduxScrollytelling = {
         e.preventDefault();
 
         // High precision scrolling physics tailored per section:
-        // Slower, more granular scroll in Data Section (p < 1.0), Day Diary (1.0 <= p < 2.30),
-        // Japanese Video expansion (2.80 <= p <= 4.25), and Breathing (4.35 <= p <= 5.35)
         const p = this.targetProgress;
+        const isScrollingBack = (e.deltaY < 0);
         let multiplier = 0.0014;
-        if (p < 1.0) {
-            multiplier = 0.00065; // ~2.5x slower for data metrics and quotes
-        } else if (p < 2.30) {
-            multiplier = 0.00048; // comfortable pace for shine and day diary cards inspection
-        } else if (p >= 2.80 && p <= 4.25) {
-            multiplier = 0.00070; // deliberate, extended scroll pacing for Japanese video player expansion
-        } else if (p >= 4.35 && p <= 5.35) {
-            multiplier = 0.00035; // ~4x slower anti-skimming scroll deceleration for guided HRV breathing
+        if (p < 0.60) {
+            multiplier = 0.0014; // Smooth dismiss for Stats Intro ("let's look at your past stats")
+        } else if (p < 1.45) {
+            multiplier = 0.00060; // Natural, comfortable reading pace through data metric cards
+        } else if (p < 2.05) {
+            multiplier = 0.00024; // Slower, graceful transition from data into Day Diary so user absorbs "Why you entered this arena" & shine
+        } else if (p < 3.20) {
+            // Responsive Day Diary horizontal/diagonal card glide
+            const s0 = document.getElementById('urge-scene-0');
+            const cards = s0 ? s0.querySelectorAll('.produx-diagonal-card') : null;
+            const cardCount = (cards && cards.length > 0) ? cards.length : 7;
+            const intervals = Math.max(1, cardCount - 1);
+            const targetDeltaYPerCard = 360;
+            let diaryMultiplier = 1.15 / (targetDeltaYPerCard * intervals);
+            diaryMultiplier = Math.max(0.00015, Math.min(0.0016, diaryMultiplier));
+            multiplier = diaryMultiplier;
+        } else if (p >= 3.20 && p < 5.00) {
+            // Relational Anchor Flashcards:
+            // When scrolling backwards (wheel up), provide responsive pacing so user can un-swipe easily:
+            multiplier = isScrollingBack ? 0.0012 : 0.00085;
+        } else if (p >= 5.00 && p < 5.45) {
+            // Forward scroll has deliberate delay. Backward scroll has instant responsive return:
+            multiplier = isScrollingBack ? 0.0012 : 0.00035;
+        } else if (p >= 5.45 && p < 6.10) {
+            // Friction-free normal scroll: "you've come this far..." to Japanese motivation video
+            multiplier = 0.0014;
+        } else if (p >= 6.10 && p < 6.70) {
+            multiplier = 0.0010; // comfortable pacing during video expansion
+        } else if (p >= 6.70 && p < 7.50) {
+            multiplier = 0.0014; // smooth normal scroll into somatic check-in
+        } else if (p >= 7.50 && p < 8.00) {
+            // Friction-free normal scroll: "Let's leave all the noise behind" to breathing exercise
+            multiplier = 0.0014;
+        } else if (p >= 8.00 && p <= 8.85) {
+            multiplier = 0.00045; // steady pace during guided HRV breathing
+        } else {
+            // Friction-free normal scroll: breathing exercise to "You chose this. Day X is yours" (p > 8.85)
+            multiplier = 0.0014;
         }
 
         const delta = e.deltaY * multiplier;
-        this.targetProgress = Math.max(0.0, Math.min(6.00, this.targetProgress + delta));
+        let nextP = Math.max(0.0, Math.min(10.00, this.targetProgress + delta));
+
+        // "Remember who counts on you" Exit Blocking:
+        // Protects call_my_name music from being accidentally closed.
+        // Requires deliberate, continuous scroll (~280 delta within 800ms) to transition past 5.00 into "you've come this far...".
+        if (this.targetProgress <= 5.00 && nextP > 5.00) {
+            const now = Date.now();
+            if (now - (this._lastAnchorScrollTime || 0) > 800) {
+                this._anchorsExitAccumulator = 0;
+            }
+            this._lastAnchorScrollTime = now;
+            if (e.deltaY > 0) {
+                this._anchorsExitAccumulator = (this._anchorsExitAccumulator || 0) + e.deltaY;
+                if (this._anchorsExitAccumulator < 280) {
+                    nextP = 5.00;
+                }
+            }
+        } else if (nextP < 5.00) {
+            this._anchorsExitAccumulator = 0;
+        }
+
+        // Photo Cue gate: if user has no photos yet, lock forward progress at 3.65 until OK button clicked
+        // _skipAnchors means user pressed OK with no photos â†’ bypass gate entirely
+        if (!this._hasAnchorPhotos && !this._cueAcknowledged && !this._skipAnchors && nextP > 3.65) {
+            nextP = 3.65;
+        }
+        // Somatic Interoception gate: lock progress until acknowledged or skipped
+        if (nextP > 7.50 && !this._affectAcknowledged) {
+            nextP = 7.50;
+        }
+        // Breathing Exercise gate: lock in place until guided breathing exercise finishes
+        if (nextP > 8.85 && !this._breathingEnded) {
+            nextP = 8.85;
+        }
+        this.targetProgress = nextP;
     },
 
     onTouchStart: function (e) {
@@ -1030,25 +1314,88 @@ window.nobsProduxScrollytelling = {
         if (e.touches && e.touches.length > 0) {
             const currentY = e.touches[0].clientY;
             const p = this.targetProgress;
+            const rawTouchDelta = (this._touchStartY - currentY);
+            const isTouchingBack = (rawTouchDelta < 0);
             let multiplier = 0.0030;
-            if (p < 1.0) {
-                multiplier = 0.0014; // ~2.5x slower
-            } else if (p < 2.30) {
-                multiplier = 0.0010; // ~3.5x slower
-            } else if (p >= 2.80 && p <= 4.25) {
-                multiplier = 0.0016; // extended scroll for Japanese video expanding
-            } else if (p >= 4.35 && p <= 5.35) {
-                multiplier = 0.00075; // ~4x slower touch deceleration for guided HRV breathing
+            if (p < 0.60) {
+                multiplier = 0.0030; // Smooth dismiss for Stats Intro
+            } else if (p < 1.45) {
+                multiplier = 0.0013; // Balanced, natural touch swipe through data metric cards
+            } else if (p < 2.05) {
+                multiplier = 0.00055; // Slower touch swipe to unveil "Why you entered this arena" and text shine
+            } else if (p < 3.20) {
+                // Responsive Day Diary touch glide
+                const s0 = document.getElementById('urge-scene-0');
+                const cards = s0 ? s0.querySelectorAll('.produx-diagonal-card') : null;
+                const cardCount = (cards && cards.length > 0) ? cards.length : 7;
+                const intervals = Math.max(1, cardCount - 1);
+                const targetTouchDeltaYPerCard = 220;
+                let diaryTouchMultiplier = 1.15 / (targetTouchDeltaYPerCard * intervals);
+                diaryTouchMultiplier = Math.max(0.00030, Math.min(0.0028, diaryTouchMultiplier));
+                multiplier = diaryTouchMultiplier;
+            } else if (p >= 3.20 && p < 5.00) {
+                multiplier = isTouchingBack ? 0.0028 : 0.0016;
+            } else if (p >= 5.00 && p < 5.45) {
+                // Deliberate touch delay for transition forward from anchors; snappy return backward:
+                multiplier = isTouchingBack ? 0.0028 : 0.00075;
+            } else if (p >= 5.45 && p < 6.10) {
+                multiplier = 0.0030; // Friction-free normal touch swipe
+            } else if (p >= 6.10 && p < 6.70) {
+                multiplier = 0.0020;
+            } else if (p >= 6.70 && p < 7.50) {
+                multiplier = 0.0030; // Friction-free normal touch swipe
+            } else if (p >= 7.50 && p < 8.00) {
+                multiplier = 0.0030; // Friction-free normal touch swipe
+            } else if (p >= 8.00 && p <= 8.85) {
+                multiplier = 0.00080;
+            } else {
+                multiplier = 0.0030; // Friction-free normal touch swipe into victory
             }
-            const deltaY = (this._touchStartY - currentY) * multiplier;
+            const deltaY = rawTouchDelta * multiplier;
             this._touchStartY = currentY;
-            this.targetProgress = Math.max(0.0, Math.min(6.00, this.targetProgress + deltaY));
+            let nextP = Math.max(0.0, Math.min(10.00, this.targetProgress + deltaY));
+
+            // Touch exit blocking for "Remember who counts on you"
+            if (this.targetProgress <= 5.00 && nextP > 5.00) {
+                const now = Date.now();
+                if (now - (this._lastAnchorTouchTime || 0) > 800) {
+                    this._anchorsTouchAccumulator = 0;
+                }
+                this._lastAnchorTouchTime = now;
+                if (rawTouchDelta > 0) {
+                    this._anchorsTouchAccumulator = (this._anchorsTouchAccumulator || 0) + rawTouchDelta;
+                    if (this._anchorsTouchAccumulator < 180) {
+                        nextP = 5.00;
+                    }
+                }
+            } else if (nextP < 5.00) {
+                this._anchorsTouchAccumulator = 0;
+            }
+
+            if (!this._hasAnchorPhotos && !this._cueAcknowledged && !this._skipAnchors && nextP > 3.65) {
+                nextP = 3.65;
+            }
+            if (nextP > 7.50 && !this._affectAcknowledged) {
+                nextP = 7.50;
+            }
+            this.targetProgress = nextP;
             if (e.cancelable) e.preventDefault();
         }
     },
 
     onKeyDown: function (e) {
         if (!this.isModalOpen()) return;
+
+        // If focus or event target is an editable input or textarea, DO NOT intercept keys (especially Space bar or arrows)
+        const target = e.target;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+            return;
+        }
+        const active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) {
+            return;
+        }
+
         if (e.key === 'Escape') {
             const closeBtn = document.querySelector('.modal-close-btn');
             if (closeBtn) {
@@ -1057,67 +1404,97 @@ window.nobsProduxScrollytelling = {
             return;
         }
         const p = this.targetProgress;
-        const step = (p < 2.45) ? 0.08 : 0.20;
+        let step = (p < 0.60) ? 0.15 : ((p < 1.45) ? 0.06 : ((p < 2.05) ? 0.03 : 0.08));
+        if (p >= 2.05 && p < 3.20) {
+            const s0 = document.getElementById('urge-scene-0');
+            const cards = s0 ? s0.querySelectorAll('.produx-diagonal-card') : null;
+            const intervals = Math.max(1, (cards && cards.length > 0 ? cards.length : 7) - 1);
+            step = 1.15 / intervals;
+        } else if (p >= 3.20 && p < 5.00) {
+            step = 0.08;
+        } else if (p >= 5.00 && p < 5.45) {
+            step = 0.04; // Deliberate scroll delay step for transition from "Remember who counts on you" to "you've come this far..."
+        }
         if (e.key === 'ArrowDown' || e.key === 'PageDown') {
             e.preventDefault();
-            this.targetProgress = Math.min(6.00, this.targetProgress + step);
+            let nextP = Math.min(10.00, this.targetProgress + step);
+            if (this.targetProgress <= 5.00 && nextP > 5.00) {
+                this._anchorsKeyPushes = (this._anchorsKeyPushes || 0) + 1;
+                if (this._anchorsKeyPushes < 3) {
+                    nextP = 5.00;
+                }
+            } else if (nextP < 5.00) {
+                this._anchorsKeyPushes = 0;
+            }
+            if (!this._hasAnchorPhotos && !this._cueAcknowledged && !this._skipAnchors && nextP > 3.65) nextP = 3.65;
+            if (nextP > 7.50 && !this._affectAcknowledged) nextP = 7.50;
+            this.targetProgress = nextP;
         } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
             e.preventDefault();
-            this.targetProgress = Math.max(0.0, this.targetProgress - step);
+            this._anchorsKeyPushes = 0;
+            const upStep = (p >= 5.00 && p <= 5.45) ? 0.08 : step;
+            this.targetProgress = Math.max(0.0, this.targetProgress - upStep);
         } else if (e.key === ' ') {
             e.preventDefault();
-            this.targetProgress = Math.min(6.00, this.targetProgress + (step * 1.5));
+            let nextP = Math.min(10.00, this.targetProgress + (step * 1.5));
+            if (this.targetProgress <= 5.00 && nextP > 5.00) {
+                this._anchorsKeyPushes = (this._anchorsKeyPushes || 0) + 1;
+                if (this._anchorsKeyPushes < 3) {
+                    nextP = 5.00;
+                }
+            } else if (nextP < 5.00) {
+                this._anchorsKeyPushes = 0;
+            }
+            if (!this._hasAnchorPhotos && !this._cueAcknowledged && !this._skipAnchors && nextP > 3.65) nextP = 3.65;
+            if (nextP > 7.50 && !this._affectAcknowledged) nextP = 7.50;
+            this.targetProgress = nextP;
         }
     },
 
     render: function (p) {
+        const sPre0 = document.getElementById('urge-scene-stats-intro');
         const s0 = document.getElementById('urge-scene-0');
+        const sCue = document.getElementById('urge-scene-photo-cue');
+        const sAnchors = document.getElementById('urge-scene-anchors');
+        const sFar = document.getElementById('urge-scene-far');
         const s2 = document.getElementById('urge-scene-2');
+        const sAffect = document.getElementById('urge-scene-affect');
+        const sBridge = document.getElementById('urge-scene-bridge');
         const s3 = document.getElementById('urge-scene-3');
         const s4 = document.getElementById('urge-scene-4');
         const bg = document.getElementById('urgeBgMusic');
 
-        // Manage ambient background music ("The City of Lost Hope")
-        // Plays during Scene 0 across all cards of the Day Diary.
-        // Fades out gently as we scroll down from Day Diary into Scene 2 (Japanese video, p: 2.30 -> 2.75).
-        // Once past Day Diary (p > 2.75) or on track end, it marks _hasPlayedOnce = true and never plays again.
-        if (bg) {
-            if (!bg._endedHooked) {
-                bg._endedHooked = true;
-                bg.loop = false;
-                bg.addEventListener('ended', () => {
-                    bg._hasPlayedOnce = true;
-                    bg.pause();
-                });
-            }
+        // Track visibility metrics for biophilic ducking and ambient volume
+        let streakVis = 0;
+        let wavesVis = 0;
 
-            if (!bg.muted && !bg._hasPlayedOnce) {
-                if (p <= 2.30) {
-                    let baseVol = 0.40;
-                    if (p <= 0.25) {
-                        baseVol = 0.22; // Duck slightly for mountain wind
-                    } else if (p >= 0.45 && p <= 1.20) {
-                        baseVol = 0.15; // Duck so water waves sound is rich and audible
-                    }
-                    bg.volume = baseVol;
-                    if (bg.paused) bg.play().catch(() => {});
-                } else if (p > 2.30 && p <= 2.75) {
-                    const fadeNorm = (p - 2.30) / 0.45;
-                    bg.volume = Math.max(0, 0.40 * (1 - fadeNorm));
-                    if (bg.paused) bg.play().catch(() => {});
-                } else {
-                    bg.volume = 0;
-                    if (!bg.paused) bg.pause();
-                    bg._hasPlayedOnce = true;
-                }
+        // -------------------------------------------------------------
+        // SCENE PRE-0: STATS INTRO (0.00 -> 0.60)
+        // Strictly SILENT (no bg music, no ambience)
+        // Immediately scrolls up on first notch of wheel
+        // -------------------------------------------------------------
+        if (sPre0) {
+            if (p < 0.60) {
+                sPre0.style.display = 'flex';
+                sPre0.style.zIndex = '22';
+                // Responsive vertical scroll OUT upwards towards stats stream (0% -> -100%)
+                const normPre = Math.min(1, Math.max(0, p / 0.60));
+                const easePre = normPre * (2 - normPre); // Quad ease-out: immediate motion on tick 1
+                const tyPre = -easePre * 100;
+                const opPre = normPre > 0.88 ? Math.max(0, 1 - (normPre - 0.88) / 0.12) : 1.0;
+                sPre0.style.opacity = opPre.toFixed(3);
+                sPre0.style.transform = `translate3d(0, ${tyPre.toFixed(2)}%, 0)`;
+                sPre0.style.pointerEvents = normPre > 0.3 ? 'none' : 'auto';
             } else {
-                bg.volume = 0;
-                if (!bg.paused) bg.pause();
+                sPre0.style.display = 'none';
+                sPre0.style.zIndex = '1';
+                sPre0.style.opacity = '0';
+                sPre0.style.pointerEvents = 'none';
             }
         }
 
         // -------------------------------------------------------------
-        // SCENE 0: DATA STREAM + PINNED DAY DIARY (0.0 -> 2.7)
+        // SCENE 0: DATA STREAM + PINNED DAY DIARY (0.00 -> 3.65)
         // -------------------------------------------------------------
         if (s0) {
             const dataStream = document.getElementById('spotifyDataStream');
@@ -1126,82 +1503,74 @@ window.nobsProduxScrollytelling = {
             const cards = s0.querySelectorAll('.produx-diagonal-card');
             const diarySection = s0.querySelector('.day-diary-data-section');
 
-            if (p < 2.4) {
+            if (p < 3.20) {
                 s0.style.display = 'flex';
-                s0.style.opacity = '1';
-                s0.style.transform = 'scale(1) translate3d(0, 0, 0)';
-                s0.style.filter = 'blur(0px)';
-                s0.style.pointerEvents = 'auto';
+                s0.style.zIndex = '15';
+                s0.style.boxShadow = 'none';
+                s0.style.filter = 'none';
 
-                // Phase 1 (p: 0.0 -> 1.0): Vertical scroll until Day Diary is in view
-                // Phase 1.5 (p: 0.85 -> 1.45): Day diary text shine animation (starts when visible, ends completely before cards glide)
-                // Phase 2 (p: 1.45 -> 2.30): Cards glide diagonally AFTER shining animation has completed!
+                if (p < 0.60) {
+                    // Normal vertical scroll IN from bottom (+100% -> 0%)
+                    const normIn0 = Math.min(1, Math.max(0, p / 0.60));
+                    const easeIn0 = normIn0 * (2 - normIn0);
+                    const tyIn0 = (1 - easeIn0) * 100;
+                    s0.style.opacity = '1';
+                    s0.style.transform = `translate3d(0, ${tyIn0.toFixed(2)}%, 0)`;
+                    s0.style.pointerEvents = normIn0 > 0.5 ? 'auto' : 'none';
+                } else {
+                    // Fully active centered
+                    s0.style.opacity = '1';
+                    s0.style.transform = 'translate3d(0, 0, 0)';
+                    s0.style.pointerEvents = 'auto';
+                }
+
+                // Phase 1 (p: 1.00 -> 2.05): Slower vertical scroll until Day Diary is in view
+                // Phase 2 (p: 2.05 -> 3.20): Cards glide horizontally/diagonally
                 if (dataStream && dataContainer) {
                     const maxScroll = Math.max(0, dataStream.scrollHeight - dataContainer.clientHeight + 30);
                     const diaryOffset = diarySection ? Math.min(maxScroll, Math.max(0, diarySection.offsetTop - 15)) : maxScroll;
 
                     let currentScrollY = 0;
-                    if (p < 1.0) {
-                        const vertRatio = p / 1.0;
+                    if (p < 0.60) {
+                        currentScrollY = 0;
+                    } else if (p < 2.05) {
+                        const vertRatio = (p - 0.60) / 1.45;
                         currentScrollY = vertRatio * diaryOffset;
                     } else {
-                        // Locked / pinned on Day Diary
                         currentScrollY = diaryOffset;
                     }
                     dataStream.style.transform = `translate3d(0, ${(-currentScrollY).toFixed(1)}px, 0)`;
 
-                    // Check exact visibility of Top Streak card (Section 1) and Urges Surfed card (Section 3.5)
-                    const containerH = dataContainer.clientHeight || 450;
+                    // Visibility checks for Streak and Waves cards
                     const streakCard = s0.querySelector('.folder-card-streak');
                     const wavesCard = s0.querySelector('.folder-card-waves');
+                    const cRect = dataContainer.getBoundingClientRect();
 
-                    let isStreakInView = false;
-                    let isWavesInView = false;
-
-                    if (streakCard) {
-                        const streakSec = streakCard.closest('.spotify-data-section') || streakCard;
-                        const sTop = streakSec.offsetTop - currentScrollY;
-                        isStreakInView = (sTop > -180 && sTop < containerH * 0.40 && p <= 0.22);
-                    }
-
-                    if (wavesCard) {
-                        const wavesSec = wavesCard.closest('.spotify-data-section') || wavesCard;
-                        const wTop = wavesSec.offsetTop - currentScrollY;
-                        isWavesInView = (wTop > -150 && wTop < containerH * 0.70 && p >= 0.52 && p < 1.05);
-                    }
-
-                    const mountainAudio = document.getElementById('mountainAmbienceAudio');
-                    const waterAudio = document.getElementById('waterWavesAudio');
-
-                    if (mountainAudio) {
-                        if (isStreakInView) {
-                            mountainAudio.volume = 0.65;
-                            if (mountainAudio.paused) mountainAudio.play().catch(() => {});
-                        } else {
-                            if (!mountainAudio.paused) mountainAudio.pause();
+                    if (streakCard && cRect.height > 0 && p >= 0.40 && p < 1.40) {
+                        const sRect = streakCard.getBoundingClientRect();
+                        const overlapTop = Math.max(sRect.top, cRect.top);
+                        const overlapBottom = Math.min(sRect.bottom, cRect.bottom);
+                        const visibleH = Math.max(0, overlapBottom - overlapTop);
+                        if (visibleH > 0) {
+                            streakVis = Math.min(1.0, visibleH / (sRect.height * 0.45));
                         }
                     }
 
-                    if (waterAudio) {
-                        if (isWavesInView) {
-                            waterAudio.volume = 0.75;
-                            if (waterAudio.paused) waterAudio.play().catch(() => {});
-                        } else {
-                            if (!waterAudio.paused) waterAudio.pause();
+                    if (wavesCard && cRect.height > 0 && p >= 1.10 && p < 2.30) {
+                        const wRect = wavesCard.getBoundingClientRect();
+                        const overlapTop = Math.max(wRect.top, cRect.top);
+                        const overlapBottom = Math.min(wRect.bottom, cRect.bottom);
+                        const visibleH = Math.max(0, overlapBottom - overlapTop);
+                        const distToBottom = wRect.top - cRect.bottom;
+
+                        if (visibleH > 0) {
+                            wavesVis = Math.min(1.0, visibleH / (wRect.height * 0.40));
+                        } else if (distToBottom > 0 && distToBottom < 180) {
+                            wavesVis = (1 - distToBottom / 180) * 0.35;
                         }
                     }
 
-                    if (bg && !bg.muted && !bg._hasPlayedOnce) {
-                        if (isWavesInView) {
-                            bg.volume = 0.12; // Duck for water waves
-                        } else if (isStreakInView) {
-                            bg.volume = 0.22; // Duck for mountain wind
-                        } else {
-                            bg.volume = 0.40;
-                        }
-                    }
-
-                    // Trigger letter animations for data sections as each enters the viewport
+                    // Trigger letter animations for data sections
                     const sections = s0.querySelectorAll('.spotify-data-section');
                     if (sections && sections.length > 0) {
                         const containerHeight = dataContainer.clientHeight || 450;
@@ -1218,7 +1587,6 @@ window.nobsProduxScrollytelling = {
                     }
 
                     // Produx-style "top 90%" shine trigger:
-                    // Text shines up while positioned at the near bottom of the visible page
                     const containerHeight = dataContainer.clientHeight || 450;
                     const sectionTopInView = diarySection ? (diarySection.offsetTop - currentScrollY) : containerHeight;
                     const viewRatio = sectionTopInView / containerHeight;
@@ -1226,25 +1594,23 @@ window.nobsProduxScrollytelling = {
                     const headlineEl = s0.querySelector('.slide-headline.shine-scroll-text');
                     const subtextEl = s0.querySelector('.slide-subtext.shine-scroll-text');
 
-                    // Headline starts shining right as it enters near the bottom (viewRatio <= 0.92)
-                    // and sweeps across diagonally, completing by viewRatio <= 0.50
+                    // Headline ("Why you entered this arena.") shines dynamically as it glides up: p 1.55 → 1.80
                     let headRatio = 0;
-                    if (viewRatio <= 0.50 || p >= 1.0) {
+                    if (p >= 1.85) {
                         headRatio = 1.0;
-                    } else if (viewRatio < 0.92) {
-                        headRatio = (0.92 - viewRatio) / 0.42;
+                    } else if (p >= 1.75) {
+                        headRatio = Math.min(1.0, (p - 1.75) / 0.25);
                     }
-                    const headPos = (-20 + headRatio * 145).toFixed(1);
+                    const headPos = (-30 + headRatio * 160).toFixed(1);
 
-                    // Subtext starts shining as headline progresses (viewRatio <= 0.65)
-                    // and completes by viewRatio <= 0.15 (when pinned at p >= 1.0)
+                    // Subtext ("Scroll momentum glides...") shines dynamically as it completes rise: p 1.80 → 2.05 (finishes at start of Day Diary)
                     let subRatio = 0;
-                    if (viewRatio <= 0.15 || p >= 1.0) {
+                    if (p >= 2.05) {
                         subRatio = 1.0;
-                    } else if (viewRatio < 0.65) {
-                        subRatio = (0.65 - viewRatio) / 0.50;
+                    } else if (p >= 1.85) {
+                        subRatio = Math.min(1.0, (p - 1.85) / 0.25);
                     }
-                    const subPos = (-20 + subRatio * 145).toFixed(1);
+                    const subPos = (-30 + subRatio * 160).toFixed(1);
 
                     if (headlineEl) {
                         headlineEl.style.setProperty('--shine-pos', `${headPos}%`);
@@ -1257,45 +1623,65 @@ window.nobsProduxScrollytelling = {
                     }
                 }
 
+                // Phase 2: Diagonal Day Diary Glide (p: 2.05 -> 3.20)
                 if (track && cards.length > 0) {
-                    // Day diary cards animation: starts ONLY AFTER the shining animation has completed and pinned (p >= 1.05)
-                    let diaryRatio = 0;
-                    if (p >= 1.05) {
-                        diaryRatio = Math.min(1.0, (p - 1.05) / 1.25);
+                    let diaryRatio = 0.0;
+                    if (p >= 2.05) {
+                        diaryRatio = Math.min(1.0, (p - 2.05) / 1.15);
                     }
-                    const maxShiftX = (cards.length - 1) * 360;
-                    const maxShiftY = (cards.length - 1) * 75;
+                    const stepX = 400;
+                    const baseStepY = 70;
+                    const maxShiftX = (cards.length - 1) * stepX;
 
-                    track.style.transform = `translate3d(${(-diaryRatio * maxShiftX).toFixed(1)}px, ${(-diaryRatio * maxShiftY).toFixed(1)}px, 0)`;
+                    const flattenFactor = Math.max(0, 1.0 - diaryRatio);
+                    const currentStepY = baseStepY * flattenFactor;
+                    const trackY = -diaryRatio * (cards.length - 1) * currentStepY;
+
+                    track.style.transform = `translate3d(${(-diaryRatio * maxShiftX).toFixed(1)}px, ${trackY.toFixed(1)}px, 0)`;
 
                     const focalIndex = diaryRatio * (cards.length - 1);
+                    const parallelHeight = Math.min(410, Math.round(380 + diaryRatio * 25));
+
                     cards.forEach((c, idx) => {
                         const dist = Math.abs(idx - focalIndex);
                         c.style.zIndex = 50 - Math.round(dist * 5);
                         c.classList.remove('active-focus');
+
+                        const cardTop = idx * currentStepY;
+                        c.style.top = `${cardTop.toFixed(1)}px`;
+                        c.style.setProperty('--card-height', `${parallelHeight}px`);
+                        c.style.minHeight = `${parallelHeight}px`;
+                        c.style.height = `${parallelHeight}px`;
                     });
 
                     this.updateCardHover();
                 }
-            } else if (p >= 2.30 && p <= 2.85) {
-                // Scene 0 scrolls vertically UP out of view (normal scroll down)
-                const norm0 = Math.min(1, Math.max(0, (p - 2.30) / 0.55));
-                const ease0 = norm0 * norm0 * (3 - 2 * norm0);
-                const tyPct0 = -ease0 * 100; // 0% -> -100% (moving up out of frame)
+
+                const mv = document.getElementById('mountainTimelapseVideo') || s0.querySelector('.folder-mountain-video');
+                if (mv && mv.paused) this.safePlayVideo(mv);
+                const wv = document.getElementById('waterWaveVideo') || s0.querySelector('.folder-water-wave-video');
+                if (wv && wv.paused) this.safePlayVideo(wv);
+
+            } else if (p >= 3.20 && p <= 3.65) {
+                // Scene 0 scrolls vertically UP out of view (0% -> -100%)
+                const norm0 = Math.min(1, Math.max(0, (p - 3.20) / 0.45));
+                const ease0 = norm0 * (2 - norm0);
+                const tyPct0 = -ease0 * 100;
                 const op0 = norm0 > 0.92 ? Math.max(0, 1 - (norm0 - 0.92) / 0.08) : 1.0;
 
                 const track = document.getElementById('produxDiagonalTrack');
                 const cards = s0.querySelectorAll('.produx-diagonal-card');
                 if (track && cards.length > 0) {
-                    const maxShiftX = (cards.length - 1) * 360;
-                    const maxShiftY = (cards.length - 1) * 75;
-                    track.style.transform = `translate3d(${(-maxShiftX).toFixed(1)}px, ${(-maxShiftY).toFixed(1)}px, 0)`;
+                    const stepX = 400;
+                    const maxShiftX = (cards.length - 1) * stepX;
+                    track.style.transform = `translate3d(${(-maxShiftX).toFixed(1)}px, 0px, 0)`;
+                    cards.forEach((c) => {
+                        c.style.top = '0px';
+                        c.style.setProperty('--card-height', '405px');
+                        c.style.minHeight = '405px';
+                        c.style.height = '405px';
+                    });
                 }
-
-                const ma = document.getElementById('mountainAmbienceAudio');
-                const wa = document.getElementById('waterWavesAudio');
-                if (ma && !ma.paused) ma.pause();
-                if (wa && !wa.paused) wa.pause();
 
                 s0.style.display = 'flex';
                 s0.style.zIndex = '15';
@@ -1309,15 +1695,342 @@ window.nobsProduxScrollytelling = {
                 s0.style.zIndex = '1';
                 s0.style.opacity = '0';
                 s0.style.pointerEvents = 'none';
-                const ma = document.getElementById('mountainAmbienceAudio');
-                const wa = document.getElementById('waterWavesAudio');
-                if (ma && !ma.paused) ma.pause();
-                if (wa && !wa.paused) wa.pause();
+
+                const mv = document.getElementById('mountainTimelapseVideo');
+                if (mv && !mv.paused) mv.pause();
+                const wv = document.getElementById('waterWaveVideo');
+                if (wv && !wv.paused) wv.pause();
             }
         }
 
         // -------------------------------------------------------------
-        // SCENE 2: THE RAW SPARK (Motivation Video) (2.30 -> 4.70)
+        // CENTRAL AUDIO ENGINE (NO BUZZ, NO COMPETING LERPS, NO CHATTER)
+        // -------------------------------------------------------------
+        const mountainAudio = document.getElementById('mountainAmbienceAudio');
+        const waterAudio = document.getElementById('waterWavesAudio');
+
+        if (bg && !bg._endedHooked) {
+            bg._endedHooked = true;
+            bg.loop = false;
+            bg.addEventListener('ended', () => {
+                bg._hasPlayedOnce = true;
+                bg.pause();
+            });
+        }
+
+        if (!this._audioUnlocked || p < 0.50) {
+            // Stats Intro screen or locked window: STRICT SILENCE
+            if (bg && bg.volume > 0) bg.volume = 0;
+            if (mountainAudio && mountainAudio.volume > 0) mountainAudio.volume = 0;
+            if (waterAudio && waterAudio.volume > 0) waterAudio.volume = 0;
+        } else if (p >= 0.50 && p <= 3.65) {
+            // SCENE 0 IS ACTIVE:
+            if (bg && !bg.muted && !bg._hasPlayedOnce) {
+                if (p <= 3.20) {
+                    let targetBgVol = 0.38;
+                    if (wavesVis > 0.05) {
+                        targetBgVol = Math.max(0.12, 0.38 - (wavesVis * 0.26));
+                    } else if (streakVis > 0.05) {
+                        targetBgVol = Math.max(0.18, 0.38 - (streakVis * 0.20));
+                    }
+                    const bgDiff = targetBgVol - bg.volume;
+                    if (Math.abs(bgDiff) > 0.002) {
+                        bg.volume = Math.max(0, Math.min(1, bg.volume + bgDiff * 0.04));
+                    }
+                    if (bg.paused && bg.volume > 0.01) bg.play().catch(() => {});
+                } else {
+                    // Smooth fade-out before Anchor deck
+                    const fadeNorm = (p - 3.20) / 0.45;
+                    const targetFadeVol = Math.max(0, 0.38 * (1 - fadeNorm));
+                    const bfDiff = targetFadeVol - bg.volume;
+                    if (Math.abs(bfDiff) > 0.002) {
+                        bg.volume = Math.max(0, Math.min(1, bg.volume + bfDiff * 0.06));
+                    }
+                    if (bg.paused && bg.volume > 0.01) bg.play().catch(() => {});
+                }
+            }
+
+            // Mountain Ambience Audio
+            if (mountainAudio) {
+                const targetMountainVol = streakVis * 0.65;
+                const mDiff = targetMountainVol - mountainAudio.volume;
+                if (Math.abs(mDiff) > 0.002) {
+                    mountainAudio.volume = Math.max(0, Math.min(1, mountainAudio.volume + mDiff * 0.05));
+                }
+                if (mountainAudio.paused && targetMountainVol > 0.02) {
+                    mountainAudio.play().catch(() => {});
+                }
+            }
+
+            // Water Waves Sound
+            if (waterAudio) {
+                const targetWaterVol = wavesVis * 0.75;
+                const wDiff = targetWaterVol - waterAudio.volume;
+                if (Math.abs(wDiff) > 0.002) {
+                    waterAudio.volume = Math.max(0, Math.min(1, waterAudio.volume + wDiff * 0.05));
+                }
+                if (waterAudio.paused && targetWaterVol > 0.02) {
+                    waterAudio.play().catch(() => {});
+                }
+            }
+        } else {
+            // Past Scene 0 (p > 3.65): fade out and stop Scene 0 audios
+            if (bg) {
+                if (bg.volume > 0.005) {
+                    bg.volume = Math.max(0, bg.volume * 0.85);
+                } else {
+                    bg.volume = 0;
+                    if (!bg.paused) bg.pause();
+                    bg._hasPlayedOnce = true;
+                }
+            }
+            if (mountainAudio && !mountainAudio.paused) {
+                mountainAudio.volume = 0;
+                mountainAudio.pause();
+            }
+            if (waterAudio && !waterAudio.paused) {
+                waterAudio.volume = 0;
+                waterAudio.pause();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // AUDIO: CALL MY NAME
+        // Sound is OFF by default; user toggles via the button in the top-right.
+        // Once turned on, it plays continuously without being paused on scroll.
+        // -------------------------------------------------------------
+        const callAudio = this.getCallMyNameAudio();
+
+        if (callAudio) {
+            // Only play if sound is turned ON by user
+            if (!this._callMyNameMuted && !this._callMyNameEnded && callAudio.paused && !this._callMyNameFadeTimer) {
+                callAudio.volume = 0.50;
+                const playPromise = callAudio.play();
+                if (playPromise !== undefined) playPromise.catch(() => {});
+            }
+        }
+
+        // -------------------------------------------------------------
+        // SCENE 1.1: GROUNDING ANCHORS PHOTO CUE
+        // Shown ONLY if user has no photos yet and has not unlocked cue gate
+        // -------------------------------------------------------------
+        if (sCue) {
+            // Never show the cue screen if user skipped (no photos) or already acknowledged
+            if (this._skipAnchors || this._cueAcknowledged || this._hasAnchorPhotos) {
+                sCue.style.display = 'none';
+                sCue.style.opacity = '0';
+                sCue.style.zIndex = '1';
+                sCue.style.pointerEvents = 'none';
+            } else {
+                // Show only when user has no photos and hasn't yet clicked OK
+                if (p >= 3.20 && p <= 4.00) {
+                    if (p < 3.65) {
+                        const normCIn = Math.min(1, Math.max(0, (p - 3.20) / 0.45));
+                        const easeCIn = normCIn * (2 - normCIn);
+                        const tyCIn = (1 - easeCIn) * 100;
+                        sCue.style.display = 'flex';
+                        sCue.style.zIndex = '22';
+                        sCue.style.opacity = normCIn.toFixed(3);
+                        sCue.style.transform = `translate3d(0, ${tyCIn.toFixed(2)}%, 0)`;
+                        sCue.style.pointerEvents = 'none';
+                    } else {
+                        // Locked centered at 3.65 with pointer events enabled
+                        sCue.style.display = 'flex';
+                        sCue.style.zIndex = '22';
+                        sCue.style.opacity = '1';
+                        sCue.style.transform = 'translate3d(0, 0, 0)';
+                        sCue.style.pointerEvents = 'auto';
+                    }
+                } else {
+                    sCue.style.display = 'none';
+                    sCue.style.zIndex = '1';
+                    sCue.style.opacity = '0';
+                    sCue.style.pointerEvents = 'none';
+                }
+            }
+        }
+
+        // If user scrolled all the way back into Day Diary (p <= 3.20), reset _cueAcknowledged so returning encounters Cue screen again
+        // But if _skipAnchors is set (skipped with no photos), keep it set so we never re-show sCue or sAnchors
+        if (p <= 3.20 && !this._hasAnchorPhotos && !this._skipAnchors) {
+            this._cueAcknowledged = false;
+        }
+
+        // -------------------------------------------------------------
+        // SCENE 1.2: ANCHOR FLASHCARDS DECK ("Remember who counts on you")
+        // Active when user has photos OR has acknowledged the cue gate
+        // -------------------------------------------------------------
+        // Show anchors only when user has photos or acknowledged cue â€” never when skipped (no photos)
+        const showAnchors = (this._hasAnchorPhotos || this._cueAcknowledged) && !this._skipAnchors;
+        if (sAnchors) {
+            if (showAnchors && !this._isFadingToAnchors) {
+                const deck = document.getElementById('anchorCardDeck');
+                const cards = deck ? deck.querySelectorAll('.anchor-card') : [];
+
+                if (p >= 3.20 && p <= 5.45) {
+                    const soundBtn = document.getElementById('callMyNameSoundBtn');
+
+                    if (p < 3.65) {
+                        // Smooth vertical scroll IN from bottom (+100% → 0%)
+                        const normIn = Math.min(1, Math.max(0, (p - 3.20) / 0.45));
+                        const easeIn = normIn * (2 - normIn);
+                        const tyIn = (1 - easeIn) * 100;
+                        const opIn = Math.min(1, Math.max(0, (normIn - 0.05) / 0.95));
+
+                        // Deck scales up as it enters: 0.88 → 1.0
+                        const scaleIn = 0.88 + easeIn * 0.12;
+
+                        sAnchors.style.display = 'flex';
+                        sAnchors.style.zIndex = '22';
+                        sAnchors.style.opacity = opIn.toFixed(3);
+                        sAnchors.style.transform = `translate3d(0, ${tyIn.toFixed(2)}%, 0) scale(${scaleIn.toFixed(3)})`;
+                        sAnchors.style.pointerEvents = 'none';
+
+                        // Sound button hidden during scroll-in
+                        if (soundBtn) { soundBtn.style.opacity = '0'; soundBtn.style.pointerEvents = 'none'; }
+
+                    } else if (p > 5.00) {
+                        // Vertical scroll OUT upwards towards Momentum Anchor (0% → -100%)
+                        const normOut = Math.min(1, Math.max(0, (p - 5.00) / 0.45));
+                        const easeOut = normOut * (2 - normOut);
+                        const tyOut = -easeOut * 100;
+                        const opOut = normOut > 0.90 ? Math.max(0, 1 - (normOut - 0.90) / 0.10) : 1.0;
+                        sAnchors.style.display = 'flex';
+                        sAnchors.style.zIndex = '15';
+                        sAnchors.style.opacity = opOut.toFixed(3);
+                        sAnchors.style.transform = `translate3d(0, ${tyOut.toFixed(2)}%, 0)`;
+                        sAnchors.style.pointerEvents = 'none';
+
+                        // Sound button fades with section
+                        if (soundBtn) { soundBtn.style.opacity = opOut.toFixed(3); soundBtn.style.pointerEvents = 'none'; }
+
+                    } else {
+                        // Centered interactive full page (3.65 → 5.00)
+                        sAnchors.style.display = 'flex';
+                        sAnchors.style.zIndex = '22';
+                        sAnchors.style.opacity = '1';
+                        sAnchors.style.transform = 'translate3d(0, 0, 0) scale(1)';
+                        sAnchors.style.pointerEvents = 'auto';
+
+                        // Sound button fully visible once settled
+                        if (soundBtn) { soundBtn.style.opacity = '1'; soundBtn.style.pointerEvents = 'auto'; }
+                    }
+
+                    // Flashcard Swipe Physics (p: 3.65 -> 5.00)
+                    if (cards && cards.length > 0) {
+                        const cardCount = cards.length;
+                        const deckProgress = Math.min(1.0, Math.max(0.0, (p - 3.65) / 1.35));
+
+                        if (cardCount === 1) {
+                            // Single card interactive feedback: gentle responsive float so user knows scroll is active
+                            const floatY = (deckProgress - 0.5) * -16;
+                            const scale = 0.98 + Math.sin(deckProgress * Math.PI) * 0.03;
+                            cards[0].style.transform = `translate3d(0, ${floatY.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
+                            cards[0].style.opacity = '1';
+                            cards[0].style.zIndex = '20';
+                            cards[0].style.pointerEvents = 'auto';
+                        } else {
+                            const swipeSlot = 1.0 / (cardCount - 1);
+                            cards.forEach((c, idx) => {
+                                if (idx < cardCount - 1) {
+                                    const startP = idx * swipeSlot;
+                                    const endP = (idx + 1) * swipeSlot;
+                                    if (deckProgress <= startP) {
+                                        c.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+                                        c.style.opacity = '1';
+                                        c.style.zIndex = `${30 - idx * 5}`;
+                                        c.style.pointerEvents = 'auto';
+                                    } else if (deckProgress >= endP) {
+                                        const swipeDir = (idx % 2 === 0) ? -1 : 1;
+                                        c.style.transform = `translate3d(${swipeDir * 140}%, -20%, 0) rotate(${swipeDir * 18}deg) scale(0.9)`;
+                                        c.style.opacity = '0';
+                                        c.style.zIndex = '1';
+                                        c.style.pointerEvents = 'none';
+                                    } else {
+                                        const localNorm = (deckProgress - startP) / (endP - startP);
+                                        const easeSwipe = localNorm * (2 - localNorm);
+                                        const swipeDir = (idx % 2 === 0) ? -1 : 1;
+                                        const tx = swipeDir * easeSwipe * 140;
+                                        const ty = -easeSwipe * 20;
+                                        const rot = swipeDir * easeSwipe * 18;
+                                        const op = Math.max(0, 1 - easeSwipe * 1.2);
+                                        c.style.transform = `translate3d(${tx.toFixed(1)}%, ${ty.toFixed(1)}%, 0) rotate(${rot.toFixed(1)}deg) scale(${(1 - easeSwipe * 0.1).toFixed(2)})`;
+                                        c.style.opacity = op.toFixed(3);
+                                        c.style.zIndex = `${30 - idx * 5}`;
+                                        c.style.pointerEvents = 'auto';
+                                    }
+                                } else {
+                                    const prevStart = (cardCount - 2) * swipeSlot;
+                                    const revealNorm = Math.min(1.0, Math.max(0.0, (deckProgress - prevStart) / swipeSlot));
+                                    const scale = 0.94 + 0.06 * revealNorm;
+                                    const ty = (1 - revealNorm) * 16;
+                                    c.style.transform = `translate3d(0, ${ty.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
+                                    c.style.opacity = '1';
+                                    c.style.zIndex = '20';
+                                    c.style.pointerEvents = 'auto';
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    sAnchors.style.display = 'none';
+                    sAnchors.style.zIndex = '1';
+                    sAnchors.style.opacity = '0';
+                    sAnchors.style.pointerEvents = 'none';
+                }
+            } else if (!this._isFadingToAnchors) {
+                sAnchors.style.display = 'none';
+                sAnchors.style.zIndex = '1';
+                sAnchors.style.opacity = '0';
+                sAnchors.style.pointerEvents = 'none';
+            }
+        }
+
+        // -------------------------------------------------------------
+        // SCENE 1.5: "YOU'VE COME THIS FAR..." (5.00 -> 6.10)
+        // Standalone full-screen momentum anchor
+        // -------------------------------------------------------------
+        if (sFar) {
+            if (p >= 5.00 && p <= 6.10) {
+                if (p < 5.45) {
+                    // Vertical scroll IN from bottom (+100% -> 0%)
+                    const normFIn = Math.min(1, Math.max(0, (p - 5.00) / 0.45));
+                    const easeFIn = normFIn * (2 - normFIn);
+                    const tyFIn = (1 - easeFIn) * 100;
+                    sFar.style.display = 'flex';
+                    sFar.style.zIndex = '22';
+                    sFar.style.opacity = '1';
+                    sFar.style.transform = `translate3d(0, ${tyFIn.toFixed(2)}%, 0)`;
+                    sFar.style.pointerEvents = 'none';
+                } else if (p > 5.65) {
+                    // Vertical scroll OUT upwards towards Motivation Video (0% -> -100%)
+                    const normFOut = Math.min(1, Math.max(0, (p - 5.65) / 0.45));
+                    const easeFOut = normFOut * (2 - normFOut);
+                    const tyFOut = -easeFOut * 100;
+                    const opF = normFOut > 0.90 ? Math.max(0, 1 - (normFOut - 0.90) / 0.10) : 1.0;
+                    sFar.style.display = 'flex';
+                    sFar.style.zIndex = '15';
+                    sFar.style.opacity = opF.toFixed(3);
+                    sFar.style.transform = `translate3d(0, ${tyFOut.toFixed(2)}%, 0)`;
+                    sFar.style.pointerEvents = 'none';
+                } else {
+                    // Centered full page alone (5.45 -> 5.65)
+                    sFar.style.display = 'flex';
+                    sFar.style.zIndex = '22';
+                    sFar.style.opacity = '1';
+                    sFar.style.transform = 'translate3d(0, 0, 0)';
+                    sFar.style.pointerEvents = 'auto';
+                }
+            } else {
+                sFar.style.display = 'none';
+                sFar.style.zIndex = '1';
+                sFar.style.opacity = '0';
+                sFar.style.pointerEvents = 'none';
+            }
+        }
+
+        // -------------------------------------------------------------
+        // SCENE 2: THE RAW SPARK (Motivation Video) (5.65 -> 7.45)
         // -------------------------------------------------------------
         if (s2) {
             const sv = document.getElementById('shuzoVideoPlayer');
@@ -1331,34 +2044,34 @@ window.nobsProduxScrollytelling = {
                 });
             }
 
-            if (p >= 2.30 && p <= 4.70) {
-                if (p < 2.85) {
-                    // Normal vertical scroll IN from BOTTOM into center
-                    const norm2In = Math.min(1, Math.max(0, (p - 2.30) / 0.55));
-                    const easeIn2 = norm2In * norm2In * (3 - 2 * norm2In);
-                    const tyPct2In = (1 - easeIn2) * 100; // +100% -> 0% (scrolling up into place)
+            if (p >= 5.65 && p <= 7.45) {
+                if (p < 6.10) {
+                    // Normal vertical scroll IN from BOTTOM (+100% -> 0%)
+                    const norm2In = Math.min(1, Math.max(0, (p - 5.65) / 0.45));
+                    const easeIn2 = norm2In * (2 - norm2In);
+                    const tyPct2In = (1 - easeIn2) * 100;
                     s2.style.display = 'flex';
                     s2.style.zIndex = '20';
                     s2.style.opacity = '1';
                     s2.style.transform = `translate3d(0, ${tyPct2In.toFixed(2)}%, 0)`;
-                    s2.style.boxShadow = (norm2In > 0.02 && norm2In < 0.98) ? '0 -12px 35px rgba(0, 0, 0, 0.4)' : 'none';
+                    s2.style.boxShadow = 'none';
                     s2.style.filter = 'none';
                     s2.style.pointerEvents = norm2In > 0.7 ? 'auto' : 'none';
-                } else if (p > 4.25) {
-                    // Glides OUT to the LEFT towards Nature video
-                    const normOut2 = Math.min(1, Math.max(0, (p - 4.25) / 0.45));
-                    const easeOut2 = normOut2 * normOut2 * (3 - 2 * normOut2);
-                    const txPct2Out = -easeOut2 * 100; // 0% -> -100%
+                } else if (p > 7.00) {
+                    // Normal vertical scroll OUT upwards towards Somatic Check-In (0% -> -100%)
+                    const normOut2 = Math.min(1, Math.max(0, (p - 7.00) / 0.45));
+                    const easeOut2 = normOut2 * (2 - normOut2);
+                    const tyPct2Out = -easeOut2 * 100;
                     const op2 = normOut2 > 0.90 ? Math.max(0, 1 - (normOut2 - 0.90) / 0.10) : 1.0;
                     s2.style.display = 'flex';
                     s2.style.zIndex = '15';
                     s2.style.opacity = op2.toFixed(3);
-                    s2.style.transform = `translate3d(${txPct2Out.toFixed(2)}%, 0, 0)`;
+                    s2.style.transform = `translate3d(0, ${tyPct2Out.toFixed(2)}%, 0)`;
                     s2.style.boxShadow = 'none';
                     s2.style.filter = 'none';
                     s2.style.pointerEvents = normOut2 > 0.4 ? 'none' : 'auto';
                 } else {
-                    // Fully active centered
+                    // Fully active centered (6.10 -> 7.00)
                     s2.style.display = 'flex';
                     s2.style.zIndex = '20';
                     s2.style.opacity = '1';
@@ -1368,9 +2081,9 @@ window.nobsProduxScrollytelling = {
                     s2.style.pointerEvents = 'auto';
                 }
 
-                // Video container expands smoothly over a LONGER scroll distance (p: 2.85 -> 4.15)
-                const expandNorm = Math.min(1, Math.max(0, (p - 2.85) / 1.30));
-                const easeExpand = expandNorm * expandNorm * (3 - 2 * expandNorm);
+                // Video container expands smoothly over scroll (p: 6.10 -> 6.70)
+                const expandNorm = Math.min(1, Math.max(0, (p - 6.10) / 0.60));
+                const easeExpand = expandNorm * (2 - expandNorm);
                 const videoScale = 0.86 + (0.14 * easeExpand);
                 if (expandingBox) {
                     expandingBox.style.transform = `scale(${videoScale.toFixed(3)})`;
@@ -1391,7 +2104,7 @@ window.nobsProduxScrollytelling = {
                 }
 
                 // Auto-play video
-                if (p >= 2.85 && p <= 4.25) {
+                if (p >= 6.10 && p <= 7.00) {
                     if (sv && sv.paused && !sv.ended && !this._shuzoEnded) {
                         sv.play().catch(() => {});
                     }
@@ -1401,7 +2114,6 @@ window.nobsProduxScrollytelling = {
                 s2.style.zIndex = '1';
                 s2.style.opacity = '0';
                 s2.style.pointerEvents = 'none';
-
                 if (sv && !sv.paused) {
                     sv.pause();
                 }
@@ -1409,39 +2121,95 @@ window.nobsProduxScrollytelling = {
         }
 
         // -------------------------------------------------------------
-        // SCENE 3: PHYSIOLOGICAL SIGH (Nature Video) (4.25 -> 5.75)
+        // SCENE 2.3: SOMATIC AWARENESS / AFFECT LABELING (7.00 -> 7.95)
+        // Standalone full-screen check-in before entering the bridge (GATED at 7.50)
+        // -------------------------------------------------------------
+        if (sAffect) {
+            if (p >= 7.00 && p <= 7.95) {
+                if (p < 7.45) {
+                    // Vertical scroll IN from bottom (+100% -> 0%)
+                    const normAIn = Math.min(1, Math.max(0, (p - 7.00) / 0.45));
+                    const easeAIn = normAIn * (2 - normAIn);
+                    const tyAIn = (1 - easeAIn) * 100;
+                    sAffect.style.display = 'flex';
+                    sAffect.style.zIndex = '22';
+                    sAffect.style.opacity = '1';
+                    sAffect.style.transform = `translate3d(0, ${tyAIn.toFixed(2)}%, 0)`;
+                    sAffect.style.pointerEvents = normAIn > 0.7 ? 'auto' : 'none';
+                } else if (p > 7.50) {
+                    // Vertical scroll OUT upwards towards Breathing Exercise (0% -> -100%)
+                    const normAOut = Math.min(1, Math.max(0, (p - 7.50) / 0.45));
+                    const easeAOut = normAOut * (2 - normAOut);
+                    const tyAOut = -easeAOut * 100;
+                    const opA = normAOut > 0.90 ? Math.max(0, 1 - (normAOut - 0.90) / 0.10) : 1.0;
+                    sAffect.style.display = 'flex';
+                    sAffect.style.zIndex = '15';
+                    sAffect.style.opacity = opA.toFixed(3);
+                    sAffect.style.transform = `translate3d(0, ${tyAOut.toFixed(2)}%, 0)`;
+                    sAffect.style.pointerEvents = 'none';
+                } else {
+                    // Centered full page (7.45 -> 7.50)
+                    sAffect.style.display = 'flex';
+                    sAffect.style.zIndex = '22';
+                    sAffect.style.opacity = '1';
+                    sAffect.style.transform = 'translate3d(0, 0, 0)';
+                    sAffect.style.pointerEvents = 'auto';
+                }
+            } else {
+                sAffect.style.display = 'none';
+                sAffect.style.zIndex = '1';
+                sAffect.style.opacity = '0';
+                sAffect.style.pointerEvents = 'none';
+            }
+        }
+
+        // -------------------------------------------------------------
+        // SCENE 2.5: COGNITIVE BRIDGE (Merged in-place inside sAffect)
+        // -------------------------------------------------------------
+        if (sBridge) {
+            sBridge.style.display = 'none';
+            sBridge.style.zIndex = '1';
+            sBridge.style.opacity = '0';
+            sBridge.style.pointerEvents = 'none';
+        }
+
+        // -------------------------------------------------------------
+        // SCENE 3: PHYSIOLOGICAL SIGH (Nature Video & Guided HRV) (7.50 -> 9.35)
+        // Clean, tranquil biophilic breathing exercise
         // -------------------------------------------------------------
         if (s3) {
             const nv = document.getElementById('natureVideoPlayer');
             const natureExpandingBox = document.getElementById('natureExpandingBox');
             const natureSoundBtn = document.getElementById('natureSoundBtn');
 
-            if (p >= 4.25 && p <= 5.75) {
-                if (p < 4.70) {
-                    // Glides IN from the RIGHT to the LEFT into center
-                    const norm3In = Math.min(1, Math.max(0, (p - 4.25) / 0.45));
-                    const easeIn3 = norm3In * norm3In * (3 - 2 * norm3In);
-                    const txPct3In = (1 - easeIn3) * 100; // +100% -> 0%
+            if (p >= 7.50 && p <= 9.35) {
+                if (p < 7.95) {
+                    // Normal vertical scroll IN from BOTTOM (+100% -> 0%)
+                    const norm3In = Math.min(1, Math.max(0, (p - 7.50) / 0.45));
+                    const easeIn3 = norm3In * (2 - norm3In);
+                    const tyPct3In = (1 - easeIn3) * 100;
                     s3.style.display = 'flex';
                     s3.style.zIndex = '20';
                     s3.style.opacity = '1';
-                    s3.style.transform = `translate3d(${txPct3In.toFixed(2)}%, 0, 0)`;
-                    s3.style.boxShadow = (norm3In > 0.02 && norm3In < 0.98) ? '-12px 0 35px rgba(0, 0, 0, 0.4)' : 'none';
+                    s3.style.transform = `translate3d(0, ${tyPct3In.toFixed(2)}%, 0)`;
+                    s3.style.boxShadow = 'none';
                     s3.style.filter = 'none';
                     s3.style.pointerEvents = norm3In > 0.7 ? 'auto' : 'none';
-                } else if (p > 5.35) {
-                    // Pure normal vertical scroll upward out of view
-                    const scrollNorm = Math.min(1, Math.max(0, (p - 5.35) / 0.60));
-                    const sceneTy = -scrollNorm * 100;
+                } else if (p > 8.85) {
+                    // Synchronized 1:1 vertical scroll OUT upwards locked with Scene 4 entering
+                    const normTrans = Math.min(1, Math.max(0, (p - 8.85) / 0.50));
+                    const easeTrans = normTrans * (2 - normTrans);
+                    const sceneTy = -easeTrans * 100;
+                    const op3 = normTrans > 0.92 ? Math.max(0, 1 - (normTrans - 0.92) / 0.08) : 1.0;
                     s3.style.display = 'flex';
-                    s3.style.zIndex = '10';
-                    s3.style.opacity = '1';
+                    s3.style.zIndex = '15';
+                    s3.style.opacity = op3.toFixed(3);
                     s3.style.transform = `translate3d(0, ${sceneTy.toFixed(2)}%, 0)`;
                     s3.style.boxShadow = 'none';
                     s3.style.filter = 'none';
-                    s3.style.pointerEvents = (p <= 5.50) ? 'auto' : 'none';
+                    s3.style.pointerEvents = normTrans > 0.4 ? 'none' : 'auto';
                 } else {
-                    // Fully active centered
+                    // Fully active centered (7.95 -> 8.85)
                     s3.style.display = 'flex';
                     s3.style.zIndex = '20';
                     s3.style.opacity = '1';
@@ -1453,18 +2221,23 @@ window.nobsProduxScrollytelling = {
                 s3.style.filter = 'none';
 
                 // Video container expands smoothly
-                const expandNorm = Math.min(1, Math.max(0, (p - 4.40) / 0.40));
-                const easeExpand = expandNorm * expandNorm * (3 - 2 * expandNorm);
+                const expandNorm = Math.min(1, Math.max(0, (p - 7.80) / 0.35));
+                const easeExpand = expandNorm * (2 - expandNorm);
                 const videoScale = 0.92 + (0.08 * easeExpand);
                 if (natureExpandingBox) {
                     natureExpandingBox.style.transform = `scale(${videoScale.toFixed(3)})`;
                 }
 
                 if (natureSoundBtn) {
-                    if (p >= 4.70 && p <= 5.40) {
+                    if (p >= 7.95 && p <= 8.85) {
                         natureSoundBtn.style.opacity = '1';
                         natureSoundBtn.style.pointerEvents = 'auto';
                         natureSoundBtn.style.transform = 'translateY(0)';
+                    } else if (p > 8.85 && p <= 9.35) {
+                        const btnFade = Math.max(0, 1 - (p - 8.85) / 0.50);
+                        natureSoundBtn.style.opacity = btnFade.toFixed(2);
+                        natureSoundBtn.style.pointerEvents = 'none';
+                        natureSoundBtn.style.transform = `translateY(${((1 - btnFade) * 12).toFixed(1)}px)`;
                     } else {
                         natureSoundBtn.style.opacity = '0';
                         natureSoundBtn.style.pointerEvents = 'none';
@@ -1491,15 +2264,16 @@ window.nobsProduxScrollytelling = {
                         });
                     }
 
-                    if (p > 5.35) {
-                        nv.muted = true;
-                        nv.volume = 0;
+                    if (p > 8.85) {
+                        const fadeAudio = Math.max(0, 1 - (p - 8.85) / 0.50);
+                        nv.volume = this._natureMuted ? 0 : (0.35 * fadeAudio);
+                        if (fadeAudio <= 0.01) nv.muted = true;
                     } else {
                         nv.muted = this._natureMuted;
                         nv.volume = this._natureMuted ? 0 : 0.35;
                     }
 
-                    if (nv.paused && !nv._playPending && p <= 5.45) {
+                    if (nv.paused && !nv._playPending && p <= 9.00) {
                         nv._playPending = true;
                         if (nv.readyState === 0) nv.load();
                         const pPromise = nv.play();
@@ -1511,24 +2285,20 @@ window.nobsProduxScrollytelling = {
                     }
                 }
 
-                // CRITICAL USER REQUIREMENT: Play guided breathing audio ONLY when fully in Scene 3 (p >= 4.70 && p <= 5.35)
-                if (p >= 4.70 && p <= 5.35) {
+                // Guided breathing audio: play only when fully settled in scene (p >= 7.95)
+                // Do NOT pause during scroll-in (7.50â€“7.95) or scroll-out (8.85+) transitions
+                // to avoid cutting audio mid-breath cycle. Only hard-pause if user scrolls all
+                // the way back out (p < 7.50).
+                if (p >= 7.95 && p <= 8.85) {
                     if (!this._breathingEnded) {
                         const ba = document.getElementById('breathingAudioPlayer');
                         if (!this._breathingPlaying || (ba && ba.paused)) {
                             this.playBreathingAudio();
                         }
                     }
-                } else {
-                    if (this._breathingPlaying) {
-                        this.pauseBreathingAudio();
-                    } else {
-                        const ba = document.getElementById('breathingAudioPlayer');
-                        if (ba && !ba.paused) ba.pause();
-                    }
                 }
+                // Do NOT pause for p in (8.85..9.35) â€” audio keeps playing while scrolling out
 
-                // Sync on-screen breath status, countdown timer, and captions with audio in real time
                 const baLive = document.getElementById('breathingAudioPlayer') || this._breathingAudio;
                 if (baLive) {
                     this.syncBreathingText(baLive.currentTime);
@@ -1555,33 +2325,26 @@ window.nobsProduxScrollytelling = {
         }
 
         // -------------------------------------------------------------
-        // SCENE 4: VICTORY LOCK & ACTIONS (5.35 -> 6.00)
+        // SCENE 4: VICTORY LOCK & ACTIONS (8.85 -> 10.00)
         // -------------------------------------------------------------
         if (s4) {
-            if (p >= 5.35) {
-                // Pure normal vertical scroll in from bottom directly connected to Scene 3
-                const scrollNorm = Math.min(1, Math.max(0, (p - 5.35) / 0.60));
-                const tyPct = (1 - scrollNorm) * 100; // percentage: 100% -> 0%
+            if (p >= 8.85) {
+                // Synchronized 1:1 continuous vertical scroll locked with Scene 3
+                const normTrans = Math.min(1, Math.max(0, (p - 8.85) / 0.50));
+                const easeTrans = normTrans * (2 - normTrans);
+                const s4Ty = (1 - easeTrans) * 100;
                 s4.style.display = 'flex';
-                s4.style.zIndex = '25';
+                s4.style.zIndex = '20';
                 s4.style.opacity = '1';
-                s4.style.transform = `translate3d(0, ${tyPct.toFixed(2)}%, 0)`;
+                s4.style.transform = `translate3d(0, ${s4Ty.toFixed(2)}%, 0)`;
                 s4.style.filter = 'none';
-                s4.style.pointerEvents = scrollNorm >= 0.5 ? 'auto' : 'none';
+                s4.style.pointerEvents = normTrans >= 0.5 ? 'auto' : 'none';
 
-                if (p >= 5.85 && !this.confettiFired) {
-                    this.confettiFired = true;
-                    if (window.nobsConfetti) window.nobsConfetti.launch();
-                    if (window.nobsAudio) window.nobsAudio.playVictorySound();
-                }
             } else {
                 s4.style.display = 'none';
                 s4.style.zIndex = '1';
                 s4.style.opacity = '0';
                 s4.style.pointerEvents = 'none';
-                if (p < 5.30) {
-                    this.confettiFired = false;
-                }
             }
         }
     },
@@ -1635,6 +2398,8 @@ window.nobsProduxScrollytelling = {
         this.clearCardHover();
         this._breathingPlaying = false;
         this._breathingEnded = false;
+        this._audioUnlocked = false;
+        if (this._audioUnlockTimer) { clearTimeout(this._audioUnlockTimer); this._audioUnlockTimer = null; }
         const bg = document.getElementById('urgeBgMusic');
         if (bg) {
             bg.pause();
@@ -1666,10 +2431,109 @@ window.nobsProduxScrollytelling = {
         if (ma) { ma.pause(); ma.currentTime = 0; }
         const wa = document.getElementById('waterWavesAudio');
         if (wa) { wa.pause(); wa.currentTime = 0; }
+        const mv = document.getElementById('mountainTimelapseVideo');
+        if (mv) { if (!mv.paused) mv.pause(); mv.currentTime = 0; }
+        const wv = document.getElementById('waterWaveVideo');
+        if (wv) { if (!wv.paused) wv.pause(); wv.currentTime = 0; }
+        if (this._callMyNameTimer) {
+            clearTimeout(this._callMyNameTimer);
+            this._callMyNameTimer = null;
+        }
+        if (this._callMyNameAudio) {
+            this._callMyNameAudio.pause();
+            this._callMyNameAudio.currentTime = 0;
+        }
+        const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
+        if (ca) { if (!ca.paused) ca.pause(); ca.currentTime = 0; }
+        this._callMyNameEnded = false;
+        this._callMyNameMuted = true;
+        const sCue = document.getElementById('urge-scene-photo-cue');
+        if (sCue) { sCue.style.display = 'none'; sCue.style.opacity = '0'; sCue.classList.remove('cue-fade-out'); }
+        const sBridge = document.getElementById('urge-scene-bridge');
+        if (sBridge) { sBridge.style.display = 'none'; sBridge.style.opacity = '0'; }
+        const sAnchors = document.getElementById('urge-scene-anchors');
+        if (sAnchors) { sAnchors.style.display = 'none'; sAnchors.style.opacity = '0'; sAnchors.classList.remove('anchor-deck-fade-in'); }
         if (window.nobsAudio) {
             window.nobsAudio.stopMountainWindAmbience();
             window.nobsAudio.stopOceanWaveAmbience();
         }
+        this._anchorsExitAccumulator = 0;
+        this._anchorsTouchAccumulator = 0;
+        this._anchorsKeyPushes = 0;
+        this._lastAnchorScrollTime = 0;
+        this._lastAnchorTouchTime = 0;
+    },
+
+    setHasPhotos: function (val) {
+        this._hasAnchorPhotos = !!val;
+    },
+
+    unlockCueGate: function (hasPhotos) {
+        const sCue = document.getElementById('urge-scene-photo-cue');
+        const sAnchors = document.getElementById('urge-scene-anchors');
+        const sFar = document.getElementById('urge-scene-far');
+
+        // Immediately hide sCue in all cases
+        if (sCue) {
+            sCue.style.display = 'none';
+            sCue.style.opacity = '0';
+            sCue.style.pointerEvents = 'none';
+            sCue.classList.remove('cue-fade-out');
+        }
+
+        if (!hasPhotos) {
+            // No photos — use _skipAnchors flag so render() NEVER shows anchors section
+            // Do NOT set _cueAcknowledged (that would make showAnchors true → blink)
+            this._skipAnchors = true;
+            this._cueAcknowledged = false;
+
+            // Immediately hide anchors section too — no blink whatsoever
+            if (sAnchors) {
+                sAnchors.style.display = 'none';
+                sAnchors.style.opacity = '0';
+                sAnchors.style.pointerEvents = 'none';
+            }
+
+            setTimeout(() => {
+                this._isFadingToAnchors = false;
+                this.currentProgress = 5.45;
+                this.targetProgress = 5.45;
+                this.render(5.45);
+            }, 400);
+        } else {
+            // Has photos â€” show anchor deck
+            this._cueAcknowledged = true;
+            this._skipAnchors = false;
+            this._isFadingToAnchors = true;
+            if (sAnchors) {
+                sAnchors.style.display = 'flex';
+                sAnchors.style.zIndex = '22';
+                sAnchors.style.transform = 'translate3d(0, 0, 0)';
+                sAnchors.style.pointerEvents = 'auto';
+                sAnchors.classList.remove('cue-fade-out');
+                sAnchors.classList.add('anchor-deck-fade-in');
+            }
+
+            setTimeout(() => {
+                this._isFadingToAnchors = false;
+                this.currentProgress = 3.65;
+                this.targetProgress = 3.65;
+                if (sCue) {
+                    sCue.style.display = 'none';
+                    sCue.style.opacity = '0';
+                    sCue.classList.remove('cue-fade-out');
+                }
+                if (sAnchors) {
+                    sAnchors.classList.remove('anchor-deck-fade-in');
+                    sAnchors.style.opacity = '1';
+                }
+                this.render(3.65);
+            }, 400);
+        }
+    },
+
+    unlockAffectGate: function () {
+        this._affectAcknowledged = true;
     }
 };
 
@@ -1679,7 +2543,7 @@ window.nobsProduxScrollytelling = {
     window.addEventListener('pointerdown', function (e) {
         if (!window.nobsProduxScrollytelling || !window.nobsProduxScrollytelling.isModalOpen()) return;
         const p = window.nobsProduxScrollytelling.currentProgress;
-        if (p >= 4.70 && p <= 5.35) {
+        if (p >= 7.95 && p <= 8.85) {
             if (!window.nobsProduxScrollytelling._breathingEnded) {
                 const ba = document.getElementById('breathingAudioPlayer');
                 if (ba && ba.paused) {
@@ -1742,21 +2606,32 @@ window.nobsProduxScrollytelling = {
         }
     }, { passive: true });
 
-    // Auto-detect modal insertion in DOM
+    // Auto-detect modal insertion in DOM with debounce to prevent false teardowns during Blazor re-renders
     if (typeof MutationObserver !== 'undefined' && document.body) {
+        let _modalDestroyTimer = null;
         const obs = new MutationObserver(function () {
             if (window.nobsProduxScrollytelling) {
-                if (window.nobsProduxScrollytelling.isModalOpen()) {
+                const isOpen = window.nobsProduxScrollytelling.isModalOpen();
+                if (isOpen) {
+                    if (_modalDestroyTimer) {
+                        clearTimeout(_modalDestroyTimer);
+                        _modalDestroyTimer = null;
+                    }
                     if (!window.nobsProduxScrollytelling.active) {
                         window.nobsProduxScrollytelling.init();
                     }
-                } else {
-                    if (window.nobsProduxScrollytelling.active) {
-                        window.nobsProduxScrollytelling.destroy();
-                    }
+                } else if (window.nobsProduxScrollytelling.active && !_modalDestroyTimer) {
+                    _modalDestroyTimer = setTimeout(() => {
+                        _modalDestroyTimer = null;
+                        if (window.nobsProduxScrollytelling && !window.nobsProduxScrollytelling.isModalOpen() && window.nobsProduxScrollytelling.active) {
+                            window.nobsProduxScrollytelling.destroy();
+                        }
+                    }, 250);
                 }
             }
         });
         obs.observe(document.body, { childList: true, subtree: true });
     }
 })();
+
+
