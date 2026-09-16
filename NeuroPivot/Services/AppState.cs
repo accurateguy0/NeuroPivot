@@ -424,7 +424,7 @@ public class AppState : IDisposable
         AnchorCards = cards ?? new();
         SyncActiveAccount();
         NotifyStateChanged();
-        _ = SaveFullSessionAsync();
+        await SaveFullSessionAsync();
     }
 
     public async Task AddOrUpdateAnchorCard(AnchorCardItem card)
@@ -444,7 +444,7 @@ public class AppState : IDisposable
         }
         SyncActiveAccount();
         NotifyStateChanged();
-        _ = SaveFullSessionAsync();
+        await SaveFullSessionAsync();
     }
 
     public async Task RemoveAnchorCard(string cardId)
@@ -455,7 +455,7 @@ public class AppState : IDisposable
         {
             SyncActiveAccount();
             NotifyStateChanged();
-            _ = SaveFullSessionAsync();
+            await SaveFullSessionAsync();
         }
     }
 
@@ -573,7 +573,8 @@ public class AppState : IDisposable
         if (_accountService?.ActiveAccount != null)
         {
             _accountService.ActiveAccount.WebsiteTimeSeconds = WebsiteTimeSeconds;
-            _ = _accountService.SaveAccountAsync(_accountService.ActiveAccount);
+            _accountService.ActiveAccount.AnchorCards = AnchorCards != null ? new List<AnchorCardItem>(AnchorCards) : new List<AnchorCardItem>();
+            await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
         }
         else if (_localStorage != null)
         {
@@ -672,6 +673,23 @@ public class AppState : IDisposable
                         IsDarkMode = account.IsDarkMode;
                         SoundVolume = account.SoundVolume;
                         SleepNotificationsEnabled = account.SleepNotificationsEnabled;
+
+                        var savedAnchors = await _localStorage.GetItemAsync<List<AnchorCardItem>>("nobs_anchor_cards");
+                        if (account.AnchorCards != null && account.AnchorCards.Count > 0)
+                        {
+                            AnchorCards = new List<AnchorCardItem>(account.AnchorCards);
+                        }
+                        else if (savedAnchors != null && savedAnchors.Count > 0)
+                        {
+                            AnchorCards = savedAnchors;
+                            account.AnchorCards = new List<AnchorCardItem>(savedAnchors);
+                            _ = _accountService.SaveAccountAsync(account);
+                        }
+                        else
+                        {
+                            AnchorCards = new List<AnchorCardItem>();
+                        }
+
                         OnUserLoaded?.Invoke(account);
                     }
                 }

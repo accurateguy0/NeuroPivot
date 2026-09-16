@@ -22,7 +22,6 @@
             <!-- Biophilic Heart Coherence Guided Breathing Audio -->
             <audio id="breathingAudioPlayer" preload="auto" playsinline>
                 <source src="sounds/breathing_exercise.mp3" type="audio/mpeg" />
-                <source src="sounds/breathing_exercise.m4a" type="audio/mp4" />
             </audio>
 
             <!-- Modal Header: Persistent '✕' Close Button -->
@@ -63,7 +62,8 @@
                                         <span class="folder-tab-text">@RenderAnimatedLetters("UNBROKEN CHAIN", 28)</span>
                                     </div>
                                     <div class="folder-content">
-                                        <video id="mountainTimelapseVideo" class="folder-mountain-video" autoplay loop muted playsinline preload="auto">
+                                        <video id="mountainTimelapseVideo" class="folder-mountain-video" autoplay loop muted playsinline preload="auto"
+                                               disablePictureInPicture disableRemotePlayback controlsList="nodownload nofullscreen noremoteplayback" oncontextmenu="return false;">
                                             <source src="videos/mountain_timelapse.mp4" type="video/mp4" />
                                         </video>
                                         <div class="folder-mountain-overlay"></div>
@@ -158,7 +158,8 @@
                                         <span class="folder-tab-text">@RenderAnimatedLetters("NEUROPLASTIC RESISTANCE", 35)</span>
                                     </div>
                                     <div class="folder-content">
-                                        <video id="waterWaveVideo" class="folder-water-wave-video" autoplay loop muted playsinline preload="auto">
+                                        <video id="waterWaveVideo" class="folder-water-wave-video" autoplay loop muted playsinline preload="auto"
+                                               disablePictureInPicture disableRemotePlayback controlsList="nodownload nofullscreen noremoteplayback" oncontextmenu="return false;">
                                             <source src="videos/water_wave.mp4?v=3" type="video/mp4" />
                                         </video>
                                         <div class="folder-water-wave-overlay"></div>
@@ -224,15 +225,16 @@
                                                 <div class="produx-card-body">
                                                     @if (dayNum <= HabitService.CurrentActiveDay)
                                                     {
-                                                        @if (log != null && (!string.IsNullOrWhiteSpace(log.GratitudeNote) || !string.IsNullOrWhiteSpace(log.Note)))
+                                                        var diaryNote = GetDiaryNoteWithoutUrge(log?.Note);
+                                                        @if (log != null && (!string.IsNullOrWhiteSpace(log.GratitudeNote) || !string.IsNullOrWhiteSpace(diaryNote)))
                                                         {
                                                             @if (!string.IsNullOrWhiteSpace(log.GratitudeNote))
                                                             {
                                                                 <p class="produx-gratitude-text">@log.GratitudeNote</p>
                                                             }
-                                                            @if (!string.IsNullOrWhiteSpace(log.Note))
+                                                            @if (!string.IsNullOrWhiteSpace(diaryNote))
                                                             {
-                                                                <p class="produx-quote-text">@log.Note</p>
+                                                                <p class="produx-quote-text">@diaryNote</p>
                                                             }
                                                         }
                                                         else if (dayNum == 1)
@@ -362,32 +364,40 @@
                                         </div>
                                     }
 
-                                    <!-- Furthest right: Placeholder slot for adding a new picture -->
-                                    <label class="cue-carousel-card placeholder-photo-card" title="Click to upload picture">
-                                        <InputFile OnChange="HandleCuePhotoUpload" accept="image/*" style="display:none;" />
-                                        <div class="cue-placeholder-inner">
-                                            @if (isUploadingPhoto)
-                                            {
-                                                <div class="cue-upload-spinner"></div>
-                                                <span class="cue-placeholder-text">Loading photo...</span>
-                                            }
-                                            else
-                                            {
-                                                <div class="cue-placeholder-icon-wrap">
-                                                    <span class="cue-plus-icon">+</span>
-                                                </div>
-                                                <span class="cue-placeholder-text">
-                                                    @(hasSelfPhoto ? "Add Loved One" : "Add Younger Self")
-                                                </span>
-                                                <span class="cue-placeholder-sub">Click to upload</span>
-                                            }
-                                        </div>
-                                    </label>
+                                    @if (photoCards.Count < 5)
+                                    {
+                                        <!-- Furthest right: Placeholder slot for adding a new picture -->
+                                        <label class="cue-carousel-card placeholder-photo-card" title="Click to upload picture">
+                                            <InputFile OnChange="HandleCuePhotoUpload" accept="image/*" style="display:none;" />
+                                            <div class="cue-placeholder-inner">
+                                                @if (isUploadingPhoto)
+                                                {
+                                                    <div class="cue-upload-spinner"></div>
+                                                    <span class="cue-placeholder-text">Loading photo...</span>
+                                                }
+                                                else
+                                                {
+                                                    <div class="cue-placeholder-icon-wrap">
+                                                        <span class="cue-plus-icon">+</span>
+                                                    </div>
+                                                    <span class="cue-placeholder-text">
+                                                        @(hasSelfPhoto ? "Add Loved One" : "Add Younger Self")
+                                                    </span>
+                                                    <span class="cue-placeholder-sub">Click to upload</span>
+                                                }
+                                            </div>
+                                        </label>
+                                    }
                                 </div>
                             </div>
 
+                            @{
+                                int maxCueIdx = photoCards.Count < 5 ? photoCards.Count : Math.Max(0, photoCards.Count - 1);
+                                int totalCueDots = photoCards.Count < 5 ? photoCards.Count + 1 : photoCards.Count;
+                            }
+
                             <button type="button" 
-                                    class="cue-carousel-nav-btn next-btn @(cueCarouselIndex >= photoCards.Count ? "disabled" : "")" 
+                                    class="cue-carousel-nav-btn next-btn @(cueCarouselIndex >= maxCueIdx ? "disabled" : "")" 
                                     @onclick="NextCuePhoto" 
                                     aria-label="Next photos">
                                 ›
@@ -396,7 +406,7 @@
 
                         <!-- Dot Indicators -->
                         <div class="cue-carousel-dots">
-                            @for (int di = 0; di <= photoCards.Count; di++)
+                            @for (int di = 0; di < totalCueDots; di++)
                             {
                                 int dIdx = di;
                                 <span class="cue-dot @(cueCarouselIndex == dIdx ? "active" : "")" @onclick="() => cueCarouselIndex = dIdx"></span>
@@ -455,7 +465,7 @@
                         
                         <div class="anchor-card-deck" id="anchorCardDeck">
                             @{
-                                var anchorCards = AppState.GetEffectiveAnchorCards();
+                                var anchorCards = AppState.GetEffectiveAnchorCards().Where(c => !string.IsNullOrWhiteSpace(c.ImageUrl)).ToList();
                             }
                             @for (int i = 0; i < anchorCards.Count; i++)
                             {
@@ -475,9 +485,7 @@
                                         }
                                     </div>
                                     <div class="anchor-card-meta">
-                                        <span class="anchor-category-pill">@card.Category.ToUpperInvariant()</span>
-                                        <h3 class="anchor-card-title">@card.Title</h3>
-                                        <p class="anchor-card-note">“@card.Note”</p>
+                                        <h3 class="anchor-card-title">@GetAnchorCardQuote(card, cardIdx)</h3>
                                     </div>
                                 </div>
                             }
@@ -502,23 +510,24 @@
                                 muted="@isShuzoMuted" 
                                 playsinline 
                                 preload="auto"
+                                disablePictureInPicture
+                                disableRemotePlayback
+                                controlsList="nodownload nofullscreen noremoteplayback"
+                                oncontextmenu="return false;"
                                 @onclick="HandleVideoClick" 
                                 @onended="HandleShuzoEnded">
                             <source src="videos/Never_give_up_!!!.mp4" type="video/mp4" />
                         </video>
 
-                        <!-- Center Replay Overlay Button (ONLY rendered when video has finished) -->
-                        @if (isShuzoEnded)
-                        {
-                            <button type="button" 
-                                    id="shuzoPlayCenterBtn" 
-                                    class="video-center-play-btn visible" 
-                                    @onclick="ReplayShuzo" 
-                                    @onclick:stopPropagation="true"
-                                    aria-label="Replay Motivation Video">
-                                <span class="play-icon-triangle" style="pointer-events: none;">▶</span>
-                            </button>
-                        }
+                        <!-- Center Play / Replay Overlay Button (Visible when paused or ended) -->
+                        <button type="button" 
+                                id="shuzoPlayCenterBtn" 
+                                class="video-center-play-btn @(isShuzoEnded || isShuzoPaused ? "visible" : "")" 
+                                @onclick="HandleVideoClick" 
+                                @onclick:stopPropagation="true"
+                                aria-label="Play or Replay Motivation Video">
+                            <span class="play-icon-triangle" style="pointer-events: none;">▶</span>
+                        </button>
 
                         <!-- Sound Toggle Pill Button (Reveals when video expands on scroll) -->
                         <button type="button" 
@@ -557,7 +566,7 @@
                         @if (!isAffectBridgeFadedIn)
                         {
                             <div class="affect-ambient-ring"></div>
-                            <span class="affect-kicker">SOMATIC INTEROCEPTION</span>
+                            
                             <h2 class="affect-giant-heading">What are you feeling in your body right now?</h2>
                             <p class="affect-subheading">Labeling physical sensations de-escalates amygdala hyperactivity before entering coherent breathing.</p>
                             
@@ -584,12 +593,9 @@
                         else
                         {
                             <div class="affect-bridge-in-place anim-fade-in-bridge">
-                                @if (isAffectLabelSaved)
-                                {
-                                    <div class="affect-saved-blended-pill">saved ✓</div>
-                                }
+                               
                                 <div class="bridge-noise-ambient-ring"></div>
-                                <h2 class="bridge-giant-quote">“Let's leave all the noise behind.”</h2>
+                                <h2 class="bridge-giant-quote">let's wind down</h2>
                                 <p class="bridge-subtext">Take a breath. We're going to slow everything down and breathe together for 90 seconds. Scroll down to start.</p>
                             </div>
                         }
@@ -616,6 +622,10 @@
                                 muted 
                                 playsinline 
                                 preload="auto"
+                                disablePictureInPicture
+                                disableRemotePlayback
+                                controlsList="nodownload nofullscreen noremoteplayback"
+                                oncontextmenu="return false;"
                                 @onclick="HandleNatureVideoClick">
                             <source src="videos/nature_wildlife.mp4" type="video/mp4" />
                             <source src="videos/water_beach_video.mp4" type="video/mp4" />
@@ -775,16 +785,20 @@
     // Video Player State - Default sound is strictly OFF (muted = true)
     private bool isShuzoMuted = true;
     private bool isShuzoEnded = false;
+    private bool isShuzoPaused = true;
 
     private async Task HandleShuzoEnded()
     {
         isShuzoEnded = true;
+        isShuzoPaused = true;
         try
         {
             await JSRuntime.InvokeVoidAsync("eval", @"
                 if (window.nobsProduxScrollytelling) {
                     window.nobsProduxScrollytelling._shuzoEnded = true;
                 }
+                const btn = document.getElementById('shuzoPlayCenterBtn');
+                if (btn) btn.classList.add('visible');
             ");
         }
         catch { }
@@ -793,15 +807,17 @@
 
     private async Task HandleVideoClick()
     {
-        if (isShuzoEnded)
+        try
         {
-            await ReplayShuzo();
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.toggleShuzoPlay");
         }
+        catch { }
     }
 
     private async Task ReplayShuzo()
     {
         isShuzoEnded = false;
+        isShuzoPaused = false;
         StateHasChanged();
         try
         {
@@ -900,6 +916,49 @@
         StateHasChanged();
     }
 
+    private readonly string[] ConsecutiveAnchorQuotes = new[]
+    {
+        "Your actions give them permission to be brave, too.",
+        "They watch how you handle hard things. When you push through this, you’re showing them what resilience actually looks like in real time.",
+        "Your family loves having your energy around. Taking care of yourself means being there for every milestone, wedding, and holiday with a clear, energetic mind.",
+        "They want you in their lives for as long as possible, feeling your best.",
+        "You can’t pour from an empty cup. Taking care of your mind/body isn’t taking time away from your loved ones—it’s making sure they get the best of you, not just what’s left of you.",
+        "Loving them well starts with ensuring you are well.",
+        "You don’t have to do this alone for your family; your family wants to carry this with you. Let’s figure out how we tackle this together.",
+        "They are your foundation, not your judges.",
+        "They love you and believe in your strength—doing this is how you protect your peace so you can enjoy each other for years to come."
+    };
+
+    private Dictionary<int, string> _randomizedAnchorQuotes = new();
+
+    private void InitializeAnchorQuotes()
+    {
+        _randomizedAnchorQuotes.Clear();
+        var rng = new Random();
+        var shuffled = ConsecutiveAnchorQuotes.OrderBy(_ => rng.Next()).ToList();
+        for (int i = 0; i < shuffled.Count; i++)
+        {
+            _randomizedAnchorQuotes[i + 1] = shuffled[i];
+        }
+    }
+
+    private string GetAnchorCardQuote(AnchorCardItem card, int index)
+    {
+        if (index == 0)
+        {
+            var label = !string.IsNullOrWhiteSpace(card.Title) ? card.Title : "your younger self";
+            return $"“Take care of yourself like you would for {label}.”";
+        }
+
+        if (_randomizedAnchorQuotes.TryGetValue(index, out var quote))
+        {
+            return $"“{quote.Trim('“', '”', '\"')}”";
+        }
+
+        var fallback = ConsecutiveAnchorQuotes[(index - 1) % ConsecutiveAnchorQuotes.Length];
+        return $"“{fallback.Trim('“', '”', '\"')}”";
+    }
+
     private void OpenCropForExistingCard(AnchorCardItem card)
     {
         if (string.IsNullOrWhiteSpace(card.ImageUrl)) return;
@@ -944,7 +1003,8 @@
     private void NextCuePhoto()
     {
         var photoCardsCount = AppState.GetEffectiveAnchorCards().Count(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
-        if (cueCarouselIndex < photoCardsCount)
+        var maxIndex = photoCardsCount < 5 ? photoCardsCount : Math.Max(0, photoCardsCount - 1);
+        if (cueCarouselIndex < maxIndex)
         {
             cueCarouselIndex++;
             StateHasChanged();
@@ -1000,6 +1060,9 @@
 
     private async Task HandleCuePhotoUpload(InputFileChangeEventArgs e)
     {
+        var existingCount = AppState.GetEffectiveAnchorCards().Count(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
+        if (existingCount >= 5) return;
+
         isUploadingPhoto = true;
         StateHasChanged();
         try
@@ -1044,6 +1107,7 @@
         if (wasNewCard)
         {
             var anchorCards = AppState.GetEffectiveAnchorCards();
+            if (anchorCards.Count(c => !string.IsNullOrWhiteSpace(c.ImageUrl)) >= 5) return;
             string newCardId;
             if (targetCat == "self")
             {
@@ -1100,6 +1164,13 @@
                 await AppState.AddOrUpdateAnchorCard(card);
             }
         }
+
+        bool hasAnyPhotos = AppState.GetEffectiveAnchorCards().Any(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.setHasPhotos", hasAnyPhotos);
+        }
+        catch { }
 
         StateHasChanged();
     }
@@ -1236,6 +1307,7 @@
             isShuzoMuted = true;
             isNatureMuted = true;
             isShuzoEnded = false;
+            isShuzoPaused = true;
             isCallMyNameMuted = true;
             affectLabelText = "";
             isAffectLabelSaved = false;
@@ -1244,6 +1316,7 @@
             isHoveringGatedExit = false;
             editingCardId = null;
             editingCardTitle = "";
+            InitializeAnchorQuotes();
 
             _dotNetRef?.Dispose();
             _dotNetRef = DotNetObjectReference.Create(this);
@@ -1350,6 +1423,16 @@
             "poor" or "high_friction" => "📉 poor",
             _ => "⚡ disciplined"
         };
+    }
+
+    private string? GetDiaryNoteWithoutUrge(string? note)
+    {
+        if (string.IsNullOrWhiteSpace(note)) return null;
+        var parts = note.Split('|', StringSplitOptions.TrimEntries)
+            .Where(p => !p.StartsWith("[Urge Somatic:", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var cleaned = string.Join(" | ", parts).Trim();
+        return string.IsNullOrWhiteSpace(cleaned) ? null : cleaned;
     }
 
     private async Task HandleFinishAction(string actionName, int index)

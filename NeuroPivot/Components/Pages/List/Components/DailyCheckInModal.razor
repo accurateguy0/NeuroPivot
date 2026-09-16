@@ -137,7 +137,7 @@
             if (todayLog != null)
             {
                 gratitudeText = todayLog.GratitudeNote;
-                noteText = todayLog.Note;
+                noteText = ExtractNonUrgeNote(todayLog.Note);
             }
             else
             {
@@ -209,8 +209,38 @@
     private async Task HandleSave()
     {
         string moodToSave = string.IsNullOrWhiteSpace(selectedMoodTag) ? "good" : selectedMoodTag;
-        HabitService.LogDailyMood(moodToSave, noteText, gratitudeText);
+        string finalNote = CombineNotesPreservingUrge(noteText);
+        HabitService.LogDailyMood(moodToSave, finalNote, gratitudeText);
         await OnClose.InvokeAsync();
+    }
+
+    private string ExtractNonUrgeNote(string? note)
+    {
+        if (string.IsNullOrWhiteSpace(note)) return "";
+        var parts = note.Split('|', StringSplitOptions.TrimEntries)
+            .Where(p => !p.StartsWith("[Urge Somatic:", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        return string.Join(" | ", parts).Trim();
+    }
+
+    private string CombineNotesPreservingUrge(string userNote)
+    {
+        var todayLog = AppState.DailyMoodLogs.FirstOrDefault(l => l.Date.Date == DateTime.Today);
+        if (todayLog == null || string.IsNullOrWhiteSpace(todayLog.Note))
+        {
+            return userNote?.Trim() ?? "";
+        }
+        var urgeParts = todayLog.Note.Split('|', StringSplitOptions.TrimEntries)
+            .Where(p => p.StartsWith("[Urge Somatic:", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        if (urgeParts.Count == 0) return userNote?.Trim() ?? "";
+
+        var trimmedUserNote = userNote?.Trim() ?? "";
+        if (string.IsNullOrWhiteSpace(trimmedUserNote))
+        {
+            return string.Join(" | ", urgeParts);
+        }
+        return $"{trimmedUserNote} | {string.Join(" | ", urgeParts)}";
     }
 
     private async Task HandleClose()

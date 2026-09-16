@@ -86,5 +86,19 @@ public class NeuroPivotDbContext : DbContext
                 v => string.IsNullOrEmpty(v) ? new List<int>() : JsonSerializer.Deserialize<List<int>>(v, JsonOpts) ?? new List<int>()
             )
             .Metadata.SetValueComparer(favComparer);
+
+        var anchorCardsComparer = new ValueComparer<List<AnchorCardItem>>(
+            (c1, c2) => JsonSerializer.Serialize(c1, JsonOpts) == JsonSerializer.Serialize(c2, JsonOpts),
+            c => c == null ? 0 : JsonSerializer.Serialize(c, JsonOpts).GetHashCode(),
+            c => c == null ? new List<AnchorCardItem>() : JsonSerializer.Deserialize<List<AnchorCardItem>>(JsonSerializer.Serialize(c, JsonOpts), JsonOpts)!
+        );
+
+        user.Property(u => u.AnchorCards)
+            .IsRequired(false)
+            .HasConversion(
+                v => v == null ? "[]" : JsonSerializer.Serialize(v, JsonOpts),
+                v => string.IsNullOrEmpty(v) ? new List<AnchorCardItem>() : JsonSerializer.Deserialize<List<AnchorCardItem>>(v, JsonOpts) ?? new List<AnchorCardItem>()
+            )
+            .Metadata.SetValueComparer(anchorCardsComparer);
     }
 }

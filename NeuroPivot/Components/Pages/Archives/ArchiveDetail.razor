@@ -49,14 +49,28 @@
                 </div>
             }
 
-            @if (selLog != null && !string.IsNullOrWhiteSpace(selLog.Note))
+            @{
+                var regularThoughts = GetNonUrgeNote(selLog?.Note);
+                var urgeNotes = GetUrgeNotes(selLog?.Note);
+            }
+            @if (!string.IsNullOrWhiteSpace(regularThoughts))
             {
                 <div class="archive-field reflection-field">
                     <span class="field-label">thoughts</span>
-                    <p class="field-value">@selLog.Note</p>
+                    <p class="field-value">@regularThoughts</p>
                 </div>
             }
-            else if (targetDay == 1 && !string.IsNullOrWhiteSpace(AppState.InitialHabitMotivation))
+            @if (urgeNotes.Count > 0)
+            {
+                <div class="archive-field urge-somatic-field">
+                    <span class="field-label">urge sensations</span>
+                    @foreach (var un in urgeNotes)
+                    {
+                        <p class="field-value urge-note-val">⚡ @un</p>
+                    }
+                </div>
+            }
+            else if (targetDay == 1 && string.IsNullOrWhiteSpace(regularThoughts) && !string.IsNullOrWhiteSpace(AppState.InitialHabitMotivation))
             {
                 <div class="archive-field reflection-field">
                     <span class="field-label">origin commitment</span>
@@ -113,5 +127,31 @@
             "poor" or "high_friction" => "📉 poor",
             _ => "⚡ disciplined"
         };
+    }
+
+    private string? GetNonUrgeNote(string? note)
+    {
+        if (string.IsNullOrWhiteSpace(note)) return null;
+        var parts = note.Split('|', StringSplitOptions.TrimEntries)
+            .Where(p => !p.StartsWith("[Urge Somatic:", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        var cleaned = string.Join(" | ", parts).Trim();
+        return string.IsNullOrWhiteSpace(cleaned) ? null : cleaned;
+    }
+
+    private List<string> GetUrgeNotes(string? note)
+    {
+        if (string.IsNullOrWhiteSpace(note)) return new();
+        var results = new List<string>();
+        var parts = note.Split('|', StringSplitOptions.TrimEntries);
+        foreach (var p in parts)
+        {
+            if (p.StartsWith("[Urge Somatic:", StringComparison.OrdinalIgnoreCase) && p.EndsWith("]"))
+            {
+                var inner = p.Substring(14, p.Length - 15).Trim();
+                if (!string.IsNullOrWhiteSpace(inner)) results.Add(inner);
+            }
+        }
+        return results;
     }
 }

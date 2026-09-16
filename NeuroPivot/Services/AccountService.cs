@@ -40,8 +40,7 @@ public class UserAccount
     public int UrgesSurfedCount { get; set; } = 0;
     public List<int> FavoriteArchiveDays { get; set; } = new();
 
-    [NotMapped]
-    public List<AnchorCardItem> AnchorCards { get; set; } = new();
+    public List<AnchorCardItem>? AnchorCards { get; set; } = new();
 
     // Goals & Diagnostics (Personalization Telemetry)
     public string CurrentGoal { get; set; } = "habits";
@@ -137,12 +136,25 @@ public class AccountService
             if (_initialized) return;
             try
             {
-                // Step 1: Check if Users table exists in an isolated context
+                // Step 1: Ensure AnchorCards column exists and backfill NULL values to empty JSON array '[]'
+                try
+                {
+                    using var colDb = _dbContextFactory.CreateDbContext();
+                    try
+                    {
+                        colDb.Database.ExecuteSqlRaw("ALTER TABLE Users ADD COLUMN AnchorCards TEXT;");
+                    }
+                    catch { }
+                    colDb.Database.ExecuteSqlRaw("UPDATE Users SET AnchorCards = '[]' WHERE AnchorCards IS NULL;");
+                }
+                catch { }
+
+                // Step 1b: Check if Users table exists in an isolated context
                 bool usersTableExists = false;
                 try
                 {
                     using var testDb = _dbContextFactory.CreateDbContext();
-                    _ = testDb.Users.Take(1).ToList();
+                    _ = testDb.Users.OrderBy(u => u.Username).Take(1).ToList();
                     usersTableExists = true;
                 }
                 catch
@@ -453,6 +465,7 @@ public class AccountService
             existing.DailyMoodLogs = account.DailyMoodLogs ?? new();
             existing.RelapseLogs = account.RelapseLogs ?? new();
             existing.FavoriteArchiveDays = account.FavoriteArchiveDays ?? new();
+            existing.AnchorCards = account.AnchorCards ?? new();
             await db.SaveChangesAsync();
         }
         else

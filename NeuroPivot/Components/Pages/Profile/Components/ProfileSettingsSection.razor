@@ -125,7 +125,7 @@
             <button type="button" class="loved-ones-modal-close-btn" @onclick="CloseLovedOnesModal" aria-label="Close">✕</button>
 
             <div class="loved-ones-modal-header">
-                <h3 class="loved-ones-modal-title">loved ones photos</h3>
+                <h3 class="loved-ones-modal-title">personal photos</h3>
                 <p class="loved-ones-modal-sub">
                     @(hasSelfPhoto ? "Add loved ones (family, close friends, partners)" : "Add your younger version of yourself")
                 </p>
@@ -198,32 +198,40 @@
                             </div>
                         }
 
-                        <!-- Furthest right: Placeholder slot for adding a new picture -->
-                        <label class="loved-ones-card loved-ones-placeholder-card" title="Click to upload picture">
-                            <InputFile OnChange="HandleNewPhotoUpload" accept="image/*" style="display:none;" />
-                            <div class="loved-ones-placeholder-inner">
-                                @if (isUploadingPhoto)
-                                {
-                                    <div class="loved-ones-upload-spinner"></div>
-                                    <span class="loved-ones-placeholder-title">Loading photo...</span>
-                                }
-                                else
-                                {
-                                    <div class="loved-ones-plus-circle">
-                                        <span class="loved-ones-plus-icon">+</span>
-                                    </div>
-                                    <span class="loved-ones-placeholder-title">
-                                        @(hasSelfPhoto ? "Add Loved One" : "Add Younger Self")
-                                    </span>
-                                    <span class="loved-ones-placeholder-desc">Click to upload</span>
-                                }
-                            </div>
-                        </label>
+                        @if (photoCards.Count < 5)
+                        {
+                            <!-- Furthest right: Placeholder slot for adding a new picture -->
+                            <label class="loved-ones-card loved-ones-placeholder-card" title="Click to upload picture">
+                                <InputFile OnChange="HandleNewPhotoUpload" accept="image/*" style="display:none;" />
+                                <div class="loved-ones-placeholder-inner">
+                                    @if (isUploadingPhoto)
+                                    {
+                                        <div class="loved-ones-upload-spinner"></div>
+                                        <span class="loved-ones-placeholder-title">Loading photo...</span>
+                                    }
+                                    else
+                                    {
+                                        <div class="loved-ones-plus-circle">
+                                            <span class="loved-ones-plus-icon">+</span>
+                                        </div>
+                                        <span class="loved-ones-placeholder-title">
+                                            @(hasSelfPhoto ? "Add Loved One" : "Add Younger Self")
+                                        </span>
+                                        <span class="loved-ones-placeholder-desc">Click to upload</span>
+                                    }
+                                </div>
+                            </label>
+                        }
                     </div>
                 </div>
 
+                @{
+                    int maxLovedIdx = photoCards.Count < 5 ? photoCards.Count : Math.Max(0, photoCards.Count - 1);
+                    int totalLovedDots = photoCards.Count < 5 ? photoCards.Count + 1 : photoCards.Count;
+                }
+
                 <button type="button" 
-                        class="loved-ones-carousel-nav-btn next-btn @(lovedOnesCarouselIndex >= photoCards.Count ? "disabled" : "")" 
+                        class="loved-ones-carousel-nav-btn next-btn @(lovedOnesCarouselIndex >= maxLovedIdx ? "disabled" : "")" 
                         @onclick="NextLovedOnesPhoto" 
                         aria-label="Next photo">
                     ›
@@ -232,7 +240,7 @@
 
             <!-- Dot Indicators -->
             <div class="loved-ones-carousel-dots">
-                @for (int di = 0; di <= photoCards.Count; di++)
+                @for (int di = 0; di < totalLovedDots; di++)
                 {
                     int dIdx = di;
                     <span class="loved-ones-dot @(lovedOnesCarouselIndex == dIdx ? "active" : "")" @onclick="() => lovedOnesCarouselIndex = dIdx"></span>
@@ -442,7 +450,8 @@
     private void NextLovedOnesPhoto()
     {
         var count = PhotoCards.Count;
-        if (lovedOnesCarouselIndex < count)
+        var maxIndex = count < 5 ? count : Math.Max(0, count - 1);
+        if (lovedOnesCarouselIndex < maxIndex)
         {
             lovedOnesCarouselIndex++;
         }
@@ -500,6 +509,7 @@
 
     private async Task HandleNewPhotoUpload(InputFileChangeEventArgs e)
     {
+        if (PhotoCards.Count >= 5) return;
         isUploadingPhoto = true;
         StateHasChanged();
         try
@@ -565,6 +575,7 @@
         if (wasNewCard)
         {
             var allCards = AppState.GetEffectiveAnchorCards();
+            if (allCards.Count(c => !string.IsNullOrWhiteSpace(c.ImageUrl)) >= 5) return;
             string newCardId;
             if (targetCat == "self")
             {
@@ -650,9 +661,10 @@
             }
 
             var count = AppState.GetEffectiveAnchorCards().Count(c => !string.IsNullOrWhiteSpace(c.ImageUrl));
-            if (lovedOnesCarouselIndex > count)
+            var maxIndex = count < 5 ? count : Math.Max(0, count - 1);
+            if (lovedOnesCarouselIndex > maxIndex)
             {
-                lovedOnesCarouselIndex = count;
+                lovedOnesCarouselIndex = maxIndex;
             }
             StateHasChanged();
         }

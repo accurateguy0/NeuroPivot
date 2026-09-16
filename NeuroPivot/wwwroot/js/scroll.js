@@ -59,7 +59,7 @@ window.nobsBreathingTimeline = [
         "end": 10.5,
         "label": "HRV PROTOCOL INTRO",
         "phase": "intro",
-        "text": "Awesome. So it's... Great. tested. Great. Let's do it together. Here, I'll play it."
+        "text": "Awesome. So it's... Great. tested. Great. Let's do it together."
     },
     {
         "start": 10.5,
@@ -81,7 +81,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 1,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Guided Deep Inhale with Rick & guide..."
     },
     {
@@ -90,7 +90,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 1,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Smooth, complete exhale with the guide..."
     },
     {
@@ -99,7 +99,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 2,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Smooth inhalation through nose..."
     },
     {
@@ -108,7 +108,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 2,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Gentle, unforced release..."
     },
     {
@@ -117,7 +117,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 3,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Deep diaphragmatic breath..."
     },
     {
@@ -126,7 +126,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 3,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Relaxing shoulders and jaw..."
     },
     {
@@ -135,7 +135,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 4,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Filling lower lungs with air..."
     },
     {
@@ -144,7 +144,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 4,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Smooth, slow exhale..."
     },
     {
@@ -153,7 +153,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 5,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Expanding ribcage gently..."
     },
     {
@@ -162,7 +162,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 5,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Releasing all physical tension..."
     },
     {
@@ -171,7 +171,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 6,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Calm, steady nasal inhalation..."
     },
     {
@@ -180,7 +180,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 6,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Letting go of urge friction..."
     },
     {
@@ -189,7 +189,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 7,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Centering awareness on heart..."
     },
     {
@@ -198,7 +198,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 7,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Long, calm release through nose..."
     },
     {
@@ -207,7 +207,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 8,
-        "total": 31,
+        "total": 30,
         "text": "[Inhale Chime] Synchronizing heart rate variability..."
     },
     {
@@ -216,7 +216,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 8,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Deep parasympathetic tone..."
     },
     {
@@ -225,7 +225,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 9,
-        "total": 31,
+        "total": 30,
         "text": "[Inhale Chime] Smooth rhythm in and out..."
     },
     {
@@ -234,7 +234,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 9,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Complete, effortless release..."
     },
     {
@@ -243,7 +243,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 10,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Pure resonant frequency breath..."
     },
     {
@@ -252,7 +252,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 10,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Emptying lungs completely..."
     },
     {
@@ -261,7 +261,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 11,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Slow and effortless airflow..."
     },
     {
@@ -270,7 +270,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 11,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Body settling into profound stillness..."
     },
     {
@@ -279,7 +279,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 12,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Vagal nerve stimulation active..."
     },
     {
@@ -288,7 +288,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 12,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Releasing stress and resistance..."
     },
     {
@@ -297,7 +297,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 13,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Expanding chest softly..."
     },
     {
@@ -306,7 +306,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 13,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Smooth airflow out..."
     },
     {
@@ -315,7 +315,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 14,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Steady breath, peaceful mind..."
     },
     {
@@ -324,7 +324,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 14,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Slowing heart rhythm naturally..."
     },
     {
@@ -333,7 +333,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 15,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Down-regulating nervous system..."
     },
     {
@@ -342,7 +342,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 15,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Letting tension dissolve..."
     },
     {
@@ -351,7 +351,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 16,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Deep soothing inspiration..."
     },
     {
@@ -360,7 +360,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 16,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Deep peace settling in..."
     },
     {
@@ -369,7 +369,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 17,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Steady parasympathetic flow..."
     },
     {
@@ -378,7 +378,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 17,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Quiet exhale with chime..."
     },
     {
@@ -387,7 +387,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 18,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Nourishing heart and brain..."
     },
     {
@@ -396,7 +396,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 18,
-        "total": 31,
+        "total": 30,
         "text": "[Exhale Chime] Resting in autonomic coherence..."
     },
     {
@@ -405,7 +405,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 19,
-        "total": 31,
+        "total": 30,
         "text": "[Inhale Chime] Smooth inhalation with chime..."
     },
     {
@@ -414,7 +414,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 19,
-        "total": 31,
+        "total": 30,
         "text": "[Exhale Chime] Gentle, quiet airflow out..."
     },
     {
@@ -423,7 +423,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 20,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Harmonizing cardiac rhythm..."
     },
     {
@@ -432,7 +432,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 20,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Softening belly and face..."
     },
     {
@@ -441,7 +441,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 21,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Unforced, gentle intake..."
     },
     {
@@ -450,7 +450,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 21,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Smooth release..."
     },
     {
@@ -459,7 +459,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 22,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Clarity and calmness expanding..."
     },
     {
@@ -468,7 +468,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 22,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Sinking into grounded stillness..."
     },
     {
@@ -477,7 +477,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 23,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Soft, even breath..."
     },
     {
@@ -486,7 +486,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 23,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Nervous system fully stabilized..."
     },
     {
@@ -495,7 +495,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 24,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Deep resonance..."
     },
     {
@@ -504,7 +504,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 24,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Effortless relaxation..."
     },
     {
@@ -513,7 +513,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 25,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Effortless nasal airflow..."
     },
     {
@@ -522,7 +522,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 25,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Gentle release of tension..."
     },
     {
@@ -531,7 +531,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 26,
-        "total": 31,
+        "total": 30,
         "text": "[Inhale Chime] Entering deep coherence state..."
     },
     {
@@ -540,7 +540,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 26,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Quiet and steady exhale..."
     },
     {
@@ -549,7 +549,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 27,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Smooth and peaceful breath..."
     },
     {
@@ -558,7 +558,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 27,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Smooth surrender of tension..."
     },
     {
@@ -567,7 +567,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 28,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Steady rhythm anchoring you..."
     },
     {
@@ -576,7 +576,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 28,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Calm, complete release..."
     },
     {
@@ -585,7 +585,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 29,
-        "total": 31,
+        "total": 30,
         "text": " [Inhale Chime] Smooth deep breath..."
     },
     {
@@ -594,7 +594,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 29,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Smooth and steady release..."
     },
     {
@@ -603,7 +603,7 @@ window.nobsBreathingTimeline = [
         "label": "INHALE THROUGH NOSE",
         "phase": "inhale",
         "breath": 30,
-        "total": 31,
+        "total": 30,
         "text": "[Inhale Chime] Penultimate deep inhale..."
     },
     {
@@ -612,7 +612,7 @@ window.nobsBreathingTimeline = [
         "label": "SLOW SMOOTH EXHALE",
         "phase": "exhale",
         "breath": 30,
-        "total": 31,
+        "total": 30,
         "text": " [Exhale Chime] Penultimate smooth exhale..."
     },
     {
@@ -620,8 +620,6 @@ window.nobsBreathingTimeline = [
         "end": 359.5,
         "label": "5-MIN COHERENCE COMPLETE",
         "phase": "complete",
-        "breath": 31,
-        "total": 31,
         "text": " That was five minutes. I like that. Feels nice, doesn't it? Yeah."
     },
     {
@@ -629,8 +627,6 @@ window.nobsBreathingTimeline = [
         "end": 372,
         "label": "5-MIN COHERENCE COMPLETE",
         "phase": "complete",
-        "breath": 31,
-        "total": 31,
         "text": " I noticed I don't spontaneously breathe at that cadence. I breathe quite a bit faster. Mhm. So especially on the exhale."
     },
     {
@@ -673,6 +669,7 @@ window.nobsProduxScrollytelling = {
     _breathingAudio: null,
     _breathingPlaying: false,
     _breathingEnded: false,
+    _breathingStarted: false,
     _breathingGateUnlocked: false,
     _dotNetHelper: null,
     _natureMuted: true,
@@ -688,6 +685,24 @@ window.nobsProduxScrollytelling = {
         this._dotNetHelper = helper;
     },
 
+    toggleShuzoPlay: function () {
+        const sv = document.getElementById('shuzoVideoPlayer');
+        if (!sv) return;
+        if (sv.ended || (sv.duration && sv.currentTime >= sv.duration - 0.25) || this._shuzoEnded) {
+            this.replayShuzo();
+        } else if (sv.paused) {
+            this._shuzoEnded = false;
+            const p = sv.play();
+            if (p !== undefined) p.catch(() => {});
+            const btn = document.getElementById('shuzoPlayCenterBtn');
+            if (btn) btn.classList.remove('visible');
+        } else {
+            sv.pause();
+            const btn = document.getElementById('shuzoPlayCenterBtn');
+            if (btn) btn.classList.add('visible');
+        }
+    },
+
     replayShuzo: function () {
         this._shuzoEnded = false;
         const sv = document.getElementById('shuzoVideoPlayer');
@@ -698,7 +713,7 @@ window.nobsProduxScrollytelling = {
         }
         const btn = document.getElementById('shuzoPlayCenterBtn');
         if (btn) {
-            btn.style.display = 'none';
+            btn.classList.remove('visible');
         }
     },
 
@@ -775,12 +790,16 @@ window.nobsProduxScrollytelling = {
         }
 
         if (pillEl) {
-            pillEl.classList.remove('inhale-deep', 'exhale-long', 'intro-listen', 'prepare-phase', 'phase-complete');
-            if (entry.phase === 'inhale') pillEl.classList.add('inhale-deep');
-            else if (entry.phase === 'exhale') pillEl.classList.add('exhale-long');
-            else if (entry.phase === 'intro') pillEl.classList.add('intro-listen');
-            else if (entry.phase === 'prepare') pillEl.classList.add('prepare-phase');
-            else if (entry.phase === 'complete') pillEl.classList.add('phase-complete');
+            const currentPhase = pillEl.getAttribute('data-active-phase');
+            if (currentPhase !== entry.phase) {
+                pillEl.setAttribute('data-active-phase', entry.phase);
+                pillEl.classList.remove('inhale-deep', 'exhale-long', 'intro-listen', 'prepare-phase', 'phase-complete');
+                if (entry.phase === 'inhale') pillEl.classList.add('inhale-deep');
+                else if (entry.phase === 'exhale') pillEl.classList.add('exhale-long');
+                else if (entry.phase === 'intro') pillEl.classList.add('intro-listen');
+                else if (entry.phase === 'prepare') pillEl.classList.add('prepare-phase');
+                else if (entry.phase === 'complete') pillEl.classList.add('phase-complete');
+            }
         }
 
         if (captionEl) {
@@ -815,7 +834,7 @@ window.nobsProduxScrollytelling = {
 
         if (gateTimeEl) {
             if (t >= gateTargetSeconds) {
-                gateTimeEl.textContent = '90s / 90s âœ“';
+                gateTimeEl.textContent = '90s / 90s ✓';
                 gateTimeEl.style.color = '#7FB7BE';
             } else {
                 gateTimeEl.textContent = `${Math.floor(t)}/90s`;
@@ -828,7 +847,7 @@ window.nobsProduxScrollytelling = {
             if (gateBadgeEl) {
                 gateBadgeEl.classList.remove('is-locked');
                 gateBadgeEl.classList.add('is-unlocked');
-                gateBadgeEl.textContent = 'âœ“ 90s Surfed â€” Actions Ready';
+                gateBadgeEl.textContent = '✓ 90s Surfed — Actions Ready';
             }
             if (exitGridEl) {
                 exitGridEl.classList.remove('is-gated');
@@ -858,6 +877,7 @@ window.nobsProduxScrollytelling = {
         const domAudio = document.getElementById('breathingAudioPlayer');
         if (domAudio) {
             domAudio.loop = false;
+            domAudio.muted = false;
             if (!domAudio._timelineHooked) {
                 domAudio._timelineHooked = true;
                 const onTime = () => {
@@ -875,42 +895,40 @@ window.nobsProduxScrollytelling = {
                 domAudio.addEventListener('ended', () => {
                     this._breathingPlaying = false;
                     this._breathingEnded = true;
-                    this.syncBreathingText(domAudio.duration || 464.5);
+                    this._breathingHasPlayedOnce = true;
+                    this._breathingGateUnlocked = true;
+                    this.syncBreathingText(domAudio.duration || 397.5);
                 });
             }
             return domAudio;
         }
-        if (!this._breathingAudio) {
-            this._breathingAudio = new Audio('sounds/breathing_exercise.mp3');
-            this._breathingAudio.loop = false;
-            this._breathingAudio.preload = 'auto';
-            this._breathingAudio.volume = 0.85;
-            this._breathingAudio.addEventListener('ended', () => {
-                this._breathingPlaying = false;
-                this._breathingEnded = true;
-            });
-        }
-        return this._breathingAudio;
+        return null;
     },
 
     playBreathingAudio: function () {
         if (this._breathingEnded) return;
         const audio = this.getBreathingAudio();
         if (audio) {
-            if (!audio.paused) {
+            if (!audio.paused || audio._playPending) {
                 this._breathingPlaying = true;
                 return;
             }
             audio.volume = 0.85;
             audio.muted = false;
             audio.loop = false;
+            audio._playPending = true;
             this._breathingPlaying = true;
             const p = audio.play();
             if (p !== undefined) {
-                p.catch((err) => {
+                p.then(() => {
+                    audio._playPending = false;
+                }).catch((err) => {
                     console.warn('Breathing audio play error:', err);
+                    audio._playPending = false;
                     this._breathingPlaying = false;
                 });
+            } else {
+                audio._playPending = false;
             }
         }
     },
@@ -918,7 +936,7 @@ window.nobsProduxScrollytelling = {
     pauseBreathingAudio: function () {
         this._breathingPlaying = false;
         const audio = this.getBreathingAudio();
-        if (audio && !audio.paused) {
+        if (audio && !audio.paused && !audio._playPending) {
             audio.pause();
         }
     },
@@ -953,25 +971,45 @@ window.nobsProduxScrollytelling = {
         if (!audio) return;
 
         if (this._callMyNameMuted) {
-            // Fade out and pause
+            // Mute: fade out and pause
             if (this._callMyNameFadeTimer) clearInterval(this._callMyNameFadeTimer);
             this._callMyNameFadeTimer = setInterval(() => {
                 if (audio.volume > 0.04) {
                     audio.volume = Math.max(0, audio.volume - 0.035);
                 } else {
                     audio.volume = 0;
-                    if (!audio.paused) audio.pause();
+                    if (!audio.paused && !audio._playPending) audio.pause();
                     clearInterval(this._callMyNameFadeTimer);
                     this._callMyNameFadeTimer = null;
                 }
             }, 40);
         } else {
-            // Resume and fade in
+            // Unmute: ONLY start playing if currently inside the Anchor section
+            const p = this.currentProgress;
+            if (p < 3.20 || p > 5.45) return; // Not in section — do nothing
+
+            // Silence background music
+            const bg = document.getElementById('urgeBgMusic');
+            if (bg && !bg.paused) { bg.volume = 0; bg.pause(); }
+
+            // Allow replay if song already ended
+            if (this._callMyNameEnded) {
+                audio.currentTime = 0;
+                this._callMyNameEnded = false;
+            }
+
+            // Fire play() ONCE, with fade-in
             if (this._callMyNameFadeTimer) clearInterval(this._callMyNameFadeTimer);
             audio.volume = 0;
-            if (!this._callMyNameEnded && audio.paused) {
+            if (audio.paused && !audio._playPending) {
+                audio._playPending = true;
                 const pp = audio.play();
-                if (pp !== undefined) pp.catch(() => {});
+                if (pp !== undefined) {
+                    pp.then(() => { audio._playPending = false; })
+                      .catch(() => { audio._playPending = false; });
+                } else {
+                    audio._playPending = false;
+                }
             }
             this._callMyNameFadeTimer = setInterval(() => {
                 if (audio.volume < 0.47) {
@@ -993,6 +1031,8 @@ window.nobsProduxScrollytelling = {
             this._callMyNameAudio.volume = 0;   // starts silent; toggled by button
             this._callMyNameAudio.addEventListener('ended', () => {
                 this._callMyNameEnded = true;
+                this._callMyNameAudio._hasPlayedOnce = true;
+                this._callMyNameAudio._playPending = false;
             });
         }
         return this._callMyNameAudio;
@@ -1004,6 +1044,8 @@ window.nobsProduxScrollytelling = {
         v.muted = true;
         v.loop = true;
         v.playsInline = true;
+        v.disablePictureInPicture = true;
+        v.disableRemotePlayback = true;
         v.addEventListener('pause', () => {
             if (this.active && this.currentProgress <= 2.4 && v.paused && !v._playPending) {
                 this.safePlayVideo(v);
@@ -1015,6 +1057,8 @@ window.nobsProduxScrollytelling = {
         if (!v) return;
         this.setupLoopingVideo(v);
         v.muted = true;
+        v.disablePictureInPicture = true;
+        v.disableRemotePlayback = true;
         if (v.paused && !v._playPending) {
             v._playPending = true;
             if (v.networkState === HTMLMediaElement.NETWORK_EMPTY) v.load();
@@ -1034,7 +1078,7 @@ window.nobsProduxScrollytelling = {
     init: function (forceReset, hasPhotos) {
         if (typeof hasPhotos === 'boolean') {
             this._hasAnchorPhotos = hasPhotos;
-        } else if (typeof this._hasAnchorPhotos !== 'boolean') {
+        } else {
             const deck = document.getElementById('anchorCardDeck');
             const existingPhotoImgs = deck ? deck.querySelectorAll('.anchor-photo-img') : [];
             this._hasAnchorPhotos = existingPhotoImgs.length > 0;
@@ -1056,11 +1100,14 @@ window.nobsProduxScrollytelling = {
             this._isFadingToAnchors = false;
             this._breathingPlaying = false;
             this._breathingEnded = false;
+            this._breathingStarted = false;
+            this._breathingHasPlayedOnce = false;
             this._breathingGateUnlocked = false;
             this._natureIndex = 0;
             this._lastNatureSwitchTime = 0;
             this._natureMuted = true;
             this._callMyNameMuted = true; // Sound OFF by default
+            this._callMyNameEnded = false;
             this._audioUnlocked = false; // Guard: audios stay silent until 2s delay elapses
             this._anchorsExitAccumulator = 0;
             this._anchorsTouchAccumulator = 0;
@@ -1085,15 +1132,39 @@ window.nobsProduxScrollytelling = {
                 btns.forEach(b => b.setAttribute('disabled', 'disabled'));
             }
 
-            // Videos start immediately (muted) â€” decoder pre-warming, no sound
+            // Shuzo motivation video stays paused at start until user enters Scene 2
             const sv = document.getElementById('shuzoVideoPlayer');
-            if (sv) { sv.muted = true; }
+            if (sv) {
+                sv.muted = true;
+                sv.currentTime = 0;
+                sv.disablePictureInPicture = true;
+                sv.disableRemotePlayback = true;
+                if (!sv.paused) sv.pause();
+            }
+            const shuzoBtn = document.getElementById('shuzoPlayCenterBtn');
+            if (shuzoBtn) shuzoBtn.classList.add('visible');
+
             const nv = document.getElementById('natureVideoPlayer');
-            if (nv) { nv.muted = true; nv.volume = 0; }
+            if (nv) {
+                nv.muted = true;
+                nv.volume = 0;
+                nv.disablePictureInPicture = true;
+                nv.disableRemotePlayback = true;
+            }
             const mv = document.getElementById('mountainTimelapseVideo');
-            if (mv) { mv.muted = true; this.safePlayVideo(mv); }
+            if (mv) {
+                mv.muted = true;
+                mv.disablePictureInPicture = true;
+                mv.disableRemotePlayback = true;
+                this.safePlayVideo(mv);
+            }
             const wv = document.getElementById('waterWaveVideo');
-            if (wv) { wv.muted = true; this.safePlayVideo(wv); }
+            if (wv) {
+                wv.muted = true;
+                wv.disablePictureInPicture = true;
+                wv.disableRemotePlayback = true;
+                this.safePlayVideo(wv);
+            }
 
             // Breathing audio pre-configured but NOT played yet
             const ba = document.getElementById('breathingAudioPlayer');
@@ -1121,12 +1192,14 @@ window.nobsProduxScrollytelling = {
             if (bg) {
                 bg.muted = false;
                 bg.volume = 0;
+                bg._hasPlayedOnce = false;
             }
 
             this._callMyNameEnded = false;
             if (this._callMyNameAudio) {
                 this._callMyNameAudio.pause();
                 this._callMyNameAudio.currentTime = 0;
+                this._callMyNameAudio._hasPlayedOnce = false;
             } else {
                 const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
                 if (ca) {
@@ -1187,6 +1260,8 @@ window.nobsProduxScrollytelling = {
         if (target === 'breathing' || target === 6.0 || target === 6) {
             this._affectAcknowledged = true;
             this.targetProgress = 8.10;
+            this._breathingStarted = true;
+            this._breathingHasPlayedOnce = false;
             const nv = document.getElementById('natureVideoPlayer');
             if (nv) {
                 nv.muted = this._natureMuted;
@@ -1194,7 +1269,7 @@ window.nobsProduxScrollytelling = {
                 if (nv.readyState === 0) nv.load();
                 nv.play().catch(() => {});
             }
-            if (!this._breathingEnded && !this._breathingPlaying) {
+            if (!this._breathingEnded) {
                 this.playBreathingAudio();
             }
         } else if (typeof target === 'number') {
@@ -1295,9 +1370,10 @@ window.nobsProduxScrollytelling = {
         if (nextP > 7.50 && !this._affectAcknowledged) {
             nextP = 7.50;
         }
-        // Breathing Exercise gate: lock in place until guided breathing exercise finishes
-        if (nextP > 8.85 && !this._breathingEnded) {
-            nextP = 8.85;
+        // Breathing Exercise gate: lock completely in place until 90s urge surfing gate is unlocked or breathing exercise finishes
+        const inBreathingZone = (this.targetProgress >= 7.95 && this.targetProgress <= 8.85);
+        if ((inBreathingZone || nextP >= 7.95) && !this._breathingGateUnlocked && !this._breathingEnded) {
+            nextP = 8.10;
         }
         this.targetProgress = nextP;
     },
@@ -1378,6 +1454,11 @@ window.nobsProduxScrollytelling = {
             if (nextP > 7.50 && !this._affectAcknowledged) {
                 nextP = 7.50;
             }
+            // Breathing Exercise gate: lock completely in place until 90s urge surfing gate is unlocked or breathing exercise finishes
+            const inBreathingZone = (this.targetProgress >= 7.95 && this.targetProgress <= 8.85);
+            if ((inBreathingZone || nextP >= 7.95) && !this._breathingGateUnlocked && !this._breathingEnded) {
+                nextP = 8.10;
+            }
             this.targetProgress = nextP;
             if (e.cancelable) e.preventDefault();
         }
@@ -1403,6 +1484,17 @@ window.nobsProduxScrollytelling = {
             }
             return;
         }
+
+        // Lock all scroll keys while in breathing exercise until 90s gate is unlocked or it finishes
+        const inBreathingKeyZone = (this.targetProgress >= 7.95 && this.targetProgress <= 8.85);
+        if (inBreathingKeyZone && !this._breathingGateUnlocked && !this._breathingEnded) {
+            if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === ' ') {
+                e.preventDefault();
+                this.targetProgress = 8.10;
+                return;
+            }
+        }
+
         const p = this.targetProgress;
         let step = (p < 0.60) ? 0.15 : ((p < 1.45) ? 0.06 : ((p < 2.05) ? 0.03 : 0.08));
         if (p >= 2.05 && p < 3.20) {
@@ -1428,6 +1520,7 @@ window.nobsProduxScrollytelling = {
             }
             if (!this._hasAnchorPhotos && !this._cueAcknowledged && !this._skipAnchors && nextP > 3.65) nextP = 3.65;
             if (nextP > 7.50 && !this._affectAcknowledged) nextP = 7.50;
+            if ((this.targetProgress >= 8.00 || nextP >= 8.00) && !this._breathingEnded) nextP = 8.10;
             this.targetProgress = nextP;
         } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
             e.preventDefault();
@@ -1447,6 +1540,7 @@ window.nobsProduxScrollytelling = {
             }
             if (!this._hasAnchorPhotos && !this._cueAcknowledged && !this._skipAnchors && nextP > 3.65) nextP = 3.65;
             if (nextP > 7.50 && !this._affectAcknowledged) nextP = 7.50;
+            if ((this.targetProgress >= 8.00 || nextP >= 8.00) && !this._breathingEnded) nextP = 8.10;
             this.targetProgress = nextP;
         }
     },
@@ -1796,17 +1890,16 @@ window.nobsProduxScrollytelling = {
 
         // -------------------------------------------------------------
         // AUDIO: CALL MY NAME
-        // Sound is OFF by default; user toggles via the button in the top-right.
-        // Once turned on, it plays continuously without being paused on scroll.
+        // Render loop ONLY handles stopping — never calls play().
+        // play() is called exclusively from toggleCallMyNameSound (user button).
+        // Once outside Anchor section, audio pauses cleanly. No re-triggers.
         // -------------------------------------------------------------
         const callAudio = this.getCallMyNameAudio();
-
-        if (callAudio) {
-            // Only play if sound is turned ON by user
-            if (!this._callMyNameMuted && !this._callMyNameEnded && callAudio.paused && !this._callMyNameFadeTimer) {
-                callAudio.volume = 0.50;
-                const playPromise = callAudio.play();
-                if (playPromise !== undefined) playPromise.catch(() => {});
+        if (callAudio && !callAudio.paused && !callAudio._playPending) {
+            // Only logic here: STOP the audio when out of section or muted
+            const outOfSection = (p < 3.20 || p > 5.45);
+            if (outOfSection || this._callMyNameMuted) {
+                callAudio.pause();
             }
         }
 
@@ -1932,13 +2025,16 @@ window.nobsProduxScrollytelling = {
                         } else {
                             const swipeSlot = 1.0 / (cardCount - 1);
                             cards.forEach((c, idx) => {
+                                // Dynamic base z-index ensuring cards are strictly stacked top-to-bottom
+                                const restingZ = 100 + (cardCount - idx) * 10;
+
                                 if (idx < cardCount - 1) {
                                     const startP = idx * swipeSlot;
                                     const endP = (idx + 1) * swipeSlot;
                                     if (deckProgress <= startP) {
                                         c.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
                                         c.style.opacity = '1';
-                                        c.style.zIndex = `${30 - idx * 5}`;
+                                        c.style.zIndex = `${restingZ}`;
                                         c.style.pointerEvents = 'auto';
                                     } else if (deckProgress >= endP) {
                                         const swipeDir = (idx % 2 === 0) ? -1 : 1;
@@ -1956,7 +2052,7 @@ window.nobsProduxScrollytelling = {
                                         const op = Math.max(0, 1 - easeSwipe * 1.2);
                                         c.style.transform = `translate3d(${tx.toFixed(1)}%, ${ty.toFixed(1)}%, 0) rotate(${rot.toFixed(1)}deg) scale(${(1 - easeSwipe * 0.1).toFixed(2)})`;
                                         c.style.opacity = op.toFixed(3);
-                                        c.style.zIndex = `${30 - idx * 5}`;
+                                        c.style.zIndex = `${restingZ + 20}`;
                                         c.style.pointerEvents = 'auto';
                                     }
                                 } else {
@@ -1966,7 +2062,7 @@ window.nobsProduxScrollytelling = {
                                     const ty = (1 - revealNorm) * 16;
                                     c.style.transform = `translate3d(0, ${ty.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
                                     c.style.opacity = '1';
-                                    c.style.zIndex = '20';
+                                    c.style.zIndex = `${restingZ}`;
                                     c.style.pointerEvents = 'auto';
                                 }
                             });
@@ -2039,8 +2135,25 @@ window.nobsProduxScrollytelling = {
 
             if (sv && !sv._shuzoHooked) {
                 sv._shuzoHooked = true;
+                sv.disablePictureInPicture = true;
+                sv.disableRemotePlayback = true;
+                const updatePlayBtn = () => {
+                    const btn = document.getElementById('shuzoPlayCenterBtn');
+                    if (!btn) return;
+                    if (sv.paused || sv.ended || (sv.duration && sv.currentTime >= sv.duration - 0.25)) {
+                        btn.classList.add('visible');
+                    } else {
+                        btn.classList.remove('visible');
+                    }
+                };
+                sv.addEventListener('play', () => {
+                    window.nobsProduxScrollytelling._shuzoEnded = false;
+                    updatePlayBtn();
+                });
+                sv.addEventListener('pause', updatePlayBtn);
                 sv.addEventListener('ended', () => {
                     window.nobsProduxScrollytelling._shuzoEnded = true;
+                    updatePlayBtn();
                 });
             }
 
@@ -2105,7 +2218,7 @@ window.nobsProduxScrollytelling = {
 
                 // Auto-play video
                 if (p >= 6.10 && p <= 7.00) {
-                    if (sv && sv.paused && !sv.ended && !this._shuzoEnded) {
+                    if (sv && sv.paused && !sv.ended && !this._shuzoEnded && sv.currentTime < ((sv.duration || 30) - 0.25)) {
                         sv.play().catch(() => {});
                     }
                 }
@@ -2285,22 +2398,14 @@ window.nobsProduxScrollytelling = {
                     }
                 }
 
-                // Guided breathing audio: play only when fully settled in scene (p >= 7.95)
-                // Do NOT pause during scroll-in (7.50â€“7.95) or scroll-out (8.85+) transitions
-                // to avoid cutting audio mid-breath cycle. Only hard-pause if user scrolls all
-                // the way back out (p < 7.50).
-                if (p >= 7.95 && p <= 8.85) {
-                    if (!this._breathingEnded) {
-                        const ba = document.getElementById('breathingAudioPlayer');
-                        if (!this._breathingPlaying || (ba && ba.paused)) {
-                            this.playBreathingAudio();
-                        }
-                    }
-                }
-                // Do NOT pause for p in (8.85..9.35) â€” audio keeps playing while scrolling out
-
-                const baLive = document.getElementById('breathingAudioPlayer') || this._breathingAudio;
+                // Guided breathing audio: render loop ONLY handles stopping.
+                // play() is called exclusively from jumpTo('breathing').
+                // Pause when scrolled out of the active breathing zone.
+                const baLive = document.getElementById('breathingAudioPlayer');
                 if (baLive) {
+                    if (!baLive.paused && !baLive._playPending && p > 8.85) {
+                        baLive.pause(); // scrolled into Scene 4
+                    }
                     this.syncBreathingText(baLive.currentTime);
                 }
             } else {
@@ -2315,12 +2420,13 @@ window.nobsProduxScrollytelling = {
                 }
 
                 if (nv && !nv.paused) nv.pause();
-                if (this._breathingPlaying) {
-                    this.pauseBreathingAudio();
-                } else {
-                    const ba = document.getElementById('breathingAudioPlayer');
-                    if (ba && !ba.paused) ba.pause();
+
+                // Outside Scene 3: pause breathing audio cleanly (no stutter, no retrigger)
+                const baOff = document.getElementById('breathingAudioPlayer');
+                if (baOff && !baOff.paused && !baOff._playPending) {
+                    baOff.pause();
                 }
+                this._breathingPlaying = false;
             }
         }
 
@@ -2398,26 +2504,26 @@ window.nobsProduxScrollytelling = {
         this.clearCardHover();
         this._breathingPlaying = false;
         this._breathingEnded = false;
+        this._breathingStarted = false;
+        this._breathingHasPlayedOnce = false;
         this._audioUnlocked = false;
         if (this._audioUnlockTimer) { clearTimeout(this._audioUnlockTimer); this._audioUnlockTimer = null; }
         const bg = document.getElementById('urgeBgMusic');
         if (bg) {
             bg.pause();
             bg.currentTime = 0;
+            bg._hasPlayedOnce = false;
         }
         const sv = document.getElementById('shuzoVideoPlayer');
         if (sv) {
             if (!sv.paused) sv.pause();
+            sv.currentTime = 0;
             sv.muted = true;
         }
         const nv = document.getElementById('natureVideoPlayer');
         if (nv) {
             if (!nv.paused) nv.pause();
             nv.muted = true;
-        }
-        if (this._breathingAudio) {
-            this._breathingAudio.pause();
-            this._breathingAudio.currentTime = 0;
         }
         const domBa = document.getElementById('breathingAudioPlayer');
         if (domBa) {
@@ -2442,6 +2548,7 @@ window.nobsProduxScrollytelling = {
         if (this._callMyNameAudio) {
             this._callMyNameAudio.pause();
             this._callMyNameAudio.currentTime = 0;
+            this._callMyNameAudio._hasPlayedOnce = false;
         }
         const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
         if (ca) { if (!ca.paused) ca.pause(); ca.currentTime = 0; }
@@ -2466,6 +2573,14 @@ window.nobsProduxScrollytelling = {
 
     setHasPhotos: function (val) {
         this._hasAnchorPhotos = !!val;
+        if (this._hasAnchorPhotos) {
+            const sCue = document.getElementById('urge-scene-photo-cue');
+            if (sCue) {
+                sCue.style.display = 'none';
+                sCue.style.opacity = '0';
+                sCue.style.pointerEvents = 'none';
+            }
+        }
     },
 
     unlockCueGate: function (hasPhotos) {
@@ -2539,17 +2654,11 @@ window.nobsProduxScrollytelling = {
 
 // Global Event Listeners attached once on window:
 (function () {
-    // User gesture audio unlock for Scene 3 (ONLY when fully in Scene 3)
+    // User gesture unlock for nature video in Scene 3
     window.addEventListener('pointerdown', function (e) {
         if (!window.nobsProduxScrollytelling || !window.nobsProduxScrollytelling.isModalOpen()) return;
         const p = window.nobsProduxScrollytelling.currentProgress;
         if (p >= 7.95 && p <= 8.85) {
-            if (!window.nobsProduxScrollytelling._breathingEnded) {
-                const ba = document.getElementById('breathingAudioPlayer');
-                if (ba && ba.paused) {
-                    window.nobsProduxScrollytelling.playBreathingAudio();
-                }
-            }
             const nv = document.getElementById('natureVideoPlayer');
             if (nv && nv.paused && !nv._playPending) {
                 nv._playPending = true;
