@@ -875,11 +875,28 @@ window.nobsProduxScrollytelling = {
 
     getBreathingAudio: function () {
         if (!this._breathingAudio) {
-            this._breathingAudio = new Audio('sounds/breathing_exercise.mp3');
+            this._breathingAudio = new Audio();
             this._breathingAudio.loop = false;
             this._breathingAudio.muted = false;
             this._breathingAudio.volume = 0.85;
             this._breathingAudio.preload = 'auto';
+
+            // --- FETCH INTO BROWSER RAM AS A BLOB ---
+            fetch('sounds/breathing_exercise.mp3')
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    if (this._breathingAudio) {
+                        this._breathingAudio.src = blobUrl;
+                    }
+                })
+                .catch(err => {
+                    console.error('Failed to load breathing_exercise into memory, falling back to direct URL:', err);
+                    if (this._breathingAudio) {
+                        this._breathingAudio.src = 'sounds/breathing_exercise.mp3';
+                    }
+                });
+            // ----------------------------------------
 
             if (!this._breathingAudio._timelineHooked) {
                 this._breathingAudio._timelineHooked = true;
