@@ -14,19 +14,82 @@
     font-family: var(--font-mono);
 }
 
+.suggestions-title-input {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid var(--border-color);
+    font-family: var(--font-mono);
+    margin-bottom: 0.85rem;
+    background: var(--bg-container);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    font-size: 0.95rem;
+}
+
+.suggestions-title-input:focus {
+    outline: none;
+    border-color: var(--accent-blue, #7FB7BE);
+}
+
 .suggestions-textarea {
     width: 100%;
     padding: 0.85rem;
     border: 1px solid var(--border-color);
     font-family: var(--font-mono);
-    margin-bottom: 1rem;
+    margin-bottom: 1.15rem;
     background: var(--bg-container);
     color: var(--text-primary);
+    box-sizing: border-box;
+    font-size: 0.95rem;
+    resize: vertical;
+}
+
+.suggestions-textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue, #7FB7BE);
+}
+
+.suggestions-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .suggestion-status-msg {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     font-size: 0.9rem;
-    color: var(--accent-blue);
+    font-family: var(--font-mono);
     font-weight: 700;
+    padding: 0.85rem 1rem;
+    border-radius: 2px;
+}
+
+.suggestion-status-msg.success {
+    color: var(--accent-blue, #7FB7BE);
+    background: rgba(127, 183, 190, 0.12);
+    border: 1px solid rgba(127, 183, 190, 0.35);
+}
+
+.suggestion-status-msg.error {
+    color: var(--accent-pink, #FF6B6B);
+    background: rgba(255, 107, 107, 0.12);
+    border: 1px solid rgba(255, 107, 107, 0.35);
+}
+
+.fallback-mailto-btn {
+    margin-top: 0.65rem;
+    display: inline-block;
+    background: transparent;
+    border: 1px dashed var(--accent-blue, #7FB7BE);
+    color: var(--accent-blue, #7FB7BE);
+    padding: 0.4rem 0.85rem;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.fallback-mailto-btn:hover {
+    background: rgba(127, 183, 190, 0.2);
 }

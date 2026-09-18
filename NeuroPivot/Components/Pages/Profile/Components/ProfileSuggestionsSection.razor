@@ -1,3 +1,6 @@
+@using NeuroPivot.Services
+@inject IEmailService EmailService
+@inject AppState AppState
 @inject IJSRuntime JSRuntime
 
 <div class="nobs-card animated-fade-in">
@@ -7,31 +10,142 @@
     <p class="suggestions-desc">
         Your message will be sent directly to the 'no bs' team. No bs.
     </p>
-    <textarea @bind="suggestionText" rows="4" placeholder="Write your suggestion or protocol idea..." class="suggestions-textarea"></textarea>
-    <button class="nobs-btn nobs-btn-blue" style="padding: 0.75rem 1.5rem; font-weight: 800;" @onclick="SubmitSuggestion">
-        Send Suggestion →
-    </button>
+
+    <input type="text"
+           @bind="suggestionTitle"
+           @bind:event="oninput"
+           placeholder="Title of your suggestion..."
+           class="suggestions-title-input"
+           disabled="@isSubmitting" />
+
+    <textarea @bind="suggestionText"
+              @bind:event="oninput"
+              rows="5"
+              placeholder="Write your suggestion or protocol idea..."
+              class="suggestions-textarea"
+              disabled="@isSubmitting"></textarea>
+
+    <div class="suggestions-actions">
+        <button class="nobs-btn nobs-btn-blue"
+                style="padding: 0.75rem 1.5rem; font-weight: 800;"
+                @onclick="SubmitSuggestion"
+                disabled="@isSubmitting">
+            @(isSubmitting ? "Sending Suggestion..." : "Send Suggestion →")
+        </button>
+    </div>
+
     @if (!string.IsNullOrEmpty(suggestionMsg))
     {
-        <div class="suggestion-status-msg">@suggestionMsg</div>
+        <div class="suggestion-status-msg @(isSubmitting ? "" : (isSuccess ? "success" : "error"))">
+            <div>@suggestionMsg</div>
+            @if (!isSuccess && !isSubmitting && showFallbackMailto)
+            {
+                <button class="fallback-mailto-btn" @onclick="OpenMailtoFallback">
+                    Open in Mail Client Instead ↗
+                </button>
+            }
+        </div>
     }
 </div>
 
 @code {
+    private string suggestionTitle = "";
     private string suggestionText = "";
     private string suggestionMsg = "";
+    private bool isSuccess = false;
+    private bool isSubmitting = false;
+    private bool showFallbackMailto = false;
 
     private async Task SubmitSuggestion()
     {
-        if (!string.IsNullOrWhiteSpace(suggestionText))
-        {
-            string subject = Uri.EscapeDataString("no bs App Suggestion");
-            string body = Uri.EscapeDataString(suggestionText);
-            string mailto = $"mailto:dawid.kowalski6789@gmail.com?subject={subject}&body={body}";
-            await JSRuntime.InvokeVoidAsync("open", mailto, "_blank");
+        suggestionMsg = "";
+        showFallbackMailto = false;
 
-            suggestionMsg = "Thanks! Your suggestion email is ready to send.";
-            suggestionText = "";
+        if (string.IsNullOrWhiteSpace(suggestionTitle))
+        {
+            suggestionMsg = "Please provide a title for your suggestion.";
+            isSuccess = false;
+            StateHasChanged();
+            return;
         }
+
+        if (string.IsNullOrWhiteSpace(suggestionText))
+        {
+            suggestionMsg = "Please write your suggestion details before sending.";
+            isSuccess = false;
+            StateHasChanged();
+            return;
+        }
+
+        isSubmitting = true;
+        suggestionMsg = "Sending suggestion...";
+        isSuccess = false;
+        StateHasChanged();
+
+        try
+        {
+            SuggestionResult? jsResult = null;
+            try
+            {
+                jsResult = await JSRuntime.InvokeAsync<SuggestionResult>("window.nobsSendSuggestion", suggestionTitle, suggestionText, AppState.Username);
+            }
+            catch
+            {
+                // Fall back to server EmailService if JS is not available
+            }
+
+            if (jsResult != null && jsResult.Success)
+            {
+                isSuccess = true;
+                suggestionMsg = !string.IsNullOrWhiteSpace(jsResult.Message) ? jsResult.Message : "Thank you! Your suggestion has been sent directly to the team.";
+                suggestionTitle = "";
+                suggestionText = "";
+                return;
+            }
+
+            // Fallback to backend EmailService
+            var result = await EmailService.SendSuggestionEmailAsync(suggestionTitle, suggestionText, AppState.Username);
+            isSuccess = result.Success;
+            suggestionMsg = result.Message;
+
+            if (result.Success)
+            {
+                suggestionTitle = "";
+                suggestionText = "";
+            }
+            else
+            {
+                if (jsResult != null && !string.IsNullOrWhiteSpace(jsResult.Message))
+                {
+                    suggestionMsg = jsResult.Message;
+                }
+                showFallbackMailto = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            isSuccess = false;
+            suggestionMsg = $"An unexpected error occurred: {ex.Message}";
+            showFallbackMailto = true;
+        }
+        finally
+        {
+            isSubmitting = false;
+            StateHasChanged();
+        }
+    }
+
+    private class SuggestionResult
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+    }
+
+    private async Task OpenMailtoFallback()
+    {
+        string subject = Uri.EscapeDataString($"[no bs] {suggestionTitle}");
+        string body = Uri.EscapeDataString(suggestionText);
+        string mailto = $"mailto:dawid.kowalski6789@gmail.com?subject={subject}&body={body}";
+        await JSRuntime.InvokeVoidAsync("open", mailto, "_blank");
     }
 }

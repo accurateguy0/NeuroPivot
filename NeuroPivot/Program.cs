@@ -62,6 +62,8 @@ builder.Services.AddScoped<NeuroPivot.Services.AccountService>();
 builder.Services.AddScoped<NeuroPivot.Services.AppState>();
 builder.Services.AddScoped<NeuroPivot.Services.HabitService>();
 builder.Services.AddScoped<NeuroPivot.Services.SleepService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<NeuroPivot.Services.IEmailService, NeuroPivot.Services.EmailService>();
 
 var app = builder.Build();
 

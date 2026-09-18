@@ -7,3 +7,5 @@ Render acts as the engine, runs your .NET 10 Docker container and handles the ba
 Supabase get a permanent $0 database.
 
 Docker to run a C# / .NET application on Render is with . Render does not have a native .NET runtime.
+
+FormSubmit to allow sending emails from tseas151@gmail.com user to dawid.kowalski6789@gmail.com user.

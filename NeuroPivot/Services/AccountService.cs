@@ -140,14 +140,48 @@ public class AccountService
                 try
                 {
                     using var colDb = _dbContextFactory.CreateDbContext();
+                    var isNpgsql = colDb.Database.IsNpgsql();
+
                     try
                     {
-                        colDb.Database.ExecuteSqlRaw("ALTER TABLE Users ADD COLUMN AnchorCards TEXT;");
+                        if (isNpgsql)
+                        {
+                            try
+                            {
+                                colDb.Database.ExecuteSqlRaw("ALTER TABLE \"Users\" ADD COLUMN IF NOT EXISTS \"AnchorCards\" TEXT DEFAULT '[]';");
+                            }
+                            catch
+                            {
+                                colDb.Database.ExecuteSqlRaw("ALTER TABLE users ADD COLUMN IF NOT EXISTS \"AnchorCards\" TEXT DEFAULT '[]';");
+                            }
+                        }
+                        else
+                        {
+                            colDb.Database.ExecuteSqlRaw("ALTER TABLE \"Users\" ADD COLUMN \"AnchorCards\" TEXT DEFAULT '[]';");
+                        }
                     }
-                    catch { }
-                    colDb.Database.ExecuteSqlRaw("UPDATE Users SET AnchorCards = '[]' WHERE AnchorCards IS NULL;");
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[AccountService Init] Notice on Add Column AnchorCards: {ex.Message}");
+                    }
+
+                    try
+                    {
+                        colDb.Database.ExecuteSqlRaw("UPDATE \"Users\" SET \"AnchorCards\" = '[]' WHERE \"AnchorCards\" IS NULL;");
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            colDb.Database.ExecuteSqlRaw("UPDATE users SET \"AnchorCards\" = '[]' WHERE \"AnchorCards\" IS NULL;");
+                        }
+                        catch { }
+                    }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[AccountService Init] Notice on EnsureInitialized AnchorCards: {ex.Message}");
+                }
 
                 // Step 1b: Check if Users table exists in an isolated context
                 bool usersTableExists = false;

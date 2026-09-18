@@ -8,6 +8,7 @@
 
 .habit-scroll-wrapper {
     overflow-x: auto;
+    overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch;
     position: relative;
     border: 1px solid rgba(46, 40, 42, 0.15);
@@ -54,6 +55,7 @@
 
 .habit-scroll-wrapper::-webkit-scrollbar {
     height: 6px;
+    width: 0px !important;
 }
 
 .habit-scroll-wrapper::-webkit-scrollbar-track {
