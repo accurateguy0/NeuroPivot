@@ -13,16 +13,11 @@
              @onclick:stopPropagation="true">
             
             <!-- Background Ambient Music ("The City of Lost Hope") -->
-            <audio id="urgeBgMusic" src="sounds/the_city_of_lost_hope.mp3" preload="auto"></audio>
+            <audio @key="@("urgeBgMusic")" id="urgeBgMusic" src="sounds/the_city_of_lost_hope.mp3" preload="auto"></audio>
 
             <!-- Biophilic Mountain & Ocean Waves Ambience Audio -->
-            <audio id="mountainAmbienceAudio" src="sounds/mountain_ambience.wav" preload="auto" loop></audio>
-            <audio id="waterWavesAudio" src="sounds/water_wave_sound.mp3" preload="auto" loop></audio>
-
-            <!-- Biophilic Heart Coherence Guided Breathing Audio -->
-            <audio id="breathingAudioPlayer" preload="auto" playsinline>
-                <source src="sounds/breathing_exercise.mp3" type="audio/mpeg" />
-            </audio>
+            <audio @key="@("mountainAmbienceAudio")" id="mountainAmbienceAudio" src="sounds/mountain_ambience.wav" preload="auto" loop></audio>
+            <audio @key="@("waterWavesAudio")" id="waterWavesAudio" src="sounds/water_wave_sound.mp3" preload="auto" loop></audio>
 
             <!-- Modal Header: Persistent '✕' Close Button -->
             <div class="urge-modal-header">
@@ -428,34 +423,37 @@
                 <!-- SCENE 1.2: RELATIONAL & SELF-CARE ANCHOR FLASHCARD DECK (SWIPE SCROLL) -->
                 <div id="urge-scene-anchors" class="urge-scene-layer anchor-deck-scene" style="display: none; opacity: 0;">
                     <!-- Sleek Transparent Sound Toggle Button on the Right Upper Side -->
-                    <button type="button" 
-                            id="callMyNameSoundBtn" 
-                            class="anchor-sound-btn" 
-                            @onclick="ToggleCallMyNameSound" 
-                            title="Toggle music sound"
-                            aria-label="Toggle music sound">
-                        @if (!isCallMyNameMuted)
-                        {
-                            <span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                                </svg>
-                                <span class="sound-text">SOUND ON</span>
-                            </span>
-                        }
-                        else
-                        {
-                            <span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                                </svg>
-                                <span class="sound-text">SOUND OFF</span>
-                            </span>
-                        }
-                    </button>
+                    @if (!isCallMyNameDismissed)
+                    {
+                        <button type="button" 
+                                id="callMyNameSoundBtn" 
+                                class="anchor-sound-btn" 
+                                @onclick="ToggleCallMyNameSound" 
+                                title="Toggle music sound"
+                                aria-label="Toggle music sound">
+                            @if (!isCallMyNameMuted)
+                            {
+                                <span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                    </svg>
+                                    <span class="sound-text">SOUND ON</span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                                    </svg>
+                                    <span class="sound-text">SOUND OFF</span>
+                                </span>
+                            }
+                        </button>
+                    }
 
                     <div class="anchor-deck-fullpage-content">
                         <div class="anchor-ambient-ring"></div>
@@ -661,10 +659,18 @@
                         </button>
                     </div>
 
-                    <div class="breath-deck-container">
+                    <div class="breath-deck-container" onclick="if (window.nobsProduxScrollytelling && window.nobsProduxScrollytelling.playBreathingAudio) { window.nobsProduxScrollytelling.playBreathingAudio(); }">
                         <div class="breath-live-status-pill intro-listen" id="breathLivePill">
                             <span class="phase-live-label" id="phaseLiveLabel">HRV PROTOCOL INTRO</span>
                             <span class="phase-live-timer" id="phaseLiveTimer">0:25</span>
+                            <button type="button" 
+                                    id="skipIntroBtn" 
+                                    class="skip-intro-pill-btn" 
+                                    style="display: none;" 
+                                    onclick="if (window.nobsProduxScrollytelling && window.nobsProduxScrollytelling.skipIntro) { window.nobsProduxScrollytelling.skipIntro(); }"
+                                    title="Skip to breathing exercise">
+                                Skip Intro →
+                            </button>
                         </div>
                         <div class="breath-live-caption-box breath-caption-live-box" id="breathLiveCaptionBox">
                             <p class="breath-caption-text" id="breathCaptionText">
@@ -706,9 +712,7 @@
                     </div>
 
                     <div class="exit-actions-grid @(isBreathingGateUnlocked ? "" : "is-gated")" 
-                         id="exitActionsGrid"
-                         @onmousemove="HandleExitGridMouseMove"
-                         @onmouseleave="HandleExitGridMouseLeave">
+                         id="exitActionsGrid">
                         <button type="button" 
                                 class="exit-action-btn primary @(selectedActionIndex == 0 ? "btn-blinking-lights" : "")" 
                                 disabled="@(isActionTriggered || !isBreathingGateUnlocked)"
@@ -727,8 +731,8 @@
                                 @onclick='() => HandleFinishAction("Restorative body care", 1)'>
                             <span class="ea-icon">💧</span>
                             <div class="ea-text">
-                                <div class="ea-name">Do something restorative for your body</div>
-                                <div class="ea-desc">Drink 500ml cold water, wash face, or step outside into fresh air</div>
+                                <div class="ea-name">Take care of yourself</div>
+                                <div class="ea-desc">Make yourself some tea, take a rest, wash face, or step outside into fresh air</div>
                             </div>
                             <span class="ea-arrow">→</span>
                         </button>
@@ -746,12 +750,9 @@
                         </button>
                     </div>
 
-                    @if (!isBreathingGateUnlocked && isHoveringGatedExit)
-                    {
-                        <div class="cursor-gated-tooltip" style="left: @(tooltipX)px; top: @(tooltipY)px;">
-                            finish the breathing first
-                        </div>
-                    }
+                    <div class="cursor-gated-tooltip" id="cursorGatedTooltip" style="display: none;">
+                        finish the breathing first
+                    </div>
                 </div>
 
             </div>
@@ -904,9 +905,19 @@
     }
 
     private bool isCallMyNameMuted = true;
+    private bool isCallMyNameDismissed = false;
+
+    [JSInvokable]
+    public void DismissCallMyName()
+    {
+        isCallMyNameDismissed = true;
+        isCallMyNameMuted = true;
+        StateHasChanged();
+    }
 
     private async Task ToggleCallMyNameSound()
     {
+        if (isCallMyNameDismissed) return;
         isCallMyNameMuted = !isCallMyNameMuted;
         try
         {
@@ -1198,30 +1209,11 @@
 
     // Affect Labeling (Somatic Interoceptive Step)
     private string affectLabelText = "";
-    private bool isAffectLabelSaved = false;
     private bool isAffectBridgeFadedIn = false;
 
-    // 90-Second Breathing Gate State & Cursor Tooltip
+    // 90-Second Breathing Gate State
     private bool isBreathingGateUnlocked = false;
-    private bool isHoveringGatedExit = false;
-    private double tooltipX = 0;
-    private double tooltipY = 0;
     private DotNetObjectReference<UrgeProtocolModal>? _dotNetRef;
-
-    private void HandleExitGridMouseMove(MouseEventArgs e)
-    {
-        if (!isBreathingGateUnlocked)
-        {
-            isHoveringGatedExit = true;
-            tooltipX = e.ClientX + 14;
-            tooltipY = e.ClientY + 14;
-        }
-    }
-
-    private void HandleExitGridMouseLeave()
-    {
-        isHoveringGatedExit = false;
-    }
 
     private async Task SaveAffectLabel()
     {
@@ -1229,7 +1221,6 @@
         var trimmed = affectLabelText.Trim();
         if (trimmed.Length > 80) trimmed = trimmed.Substring(0, 80);
 
-        isAffectLabelSaved = true;
         isAffectBridgeFadedIn = true;
         try
         {
@@ -1293,14 +1284,16 @@
 
     // Breathing Timer State (Heart Coherence / HRV: 5s Inhale / 5s Exhale)
     private bool _wasOpen = false;
+    private bool _needsJsInit = false;
     private bool isActionTriggered = false;
     private int selectedActionIndex = -1;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnParametersSet()
     {
         if (IsOpen && !_wasOpen)
         {
             _wasOpen = true;
+            _needsJsInit = true;
             isActionTriggered = false;
             selectedActionIndex = -1;
             isBgMusicMuted = false;
@@ -1309,15 +1302,28 @@
             isShuzoEnded = false;
             isShuzoPaused = true;
             isCallMyNameMuted = true;
+            isCallMyNameDismissed = false;
             affectLabelText = "";
-            isAffectLabelSaved = false;
             isAffectBridgeFadedIn = false;
             isBreathingGateUnlocked = false;
-            isHoveringGatedExit = false;
             editingCardId = null;
             editingCardTitle = "";
             InitializeAnchorQuotes();
+        }
+        else if (!IsOpen && _wasOpen)
+        {
+            _wasOpen = false;
+            _needsJsInit = false;
+            isCallMyNameDismissed = false;
+            isCallMyNameMuted = true;
+        }
+    }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && _needsJsInit)
+        {
+            _needsJsInit = false;
             _dotNetRef?.Dispose();
             _dotNetRef = DotNetObjectReference.Create(this);
 
@@ -1332,10 +1338,6 @@
                 await JSRuntime.InvokeVoidAsync("nobsProduxScrollytelling.init", true, hasAnyPhotos);
             }
             catch { }
-        }
-        else if (!IsOpen && _wasOpen)
-        {
-            _wasOpen = false;
         }
     }
 
@@ -1452,51 +1454,25 @@
         await Task.Delay(1600);
 
         _wasOpen = false;
+        _needsJsInit = false;
+        isCallMyNameDismissed = false;
         isCallMyNameMuted = true;
         await HabitService.LogUrgeSurfedAsync();
-        StopAllAudio();
         await OnClose.InvokeAsync();
     }
 
     private async Task HandleCancel()
     {
         _wasOpen = false;
+        _needsJsInit = false;
+        isCallMyNameDismissed = false;
         isCallMyNameMuted = true;
-        StopAllAudio();
         await OnClose.InvokeAsync();
-    }
-
-    private void StopAllAudio()
-    {
-        try
-        {
-            _ = JSRuntime.InvokeVoidAsync("eval", @"
-                if (window.nobsProduxScrollytelling) {
-                    window.nobsProduxScrollytelling.destroy();
-                }
-                const bg = document.getElementById('urgeBgMusic');
-                if (bg) { bg.pause(); bg.currentTime = 0; }
-                const ma = document.getElementById('mountainAmbienceAudio');
-                if (ma) { ma.pause(); ma.currentTime = 0; }
-                const wa = document.getElementById('waterWavesAudio');
-                if (wa) { wa.pause(); wa.currentTime = 0; }
-                const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
-                if (ca) { ca.pause(); ca.currentTime = 0; }
-                const v1 = document.getElementById('shuzoVideoPlayer');
-                if (v1) { v1.pause(); }
-                const v2 = document.getElementById('natureVideoPlayer');
-                if (v2) { v2.pause(); }
-                const ba = document.getElementById('breathingAudioPlayer');
-                if (ba) { ba.pause(); ba.currentTime = 0; }
-            ");
-        }
-        catch { }
     }
 
     public void Dispose()
     {
         _dotNetRef?.Dispose();
         _dotNetRef = null;
-        StopAllAudio();
     }
 }

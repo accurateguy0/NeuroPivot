@@ -287,10 +287,33 @@
     filter: brightness(1.15);
 }
 
-.streak-days-highlight.scaling-down {
-    color: #ef4444 !important;
-    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-    transition: color 0.4s ease;
+.streak-days-highlight.streak-lost-glowing {
+    animation: streakLostGlow 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform-origin: center;
+    display: inline-block;
+}
+
+@keyframes streakLostGlow {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 3px rgba(255, 107, 107, 0.45)) drop-shadow(0 0 6px rgba(127, 183, 190, 0.35));
+    }
+    30% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.95)) drop-shadow(0 0 22px rgba(255, 107, 107, 0.75)) drop-shadow(0 0 32px rgba(127, 183, 190, 0.65));
+    }
+    60% {
+        transform: scale(1.10);
+        filter: drop-shadow(0 0 14px rgba(255, 107, 107, 1)) drop-shadow(0 0 26px rgba(255, 107, 107, 0.85)) drop-shadow(0 0 40px rgba(127, 183, 190, 0.75));
+    }
+    85% {
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 8px rgba(255, 107, 107, 0.8)) drop-shadow(0 0 18px rgba(255, 107, 107, 0.5));
+    }
+    100% {
+        transform: scale(1.02);
+        filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.6));
+    }
 }
 
 .streak-test-row {
@@ -711,18 +734,15 @@
 
 @keyframes streakDaysCooldown {
     0% {
-        color: var(--accent-pink, #FF6B6B);
-        text-shadow: 0 0 10px rgba(255, 107, 107, 0.7);
-        transform: scale(1.08);
+        filter: drop-shadow(0 0 6px rgba(255, 107, 107, 0.6));
+        transform: scale(1.02);
     }
     50% {
-        color: #fa5252;
-        text-shadow: 0 0 6px rgba(255, 107, 107, 0.4);
-        transform: scale(1.03);
+        filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.3));
+        transform: scale(1.01);
     }
     100% {
-        color: inherit;
-        text-shadow: none;
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
         transform: scale(1);
     }
 }

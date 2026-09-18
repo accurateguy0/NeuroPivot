@@ -779,7 +779,7 @@ window.nobsProduxScrollytelling = {
 
         if (timerEl) {
             if (entry.phase === 'complete') {
-                timerEl.textContent = '5:00 âœ“';
+                timerEl.textContent = '5:00';
             } else if (entry.phase === 'intro') {
                 const secsToStart = Math.max(1, Math.ceil(24.2 - t));
                 timerEl.textContent = secsToStart > 0 ? (secsToStart <= 9 ? `0:0${secsToStart}` : `0:${secsToStart}`) : '0:01';
@@ -874,35 +874,43 @@ window.nobsProduxScrollytelling = {
     },
 
     getBreathingAudio: function () {
-        const domAudio = document.getElementById('breathingAudioPlayer');
-        if (domAudio) {
-            domAudio.loop = false;
-            domAudio.muted = false;
-            if (!domAudio._timelineHooked) {
-                domAudio._timelineHooked = true;
+        if (!this._breathingAudio) {
+            this._breathingAudio = new Audio('sounds/breathing_exercise.mp3');
+            this._breathingAudio.loop = false;
+            this._breathingAudio.muted = false;
+            this._breathingAudio.volume = 0.85;
+            this._breathingAudio.preload = 'auto';
+
+            if (!this._breathingAudio._timelineHooked) {
+                this._breathingAudio._timelineHooked = true;
                 const onTime = () => {
-                    this.syncBreathingText(domAudio.currentTime);
+                    if (this._breathingAudio) {
+                        this.syncBreathingText(this._breathingAudio.currentTime);
+                    }
                 };
-                domAudio.addEventListener('timeupdate', onTime);
-                domAudio.addEventListener('seeking', onTime);
-                domAudio.addEventListener('play', () => {
+                this._breathingAudio.addEventListener('timeupdate', onTime);
+                this._breathingAudio.addEventListener('seeking', onTime);
+                this._breathingAudio.addEventListener('play', () => {
                     this._breathingPlaying = true;
-                    this.syncBreathingText(domAudio.currentTime);
+                    if (this._breathingAudio) {
+                        this.syncBreathingText(this._breathingAudio.currentTime);
+                    }
                 });
-                domAudio.addEventListener('pause', () => {
+                this._breathingAudio.addEventListener('pause', () => {
                     this._breathingPlaying = false;
                 });
-                domAudio.addEventListener('ended', () => {
+                this._breathingAudio.addEventListener('ended', () => {
                     this._breathingPlaying = false;
                     this._breathingEnded = true;
                     this._breathingHasPlayedOnce = true;
                     this._breathingGateUnlocked = true;
-                    this.syncBreathingText(domAudio.duration || 397.5);
+                    if (this._breathingAudio) {
+                        this.syncBreathingText(this._breathingAudio.duration || 397.5);
+                    }
                 });
             }
-            return domAudio;
         }
-        return null;
+        return this._breathingAudio;
     },
 
     playBreathingAudio: function () {
@@ -926,6 +934,15 @@ window.nobsProduxScrollytelling = {
                     console.warn('Breathing audio play error:', err);
                     audio._playPending = false;
                     this._breathingPlaying = false;
+                    const retryPlay = () => {
+                        window.removeEventListener('click', retryPlay);
+                        window.removeEventListener('keydown', retryPlay);
+                        if (this.currentProgress >= 7.50 && this.currentProgress <= 9.10 && !this._breathingEnded) {
+                            this.playBreathingAudio();
+                        }
+                    };
+                    window.addEventListener('click', retryPlay, { once: true });
+                    window.addEventListener('keydown', retryPlay, { once: true });
                 });
             } else {
                 audio._playPending = false;
@@ -966,7 +983,12 @@ window.nobsProduxScrollytelling = {
     },
 
     toggleCallMyNameSound: function (isMuted) {
-        this._callMyNameMuted = !!isMuted;
+        if (this._callMyNameDismissed) return;
+        if (typeof isMuted === 'boolean') {
+            this._callMyNameMuted = isMuted;
+        } else {
+            this._callMyNameMuted = !this._callMyNameMuted;
+        }
         const audio = this.getCallMyNameAudio();
         if (!audio) return;
 
@@ -993,10 +1015,10 @@ window.nobsProduxScrollytelling = {
             if (bg && !bg.paused) { bg.volume = 0; bg.pause(); }
 
             // Allow replay if song already ended
-            if (this._callMyNameEnded) {
-                audio.currentTime = 0;
-                this._callMyNameEnded = false;
-            }
+            // if (this._callMyNameEnded) {
+            //     audio.currentTime = 0;
+            //     this._callMyNameEnded = false;
+            // }
 
             // Fire play() ONCE, with fade-in
             if (this._callMyNameFadeTimer) clearInterval(this._callMyNameFadeTimer);
@@ -1025,15 +1047,43 @@ window.nobsProduxScrollytelling = {
 
     getCallMyNameAudio: function () {
         if (!this._callMyNameAudio) {
-            this._callMyNameAudio = new Audio('sounds/call_my_name.mp3');
+            // this._callMyNameAudio = new Audio('sounds/call_my_name.mp3');
+            // this._callMyNameAudio.preload = 'auto';
+            // this._callMyNameAudio.loop = false;
+            // this._callMyNameAudio.volume = 0;   // starts silent; toggled by button
+
+            // this._callMyNameAudio.addEventListener('ended', () => {
+            //     this._callMyNameEnded = true;
+            //     this._callMyNameAudio._hasPlayedOnce = true;
+            //     this._callMyNameAudio._playPending = false;
+            // });
+            this._callMyNameAudio = new Audio();
             this._callMyNameAudio.preload = 'auto';
             this._callMyNameAudio.loop = false;
-            this._callMyNameAudio.volume = 0;   // starts silent; toggled by button
+            this._callMyNameAudio.volume = 0;
+
+            // Fetch the entire audio file into memory as a Blob
+            fetch('sounds/call_my_name.mp3')
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    if (this._callMyNameAudio) {
+                        this._callMyNameAudio.src = blobUrl;
+                    }
+                })
+                .catch(err => {
+                    console.error('Failed to load call_my_name into memory, falling back to direct URL:', err);
+                    if (this._callMyNameAudio) {
+                        this._callMyNameAudio.src = 'sounds/call_my_name.mp3';
+                    }
+                });
+
             this._callMyNameAudio.addEventListener('ended', () => {
                 this._callMyNameEnded = true;
                 this._callMyNameAudio._hasPlayedOnce = true;
                 this._callMyNameAudio._playPending = false;
             });
+
         }
         return this._callMyNameAudio;
     },
@@ -1084,8 +1134,9 @@ window.nobsProduxScrollytelling = {
             this._hasAnchorPhotos = existingPhotoImgs.length > 0;
         }
 
-        if (this.active && !forceReset) {
-            // Already active, do not reset progress! Just maintain render state
+        if (this.active) {
+            // Modal is already active and running (e.g. Blazor re-render or lifecycle event).
+            // NEVER reset audio currentTime, gate timers, or progress mid-session!
             this.render(this.currentProgress);
             return;
         }
@@ -1108,6 +1159,13 @@ window.nobsProduxScrollytelling = {
             this._natureMuted = true;
             this._callMyNameMuted = true; // Sound OFF by default
             this._callMyNameEnded = false;
+            this._callMyNameDismissed = false;
+            const callBtn = document.getElementById('callMyNameSoundBtn');
+            if (callBtn) {
+                callBtn.style.display = '';
+                callBtn.style.opacity = '0';
+                callBtn.style.pointerEvents = 'none';
+            }
             this._audioUnlocked = false; // Guard: audios stay silent until 2s delay elapses
             this._anchorsExitAccumulator = 0;
             this._anchorsTouchAccumulator = 0;
@@ -1167,15 +1225,18 @@ window.nobsProduxScrollytelling = {
             }
 
             // Breathing audio pre-configured but NOT played yet
-            const ba = document.getElementById('breathingAudioPlayer');
+            const ba = this.getBreathingAudio();
             if (ba) {
                 ba.muted = false;
                 ba.volume = 0.85;
                 ba.loop = false;
-                ba.currentTime = 0;
+                if (ba.currentTime === 0 || this._breathingEnded) {
+                    ba.pause();
+                    ba.currentTime = 0;
+                }
             }
 
-            // All audios start SILENT â€” they unlock after 2s (unblur animation = 2.2s)
+            // All audios start SILENT  they unlock after 2s (unblur animation = 2.2s)
             const ma = document.getElementById('mountainAmbienceAudio');
             if (ma) {
                 ma.muted = false;
@@ -1195,18 +1256,34 @@ window.nobsProduxScrollytelling = {
                 bg._hasPlayedOnce = false;
             }
 
-            this._callMyNameEnded = false;
+           
             if (this._callMyNameAudio) {
-                this._callMyNameAudio.pause();
-                this._callMyNameAudio.currentTime = 0;
-                this._callMyNameAudio._hasPlayedOnce = false;
+                // ONLY pause/rewind if it has NOT started yet, or if it already finished
+                if (this._callMyNameAudio.currentTime === 0 || this._callMyNameEnded) {
+                    this._callMyNameEnded = false;
+                    this._callMyNameDismissed = false;
+                    this._callMyNameAudio.pause();
+                    this._callMyNameAudio.currentTime = 0;
+                    this._callMyNameAudio._hasPlayedOnce = false;
+                }
             } else {
                 const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
                 if (ca) {
                     ca.pause();
-                    ca.currentTime = 0;
                     ca.volume = 0.50;
                 }
+            }
+
+            const sCueEl = document.getElementById('urge-scene-photo-cue');
+            if (sCueEl && !sCueEl._clickHooked) {
+                sCueEl._clickHooked = true;
+                sCueEl.addEventListener('click', () => {
+                    if (this.currentProgress >= 3.20 && this.currentProgress < 3.65) {
+                        this.targetProgress = 3.65;
+                        this.currentProgress = 3.65;
+                        this.render(3.65);
+                    }
+                });
             }
 
             // After 2s: unblur is complete. Audio unlock is enabled, but stays silent
@@ -1819,7 +1896,13 @@ window.nobsProduxScrollytelling = {
             if (waterAudio && waterAudio.volume > 0) waterAudio.volume = 0;
         } else if (p >= 0.50 && p <= 3.65) {
             // SCENE 0 IS ACTIVE:
-            if (bg && !bg.muted && !bg._hasPlayedOnce) {
+            const isCallActive = this._callMyNameAudio && !this._callMyNameAudio.paused;
+            if (isCallActive) {
+                if (bg) {
+                    bg.volume = 0;
+                    if (!bg.paused) bg.pause();
+                }
+            } else if (bg && !bg.muted && !bg._hasPlayedOnce) {
                 if (p <= 3.20) {
                     let targetBgVol = 0.38;
                     if (wavesVis > 0.05) {
@@ -1892,14 +1975,44 @@ window.nobsProduxScrollytelling = {
         // AUDIO: CALL MY NAME
         // Render loop ONLY handles stopping — never calls play().
         // play() is called exclusively from toggleCallMyNameSound (user button).
-        // Once outside Anchor section, audio pauses cleanly. No re-triggers.
+        // Once outside Anchor section, audio pauses cleanly and never plays again.
         // -------------------------------------------------------------
         const callAudio = this.getCallMyNameAudio();
-        if (callAudio && !callAudio.paused && !callAudio._playPending) {
-            // Only logic here: STOP the audio when out of section or muted
-            const outOfSection = (p < 3.20 || p > 5.45);
-            if (outOfSection || this._callMyNameMuted) {
-                callAudio.pause();
+        if (callAudio) {
+            if (this._callMyNameDismissed) {
+                if (!callAudio.paused) {
+                    callAudio.pause();
+                }
+                callAudio.volume = 0;
+            } else {
+                // Section 1.2 is active from p: 3.20 to 5.05.
+                // Dismiss ONLY when the user scrolls away forward into Scene 2 (p > 5.05)
+                // or scrolls backward all the way into Day Diary (p < 3.20).
+                const outOfSection = (p < 3.20 || p > 5.00);
+                if (outOfSection) {
+                    if (this._callMyNameFadeTimer) {
+                        clearInterval(this._callMyNameFadeTimer);
+                        this._callMyNameFadeTimer = null;
+                    }
+                    if (!callAudio.paused || !this._callMyNameMuted) {
+                        callAudio.pause();
+                        this._callMyNameDismissed = true;
+                        this._callMyNameMuted = true;
+                        if (this._dotNetHelper) {
+                            try { this._dotNetHelper.invokeMethodAsync('DismissCallMyName'); } catch (e) { }
+                        }
+                    }
+                    if (p > 5.05) {
+                        this._callMyNameDismissed = true;
+                        this._callMyNameMuted = true;
+                        if (this._dotNetHelper) {
+                            try { this._dotNetHelper.invokeMethodAsync('DismissCallMyName'); } catch (e) { }
+                        }
+                    }
+                    callAudio.volume = 0;
+                } else if (this._callMyNameMuted && !callAudio.paused) {
+                    callAudio.pause();
+                }
             }
         }
 
@@ -1925,7 +2038,7 @@ window.nobsProduxScrollytelling = {
                         sCue.style.zIndex = '22';
                         sCue.style.opacity = normCIn.toFixed(3);
                         sCue.style.transform = `translate3d(0, ${tyCIn.toFixed(2)}%, 0)`;
-                        sCue.style.pointerEvents = 'none';
+                        sCue.style.pointerEvents = normCIn > 0.08 ? 'auto' : 'none';
                     } else {
                         // Locked centered at 3.65 with pointer events enabled
                         sCue.style.display = 'flex';
@@ -1953,7 +2066,7 @@ window.nobsProduxScrollytelling = {
         // SCENE 1.2: ANCHOR FLASHCARDS DECK ("Remember who counts on you")
         // Active when user has photos OR has acknowledged the cue gate
         // -------------------------------------------------------------
-        // Show anchors only when user has photos or acknowledged cue â€” never when skipped (no photos)
+        // Show anchors only when user has photos or acknowledged cue — never when skipped (no photos)
         const showAnchors = (this._hasAnchorPhotos || this._cueAcknowledged) && !this._skipAnchors;
         if (sAnchors) {
             if (showAnchors && !this._isFadingToAnchors) {
@@ -1962,6 +2075,14 @@ window.nobsProduxScrollytelling = {
 
                 if (p >= 3.20 && p <= 5.45) {
                     const soundBtn = document.getElementById('callMyNameSoundBtn');
+
+                    if (this._callMyNameDismissed) {
+                        if (soundBtn) {
+                            soundBtn.style.display = 'none';
+                            soundBtn.style.opacity = '0';
+                            soundBtn.style.pointerEvents = 'none';
+                        }
+                    }
 
                     if (p < 3.65) {
                         // Smooth vertical scroll IN from bottom (+100% → 0%)
@@ -1977,10 +2098,10 @@ window.nobsProduxScrollytelling = {
                         sAnchors.style.zIndex = '22';
                         sAnchors.style.opacity = opIn.toFixed(3);
                         sAnchors.style.transform = `translate3d(0, ${tyIn.toFixed(2)}%, 0) scale(${scaleIn.toFixed(3)})`;
-                        sAnchors.style.pointerEvents = 'none';
+                        sAnchors.style.pointerEvents = normIn > 0.15 ? 'auto' : 'none';
 
                         // Sound button hidden during scroll-in
-                        if (soundBtn) { soundBtn.style.opacity = '0'; soundBtn.style.pointerEvents = 'none'; }
+                        if (soundBtn && !this._callMyNameDismissed) { soundBtn.style.opacity = '0'; soundBtn.style.pointerEvents = 'none'; }
 
                     } else if (p > 5.00) {
                         // Vertical scroll OUT upwards towards Momentum Anchor (0% → -100%)
@@ -1995,7 +2116,7 @@ window.nobsProduxScrollytelling = {
                         sAnchors.style.pointerEvents = 'none';
 
                         // Sound button fades with section
-                        if (soundBtn) { soundBtn.style.opacity = opOut.toFixed(3); soundBtn.style.pointerEvents = 'none'; }
+                        if (soundBtn && !this._callMyNameDismissed) { soundBtn.style.opacity = opOut.toFixed(3); soundBtn.style.pointerEvents = 'none'; }
 
                     } else {
                         // Centered interactive full page (3.65 → 5.00)
@@ -2005,8 +2126,18 @@ window.nobsProduxScrollytelling = {
                         sAnchors.style.transform = 'translate3d(0, 0, 0) scale(1)';
                         sAnchors.style.pointerEvents = 'auto';
 
-                        // Sound button fully visible once settled
-                        if (soundBtn) { soundBtn.style.opacity = '1'; soundBtn.style.pointerEvents = 'auto'; }
+                        // Sound button fully visible once settled (only if not dismissed)
+                        if (soundBtn) {
+                            if (this._callMyNameDismissed) {
+                                soundBtn.style.display = 'none';
+                                soundBtn.style.opacity = '0';
+                                soundBtn.style.pointerEvents = 'none';
+                            } else {
+                                soundBtn.style.display = 'flex';
+                                soundBtn.style.opacity = '1';
+                                soundBtn.style.pointerEvents = 'auto';
+                            }
+                        }
                     }
 
                     // Flashcard Swipe Physics (p: 3.65 -> 5.00)
@@ -2398,13 +2529,18 @@ window.nobsProduxScrollytelling = {
                     }
                 }
 
-                // Guided breathing audio: render loop ONLY handles stopping.
-                // play() is called exclusively from jumpTo('breathing').
-                // Pause when scrolled out of the active breathing zone.
-                const baLive = document.getElementById('breathingAudioPlayer');
+                // Guided breathing audio: auto-play in active breathing zone (7.80 -> 8.85)
+                // Pause when scrolled out into Scene 4 (p > 8.85)
+                const baLive = this.getBreathingAudio();
                 if (baLive) {
-                    if (!baLive.paused && !baLive._playPending && p > 8.85) {
-                        baLive.pause(); // scrolled into Scene 4
+                    if (p > 8.85) {
+                        if (!baLive.paused && !baLive._playPending) {
+                            baLive.pause(); // scrolled into Scene 4
+                        }
+                    } else if (p >= 7.80 && p <= 8.85) {
+                        if (baLive.paused && !baLive._playPending && !this._breathingEnded && this._audioUnlocked) {
+                            this.playBreathingAudio();
+                        }
                     }
                     this.syncBreathingText(baLive.currentTime);
                 }
@@ -2422,7 +2558,7 @@ window.nobsProduxScrollytelling = {
                 if (nv && !nv.paused) nv.pause();
 
                 // Outside Scene 3: pause breathing audio cleanly (no stutter, no retrigger)
-                const baOff = document.getElementById('breathingAudioPlayer');
+                const baOff = this.getBreathingAudio();
                 if (baOff && !baOff.paused && !baOff._playPending) {
                     baOff.pause();
                 }
@@ -2498,6 +2634,7 @@ window.nobsProduxScrollytelling = {
     },
 
     destroy: function () {
+         console.warn('⚠️ PRODUX DESTROY WAS CALLED! Caller:', new Error().stack);
         this.active = false;
         this.targetProgress = 0.0;
         this.currentProgress = 0.0;
@@ -2525,11 +2662,16 @@ window.nobsProduxScrollytelling = {
             if (!nv.paused) nv.pause();
             nv.muted = true;
         }
-        const domBa = document.getElementById('breathingAudioPlayer');
-        if (domBa) {
-            domBa.pause();
-            domBa.currentTime = 0;
-        }
+        // if (this._breathingAudio) {
+        //     this._breathingAudio.pause();
+        //     this._breathingAudio.currentTime = 0;
+        //     this._breathingAudio = null;
+        // }
+        // const domBa = document.getElementById('breathingAudioPlayer');
+        // if (domBa) {
+        //     domBa.pause();
+        //     domBa.currentTime = 0;
+        // }
         this.syncBreathingText(0);
         const sections = document.querySelectorAll('.spotify-data-section');
         sections.forEach(s => s.classList.remove('in-view'));
@@ -2548,12 +2690,19 @@ window.nobsProduxScrollytelling = {
         if (this._callMyNameAudio) {
             this._callMyNameAudio.pause();
             this._callMyNameAudio.currentTime = 0;
-            this._callMyNameAudio._hasPlayedOnce = false;
+            this._callMyNameAudio = null;
         }
         const ca = document.getElementById('anchorCallMyNameAudio') || document.getElementById('callMyNameAudio');
-        if (ca) { if (!ca.paused) ca.pause(); ca.currentTime = 0; }
+        if (ca) { if (!ca.paused) ca.pause(); }
         this._callMyNameEnded = false;
         this._callMyNameMuted = true;
+        this._callMyNameDismissed = false;
+        const soundBtn = document.getElementById('callMyNameSoundBtn');
+        if (soundBtn) {
+            soundBtn.style.display = '';
+            soundBtn.style.opacity = '';
+            soundBtn.style.pointerEvents = '';
+        }
         const sCue = document.getElementById('urge-scene-photo-cue');
         if (sCue) { sCue.style.display = 'none'; sCue.style.opacity = '0'; sCue.classList.remove('cue-fade-out'); }
         const sBridge = document.getElementById('urge-scene-bridge');
@@ -2696,6 +2845,18 @@ window.nobsProduxScrollytelling = {
             window.nobsProduxScrollytelling._mouseX = e.clientX;
             window.nobsProduxScrollytelling._mouseY = e.clientY;
             window.nobsProduxScrollytelling.updateCardHover();
+
+            const exitGrid = document.getElementById('exitActionsGrid');
+            const tooltip = document.getElementById('cursorGatedTooltip');
+            if (exitGrid && tooltip) {
+                if (exitGrid.classList.contains('is-gated') && (exitGrid === e.target || exitGrid.contains(e.target))) {
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = (e.clientX + 14) + 'px';
+                    tooltip.style.top = (e.clientY + 14) + 'px';
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            }
         }
     }, { passive: true });
 
@@ -2712,6 +2873,8 @@ window.nobsProduxScrollytelling = {
             window.nobsProduxScrollytelling._mouseX = undefined;
             window.nobsProduxScrollytelling._mouseY = undefined;
             window.nobsProduxScrollytelling.clearCardHover();
+            const tooltip = document.getElementById('cursorGatedTooltip');
+            if (tooltip) tooltip.style.display = 'none';
         }
     }, { passive: true });
 

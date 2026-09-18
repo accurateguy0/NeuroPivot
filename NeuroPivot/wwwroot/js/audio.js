@@ -27,7 +27,7 @@ window.nobsAudio = {
                 this.audioCache[soundName] = audio;
             }
             audio.volume = masterVol;
-            audio.currentTime = 0;
+            //audio.currentTime = 0;
             audio.play().catch(err => {
                 // If MP3 file is not found or blocked by browser policy, fall back silently
             });
@@ -550,7 +550,7 @@ window.nobsAudio = {
                 }
                 if (this.activeCustomAudio) {
                     this.activeCustomAudio.pause();
-                    this.activeCustomAudio.currentTime = 0;
+                    //this.activeCustomAudio.currentTime = 0;
                     if (this._activeAudioResolve) {
                         this._activeAudioResolve();
                         this._activeAudioResolve = null;
@@ -610,7 +610,7 @@ window.nobsAudio = {
             try {
                 if (this.activeCustomAudio) {
                     this.activeCustomAudio.pause();
-                    this.activeCustomAudio.currentTime = 0;
+                    //this.activeCustomAudio.currentTime = 0;
                     if (this._activeAudioResolve) {
                         this._activeAudioResolve();
                         this._activeAudioResolve = null;

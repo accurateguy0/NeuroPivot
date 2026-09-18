@@ -14,7 +14,7 @@
         <div class="streak-meter-header">
             <div class="streak-meter-title-wrap">
                 <span class="streak-fire-icon">🔥</span>
-                <span class="streak-meter-text">Consecutive streaks: <strong class="streak-days-highlight @(isStreakBarScalingDown ? "scaling-down" : "")">@FormatStreakDisplay(streakDays)</strong></span>
+                <span class="streak-meter-text">Consecutive streaks: <strong class="streak-days-highlight @(isStreakLostGlowing ? "streak-lost-glowing" : "") @(isStreakBarScalingDown ? "scaling-down" : "")">@FormatStreakDisplay(streakDays)</strong></span>
             </div>
             <div class="streak-badge @(isTodayQualified ? "qualified" : "pending")">
                 @(isTodayQualified ? "✓ Streak active today (4-6 habits done)" : $"{todayCount}/4 habits done today")
@@ -161,6 +161,7 @@
     private System.Threading.CancellationTokenSource? _scaleCts;
 
     private bool isStreakBarScalingDown = false;
+    private bool isStreakLostGlowing = false;
     private int? _overrideStreakDays;
     private System.Threading.CancellationTokenSource? _scaleDownCts;
     private bool _hasStartedScaleDown = false;
@@ -192,6 +193,7 @@
             var startScale = HabitService.GetStreakScaleInfoForStreak(lostStreak, Math.Max(0, lostStreak - 1));
             _overrideScaleInfo = startScale;
             _outgoingScaleInfo = startScale;
+            isStreakLostGlowing = true;
         }
 
         CheckMilestonePopUp();
@@ -311,32 +313,42 @@
 
         _ = Task.Run(async () =>
         {
-            // Milestone tiers in descending order (e.g. for 30: [30, 21, 14, 7, 3])
+            // Milestone tiers in descending order strictly below lostStreak
             var tiers = new List<int>();
-            if (lostStreak >= 30) tiers.Add(30);
-            if (lostStreak >= 21 && !tiers.Contains(21)) tiers.Add(21);
-            if (lostStreak >= 14 && !tiers.Contains(14)) tiers.Add(14);
-            if (lostStreak >= 7 && !tiers.Contains(7)) tiers.Add(7);
-            if (!tiers.Contains(3)) tiers.Add(3);
-            if (tiers[0] != lostStreak) tiers.Insert(0, lostStreak);
+            if (lostStreak > 30) tiers.Add(30);
+            if (lostStreak > 21 && !tiers.Contains(21)) tiers.Add(21);
+            if (lostStreak > 14 && !tiers.Contains(14)) tiers.Add(14);
+            if (lostStreak > 7 && !tiers.Contains(7)) tiers.Add(7);
+            if (lostStreak > 3 && !tiers.Contains(3)) tiers.Add(3);
+            tiers.Insert(0, lostStreak);
 
-            // Phase 1: Hold initial streak level for 800ms so user clearly registers where they started
+            // Phase 1: Hold the day user was previously in and glow the text for 2 seconds before scaling down
             await InvokeAsync(() =>
             {
                 _cascadeStage = 0;
                 _overrideStreakDays = lostStreak;
-                _overridePercentage = 100;
+                _overridePercentage = HabitService.GetStreakMeterPercentageForStreak(lostStreak);
                 _overrideScaleInfo = HabitService.GetStreakScaleInfoForStreak(lostStreak, Math.Max(0, lostStreak - 1));
                 _outgoingScaleInfo = null;
-                isStreakBarScalingDown = true;
+                isStreakLostGlowing = true;
+                isStreakBarScalingDown = false;
                 isExpandingRight = false;
                 StateHasChanged();
             });
 
-            await Task.Delay(800, token);
+            // Glow the text and wait for 2 seconds
+            await Task.Delay(2000, token);
             if (token.IsCancellationRequested) return;
 
-            // Phase 2: Cascade down through each milestone tier
+            // Phase 2: Switch off glowing and begin meter scaling down animation
+            await InvokeAsync(() =>
+            {
+                isStreakLostGlowing = false;
+                isStreakBarScalingDown = true;
+                StateHasChanged();
+            });
+
+            // Cascade down through each milestone tier
             for (int k = 0; k < tiers.Count; k++)
             {
                 int currentTier = tiers[k];
@@ -352,6 +364,9 @@
                 // Smooth micro-frame interpolation (28 micro-frames over ~800ms) for continuous liquid movement
                 int frames = 28;
                 int frameDelay = 28;
+                double startPct = (k == 0)
+                    ? (double)HabitService.GetStreakMeterPercentageForStreak(currentTier)
+                    : 100.0;
                 double endPct = GetTargetLabelPercentage(currentTier, nextTier);
 
                 for (int f = 1; f <= frames; f++)
@@ -362,7 +377,7 @@
                     double t = (double)f / (double)frames;
                     double currentVal = (double)currentTier - t * (double)(currentTier - nextTier);
                     int displayVal = (int)Math.Round(currentVal);
-                    int pct = (int)Math.Round(100.0 - t * (100.0 - endPct));
+                    int pct = (int)Math.Round(startPct - t * (startPct - endPct));
 
                     await InvokeAsync(() =>
                     {
@@ -410,6 +425,7 @@
                 _overrideScaleInfo = null;
                 _outgoingScaleInfo = null;
                 _overrideStreakDays = null;
+                isStreakLostGlowing = false;
                 isStreakBarScalingDown = false;
                 isExpandingRight = false;
                 _cascadeStage = 0;
@@ -420,6 +436,7 @@
 
     private void TriggerTestScaleDown(int days = 30)
     {
+        _hasStartedScaleDown = false;
         TriggerCinematicStreakScaleDown(days);
     }
 
