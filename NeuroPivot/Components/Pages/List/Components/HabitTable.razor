@@ -1,5 +1,6 @@
 @inject HabitService HabitService
 @inject IJSRuntime JSRuntime
+@implements IDisposable
 
 @if (HabitService.Habits.Count == 0)
 {
@@ -86,6 +87,32 @@ else
     public EventCallback<HabitItem> OnPromptDelete { get; set; }
 
     private ElementReference scrollWrapperRef;
+
+    protected override void OnInitialized()
+    {
+        HabitService.OnChange += OnStateChanged;
+    }
+
+    private void OnStateChanged()
+    {
+        InvokeAsync(async () =>
+        {
+            StateHasChanged();
+            if (HabitService.CurrentActiveDay == 1)
+            {
+                try
+                {
+                    await JSRuntime.InvokeVoidAsync("nobsScrollTable.scrollToStart", scrollWrapperRef);
+                }
+                catch { }
+            }
+        });
+    }
+
+    public void Dispose()
+    {
+        HabitService.OnChange -= OnStateChanged;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

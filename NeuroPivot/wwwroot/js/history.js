@@ -87,6 +87,22 @@ window.nobsScrollTable = {
             }, { passive: true });
             el._hasScrollTracker = true;
         }
+    },
+
+    scrollToStart: function (el) {
+        if (!el) {
+            el = document.querySelector('.habit-scroll-wrapper');
+        }
+        sessionStorage.removeItem('nobs_habit_table_scroll_x');
+        if (el) {
+            el.scrollLeft = 0;
+            requestAnimationFrame(() => {
+                el.scrollLeft = 0;
+            });
+            setTimeout(() => {
+                el.scrollLeft = 0;
+            }, 60);
+        }
     }
 };
 

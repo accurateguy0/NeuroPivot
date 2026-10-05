@@ -203,19 +203,31 @@
         }
     }
 
-    private void ReinforceSame()
+    private async Task ReinforceSame()
     {
         HabitService.ReinforceChallenge();
         showLtpModal = false;
         _hasDismissedLtpModal = false;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsScrollTable.scrollToStart");
+        }
+        catch { }
+        await InvokeAsync(StateHasChanged);
     }
 
-    private void StartNewHabits()
+    private async Task StartNewHabits()
     {
         HabitService.StartNewChallenge();
         showLtpModal = false;
         _hasDismissedLtpModal = false;
         showManualAddModal = true;
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("nobsScrollTable.scrollToStart");
+        }
+        catch { }
+        await InvokeAsync(StateHasChanged);
     }
 
     private void CompleteProtocolNow()
