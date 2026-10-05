@@ -117,9 +117,17 @@ public class HabitService
             _ = SaveHabitsToActiveAccountAsync();
         }
 
-        if (account.CurrentActiveDay >= 21 && account.IsDayLocked)
+        if (CurrentActiveDay >= 21)
         {
-            ChallengeComplete = true;
+            bool hasQualifiedDay21 = Habits.Count(h => h.IsCompletedOnDay(21)) >= 4;
+            bool datePassedQualify = LastStreakQualifyDate.HasValue && (DateTime.Today - LastStreakQualifyDate.Value.Date).TotalDays >= 1;
+            bool timeElapsed = ChallengeStartDate != default && (DateTime.Today - ChallengeStartDate.Date).TotalDays >= 21;
+
+            if (ChallengeComplete || IsDayLocked || hasQualifiedDay21 || timeElapsed || datePassedQualify)
+            {
+                ChallengeComplete = true;
+                IsDayLocked = true;
+            }
         }
 
         CheckRealWorldDateShift();
@@ -127,6 +135,14 @@ public class HabitService
         {
             InitializeGoalHabit(account.CurrentGoal);
         }
+        NotifyStateChanged();
+    }
+
+    public void MarkChallengeComplete()
+    {
+        ChallengeComplete = true;
+        IsDayLocked = true;
+        _ = SaveHabitsToActiveAccountAsync();
         NotifyStateChanged();
     }
 
@@ -206,6 +222,23 @@ public class HabitService
             }
             _ = SaveHabitsToActiveAccountAsync();
             NotifyStateChanged();
+        }
+        else
+        {
+            if (CurrentActiveDay >= 21 && !ChallengeComplete)
+            {
+                bool hasQualifiedDay21 = Habits.Count(h => h.IsCompletedOnDay(21)) >= 4;
+                bool datePassedQualify = LastStreakQualifyDate.HasValue && (today - LastStreakQualifyDate.Value.Date).TotalDays >= 1;
+                bool timeElapsed = ChallengeStartDate != default && (today - ChallengeStartDate.Date).TotalDays >= 21;
+
+                if (IsDayLocked || hasQualifiedDay21 || timeElapsed || datePassedQualify)
+                {
+                    ChallengeComplete = true;
+                    IsDayLocked = true;
+                    _ = SaveHabitsToActiveAccountAsync();
+                    NotifyStateChanged();
+                }
+            }
         }
     }
 

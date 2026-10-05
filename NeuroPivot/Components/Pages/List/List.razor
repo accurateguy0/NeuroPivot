@@ -16,6 +16,17 @@
             </div>
         </div>
     }
+    else if (HabitService.CurrentActiveDay >= 21 && HabitService.Habits.Count(h => h.IsCompletedOnDay(21)) >= 4)
+    {
+        <div class="list-page-header">
+            <div class="day-locked-banner challenge-complete-banner">
+                <span class="challenge-complete-text">🎉 Day 21 qualified! (4/6 habits completed)</span>
+                <button type="button" class="btn-ltp-banner-action" @onclick="CompleteProtocolNow">
+                    Finish 21-Day Challenge Now →
+                </button>
+            </div>
+        </div>
+    }
     else if (HabitService.IsDayLocked)
     {
         <div class="list-page-header">
@@ -205,6 +216,12 @@
         showLtpModal = false;
         _hasDismissedLtpModal = false;
         showManualAddModal = true;
+    }
+
+    private void CompleteProtocolNow()
+    {
+        HabitService.MarkChallengeComplete();
+        showLtpModal = true;
     }
 
     private void OpenManualAddModal()
