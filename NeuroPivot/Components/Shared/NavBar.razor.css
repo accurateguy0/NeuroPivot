@@ -135,3 +135,90 @@
     opacity: 0;
     will-change: transform, opacity;
 }
+
+/* Mobile responsive navigation & header */
+@media (max-width: 768px) {
+    .nobs-header {
+        padding: 0.8rem 1.25rem !important;
+        min-height: 4.2rem !important;
+    }
+
+    .nobs-header.is-shrunk .nav-left {
+        display: none !important;
+    }
+
+    .nobs-header.is-shrunk .nav-center {
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        flex: 0 0 auto !important;
+    }
+
+    .nobs-header.is-shrunk .logo-scene {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        pointer-events: auto !important;
+        z-index: auto !important;
+    }
+
+    .nobs-header.is-shrunk .logo-scene .nobs-logo {
+        font-size: 1.35rem !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        color: var(--text-primary) !important;
+    }
+
+    .nobs-header.is-shrunk .logo-char {
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    .nobs-header.is-shrunk .nav-right {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+    }
+
+    .nobs-header.is-shrunk .nobs-nav {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 0.5rem !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .nobs-header.is-shrunk .nobs-nav-link {
+        font-size: 0.85rem !important;
+        padding: 0.35rem 0.5rem !important;
+        white-space: nowrap !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .nobs-header {
+        padding: 0.6rem 0.75rem !important;
+        min-height: 3.8rem !important;
+    }
+
+    .nobs-header.is-shrunk .logo-scene .nobs-logo {
+        font-size: 1.2rem !important;
+    }
+
+    .nobs-header.is-shrunk .nobs-nav {
+        gap: 0.35rem !important;
+    }
+
+    .nobs-header.is-shrunk .nobs-nav-link {
+        font-size: 0.78rem !important;
+        padding: 0.25rem 0.35rem !important;
+    }
+}

@@ -1,7 +1,7 @@
 @if (IsOpen)
 {
-    <div class="modal-backdrop-overlay">
-        <div class="ltp-solid-square animated-fade-in">
+    <div class="modal-backdrop-overlay" @onclick="HandleBackdropClick">
+        <div class="ltp-solid-square animated-fade-in" @onclick:stopPropagation="true">
             <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🧠</div>
             <h2 class="ltp-title">21-Day Milestone Achieved!</h2>
             <h3 class="ltp-sub">Long-Term Potentiation (LTP)</h3>
@@ -17,6 +17,12 @@
                 <button class="nobs-btn btn-new-habits" @onclick="OnStartNewHabits">
                     ✨ Start New 21-Day Cycle with Custom Habits
                 </button>
+                @if (OnClose.HasDelegate)
+                {
+                    <button class="nobs-btn btn-review-board" @onclick="OnClose">
+                        👀 Review 21-Day Board
+                    </button>
+                }
             </div>
         </div>
     </div>
@@ -26,4 +32,13 @@
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback OnReinforceSame { get; set; }
     [Parameter] public EventCallback OnStartNewHabits { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private async Task HandleBackdropClick()
+    {
+        if (OnClose.HasDelegate)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
 }

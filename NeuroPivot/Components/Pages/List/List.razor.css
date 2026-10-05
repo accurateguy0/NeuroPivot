@@ -21,6 +21,44 @@
     margin-top: 0.5rem;
 }
 
+.challenge-complete-banner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    background: rgba(127, 183, 190, 0.12);
+    border: 1px solid var(--accent-blue, #7FB7BE);
+    padding: 0.65rem 1.25rem;
+    border-radius: 6px;
+    margin: 0.5rem auto;
+}
+
+.challenge-complete-text {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--accent-blue, #7FB7BE);
+    font-size: 0.95rem;
+}
+
+.btn-ltp-banner-action {
+    background: var(--accent-blue, #7FB7BE);
+    color: #2E282A;
+    border: none;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.btn-ltp-banner-action:hover {
+    background: #6ea4ab;
+    transform: translateY(-1px);
+}
+
 .page-title-inter {
     font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
     font-size: clamp(2.2rem, 5vw, 3rem);

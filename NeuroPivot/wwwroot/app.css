@@ -241,6 +241,28 @@ body::after {
     align-items: center;
 }
 
+@media (max-width: 768px) {
+    .nobs-header {
+        padding: 0.8rem 1.25rem !important;
+        min-height: 4.2rem !important;
+    }
+
+    .nobs-nav {
+        gap: 0.5rem !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .nobs-header {
+        padding: 0.6rem 0.75rem !important;
+        min-height: 3.8rem !important;
+    }
+
+    .nobs-nav {
+        gap: 0.35rem !important;
+    }
+}
+
 
 
 /* High Contrast Buttons */

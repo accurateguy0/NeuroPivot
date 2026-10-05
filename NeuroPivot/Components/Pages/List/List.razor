@@ -5,7 +5,18 @@
 @implements IDisposable
 
 <div class="nobs-container list-container" style="max-width: 1200px;">
-    @if (HabitService.IsDayLocked)
+    @if (HabitService.ChallengeComplete)
+    {
+        <div class="list-page-header">
+            <div class="day-locked-banner challenge-complete-banner">
+                <span class="challenge-complete-text">🧠 21-day neuroplasticity protocol completed!</span>
+                <button type="button" class="btn-ltp-banner-action" @onclick="() => showLtpModal = true">
+                    Next Cycle (Reinforce or New Habits) →
+                </button>
+            </div>
+        </div>
+    }
+    else if (HabitService.IsDayLocked)
     {
         <div class="list-page-header">
             <div class="day-locked-banner">
@@ -60,7 +71,7 @@
 <ManualHabitModal IsOpen="showManualAddModal" OnClose="() => showManualAddModal = false" OnSave="CreateManualHabit" />
 <ActionAlertModal IsOpen="showAlertPopUp" Message="@alertPopUpMessage" OnClose="() => showAlertPopUp = false" />
 <CelebrationModal IsOpen="showCelebrationModal" Message="@celebrationModalMessage" OnClose="() => showCelebrationModal = false" />
-<LtpMilestoneModal IsOpen="showLtpModal" OnReinforceSame="ReinforceSame" OnStartNewHabits="StartNewHabits" />
+<LtpMilestoneModal IsOpen="showLtpModal" OnReinforceSame="ReinforceSame" OnStartNewHabits="StartNewHabits" OnClose="HandleCloseLtpModal" />
 <ConfirmModal IsOpen="showDeleteModal"
               Message="Are you sure? It will reset your progress."
               OnConfirm="ConfirmDelete"
@@ -79,6 +90,7 @@
     private bool showCelebrationModal = false;
     private string celebrationModalMessage = "";
     private bool showLtpModal = false;
+    private bool _hasDismissedLtpModal = false;
 
     // Habits Goal Exclusives: Relapse, Urge & Daily Check-In
     private bool showRelapseModal = false;
@@ -99,11 +111,17 @@
         HabitService.OnChange += OnStateChanged;
         AppState.OnChange += OnStateChanged;
 
+        if (HabitService.ChallengeComplete)
+        {
+            showLtpModal = true;
+        }
+
         CheckAndShowDailyPopup();
     }
 
     private void CheckAndShowDailyPopup()
     {
+        if (HabitService.ChallengeComplete) return;
         if (!_hasCheckedDailyPopup && AppState.CurrentGoal == "habits" && todayMoodLog == null)
         {
             _hasCheckedDailyPopup = true;
@@ -117,8 +135,18 @@
         _hasCheckedDailyPopup = true;
     }
 
+    private void HandleCloseLtpModal()
+    {
+        showLtpModal = false;
+        _hasDismissedLtpModal = true;
+    }
+
     private void OnStateChanged()
     {
+        if (HabitService.ChallengeComplete && !showLtpModal && !_hasDismissedLtpModal)
+        {
+            showLtpModal = true;
+        }
         CheckAndShowDailyPopup();
         InvokeAsync(StateHasChanged);
     }
@@ -168,12 +196,15 @@
     {
         HabitService.ReinforceChallenge();
         showLtpModal = false;
+        _hasDismissedLtpModal = false;
     }
 
     private void StartNewHabits()
     {
         HabitService.StartNewChallenge();
         showLtpModal = false;
+        _hasDismissedLtpModal = false;
+        showManualAddModal = true;
     }
 
     private void OpenManualAddModal()

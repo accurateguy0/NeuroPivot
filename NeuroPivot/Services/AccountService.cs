@@ -91,6 +91,7 @@ public class RelapseEntry
     public string HaltState { get; set; } = ""; // Hungry, Angry, Lonely, Tired, None
     public string FrictionFailure { get; set; } = ""; // Environmental barrier that failed
     public string CalibrationAction { get; set; } = ""; // Solution / rule adjustment
+    public int HabitsCompletedAtRelapseTime { get; set; } = 0; // Number of habits completed on challenge day at relapse time
 }
 
 public class AnchorCardItem

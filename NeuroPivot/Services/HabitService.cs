@@ -95,6 +95,18 @@ public class HabitService
         int tableHighest = CalculateHistoricalHighestTableStreak();
         HighestStreak = Math.Max(tableHighest, Math.Max(account.HighestStreak, Math.Max(account.ConsecutiveStreak, account.PendingLostStreak)));
 
+        var lastRelapse = account.RelapseLogs?.OrderByDescending(r => r.Timestamp).FirstOrDefault();
+        if (lastRelapse != null)
+        {
+            int tableStreak = CalculateTableStreak();
+            ConsecutiveStreak = tableStreak;
+            if (account.ConsecutiveStreak != tableStreak)
+            {
+                account.ConsecutiveStreak = tableStreak;
+                _ = SaveHabitsToActiveAccountAsync();
+            }
+        }
+
         if (account.Username != null && account.Username.Equals("admin", StringComparison.OrdinalIgnoreCase) && account.ConsecutiveStreak == 21)
         {
             account.ConsecutiveStreak = 7;
@@ -103,6 +115,11 @@ public class HabitService
             AcknowledgedStreakMilestone = 7;
             HighestStreak = Math.Max(HighestStreak, 7);
             _ = SaveHabitsToActiveAccountAsync();
+        }
+
+        if (account.CurrentActiveDay >= 21 && account.IsDayLocked)
+        {
+            ChallengeComplete = true;
         }
 
         CheckRealWorldDateShift();
@@ -180,6 +197,11 @@ public class HabitService
                     CurrentActiveDay++;
                     IsDayLocked = false;
                     foreach (var h in Habits) h.SetCompletedOnDay(CurrentActiveDay, false);
+                }
+                else
+                {
+                    ChallengeComplete = true;
+                    IsDayLocked = true;
                 }
             }
             _ = SaveHabitsToActiveAccountAsync();
@@ -383,11 +405,11 @@ public class HabitService
         }
         else if (LastStreakQualifyDate.Value.Date == today)
         {
-            ConsecutiveStreak = Math.Max(ConsecutiveStreak, tableStreak);
+            ConsecutiveStreak = tableStreak > 0 ? tableStreak : Math.Max(ConsecutiveStreak, 1);
         }
         else if (LastStreakQualifyDate.Value.Date == today.AddDays(-1))
         {
-            ConsecutiveStreak++;
+            ConsecutiveStreak = tableStreak > 0 ? tableStreak : ConsecutiveStreak + 1;
             LastStreakQualifyDate = today;
         }
         else
@@ -407,7 +429,21 @@ public class HabitService
         int count = 0;
         int startDay = todayQualified ? CurrentActiveDay : CurrentActiveDay - 1;
 
-        for (int d = startDay; d >= 1; d--)
+        var lastRelapse = _appState?.RelapseLogs?.OrderByDescending(r => r.Timestamp).FirstOrDefault()
+            ?? _accountService?.ActiveAccount?.RelapseLogs?.OrderByDescending(r => r.Timestamp).FirstOrDefault();
+
+        int cutoffDay = 1;
+        if (lastRelapse != null)
+        {
+            // If the user had already completed habits at the time of the relapse, that day was before the relapse
+            // and cannot count towards the new streak.
+            // If the user had NOT completed habits yet (or completed them afterwards), that day can count as day 1.
+            cutoffDay = lastRelapse.HabitsCompletedAtRelapseTime >= 4
+                ? lastRelapse.ChallengeDay + 1
+                : lastRelapse.ChallengeDay;
+        }
+
+        for (int d = startDay; d >= cutoffDay; d--)
         {
             int c = Habits.Count(h => h.IsCompletedOnDay(d));
             if (c >= 4)
@@ -551,6 +587,12 @@ public class HabitService
             return 0;
         }
         int tableStreak = CalculateTableStreak();
+        var lastRelapse = _appState?.RelapseLogs?.OrderByDescending(r => r.Timestamp).FirstOrDefault()
+            ?? _accountService?.ActiveAccount?.RelapseLogs?.OrderByDescending(r => r.Timestamp).FirstOrDefault();
+        if (lastRelapse != null)
+        {
+            return tableStreak;
+        }
         return Math.Max(ConsecutiveStreak, tableStreak);
     }
 
@@ -560,20 +602,38 @@ public class HabitService
         int maxStreak = 0;
         int currentRun = 0;
 
+        var allRelapses = _appState?.RelapseLogs ?? _accountService?.ActiveAccount?.RelapseLogs ?? new List<RelapseEntry>();
+        var relapseDays = allRelapses.ToLookup(r => r.ChallengeDay);
+
         for (int d = 1; d <= CurrentActiveDay; d++)
         {
-            int c = Habits.Count(h => h.IsCompletedOnDay(d));
-            if (c >= 4)
+            var relapsesOnDay = relapseDays[d].ToList();
+            if (relapsesOnDay.Count > 0)
             {
-                currentRun++;
-                if (currentRun > maxStreak)
+                currentRun = 0;
+                var latestRelapseOnDay = relapsesOnDay.OrderByDescending(r => r.Timestamp).First();
+                int c = Habits.Count(h => h.IsCompletedOnDay(d));
+                if (c >= 4 && latestRelapseOnDay.HabitsCompletedAtRelapseTime < 4)
                 {
-                    maxStreak = currentRun;
+                    currentRun = 1;
                 }
             }
             else
             {
-                currentRun = 0;
+                int c = Habits.Count(h => h.IsCompletedOnDay(d));
+                if (c >= 4)
+                {
+                    currentRun++;
+                }
+                else
+                {
+                    currentRun = 0;
+                }
+            }
+
+            if (currentRun > maxStreak)
+            {
+                maxStreak = currentRun;
             }
         }
         return maxStreak;
@@ -642,6 +702,8 @@ public class HabitService
 
     public async Task LogRelapseAsync(string triggerCategory, string haltState, string frictionFailure, string calibrationAction)
     {
+        int completedAtRelapse = Habits.Count(h => h.IsCompletedOnDay(CurrentActiveDay));
+
         var entry = new RelapseEntry
         {
             Timestamp = DateTime.Now,
@@ -649,7 +711,8 @@ public class HabitService
             TriggerCategory = triggerCategory ?? "Unspecified",
             HaltState = haltState ?? "None",
             FrictionFailure = frictionFailure ?? "",
-            CalibrationAction = calibrationAction ?? ""
+            CalibrationAction = calibrationAction ?? "",
+            HabitsCompletedAtRelapseTime = completedAtRelapse
         };
 
         _appState.AddRelapseLog(entry);
@@ -660,16 +723,16 @@ public class HabitService
             PendingLostStreak = curStreak;
         }
 
-        // Reset the streak in stats to 0, reset milestone scale, mark today as last qualifying attempt
+        // Reset the streak in stats to 0, reset milestone scale
         ConsecutiveStreak = 0;
         AcknowledgedStreakMilestone = 0;
-        LastStreakQualifyDate = DateTime.Today;
+        LastStreakQualifyDate = null;
 
         if (_accountService.ActiveAccount != null)
         {
             _accountService.ActiveAccount.ConsecutiveStreak = 0;
             _accountService.ActiveAccount.AcknowledgedStreakMilestone = 0;
-            _accountService.ActiveAccount.LastStreakQualifyDate = DateTime.Today;
+            _accountService.ActiveAccount.LastStreakQualifyDate = null;
             _accountService.ActiveAccount.PendingLostStreak = PendingLostStreak;
             await _accountService.SaveAccountAsync(_accountService.ActiveAccount);
         }

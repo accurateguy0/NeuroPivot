@@ -5,7 +5,7 @@
 
 @if (!ShouldHideHeader(AppState.ActiveView))
 {
-  <header class="nobs-header">
+  <header class="nobs-header @(AppState.ActiveView != "landing" || !AppState.IsSessionLoaded ? "is-shrunk" : "")">
     <div class="nav-side nav-left"></div>
     <div class="nav-center">
         <div class="logo-scene @(AppState.ActiveView != "landing" || !AppState.IsSessionLoaded ? "shrunk" : "")" style="@(!AppState.IsSessionLoaded ? "opacity: 0;" : "")">
